@@ -1,9 +1,11 @@
 /* eslint-disable react/display-name */
 import classNames from "classnames";
-import React, { ReactNode } from "react";
-type InputProps = 
-    React.InputHTMLAttributes<HTMLInputElement>
-
+import React, { Dispatch, InputHTMLAttributes, ReactNode } from "react";
+type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+export interface GeneralInputProps<T extends string | number>
+    extends InputHTMLAttributes<HTMLInputElement> {
+    setValue?: Dispatch<T>;
+}
 export const StyledInput = React.forwardRef<HTMLInputElement, InputProps>(
     (props, ref) => (
         <input
@@ -18,9 +20,49 @@ export const StyledInput = React.forwardRef<HTMLInputElement, InputProps>(
         />
     )
 );
-export function BottomLine({ children }: { children: ReactNode }) {
+export interface Props
+    extends React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLDivElement>,
+        HTMLDivElement
+    > {
+    label: string | React.ReactNode;
+}
+
+export const LabelElem = React.forwardRef<HTMLDivElement, Props>(
+    ({ label, id, children, ...props }, ref) => {
+        return (
+            <div
+                ref={ref}
+                {...props}
+            >
+                <label
+                    htmlFor={id}
+                    className="py-2 block text-neutral-40 leading-6"
+                >
+                    {label}
+                </label>
+                {children}
+            </div>
+        );
+    }
+);
+
+export function BottomLine({
+    children,
+    focus = false,
+}: {
+    children: ReactNode;
+    focus?: boolean;
+}) {
     return (
-        <div className='after:content-[""] after:absolute after:w-0 focus-within:after:w-full after:transition-all after:duration-75 after:h-[2px] after:bg-blue-60 after:bottom-0 after:left-1/2 after:-translate-x-1/2 relative'>
+        <div
+            className={classNames(
+                'after:content-[""] after:absolute after:w-0 focus-within:after:w-full after:transition-all after:duration-75 after:h-[3px] after:bg-blue-60 after:z-10 after:bottom-0 after:left-1/2 after:-translate-x-1/2 relative',
+                {
+                    "after:w-full": focus,
+                }
+            )}
+        >
             {children}
         </div>
     );

@@ -1,0 +1,47 @@
+.level[data-cur="0"]{
+    @apply bg-red-10 hover:bg-red-20;
+}
+.level-container[data-cur="0"]{
+    @apply after:bg-red-40 after:left-0
+}
+.level[data-cur="1"]{
+    @apply bg-amber-10 hover:bg-amber-20;
+}
+.level-container[data-cur="1"]{
+    @apply after:bg-amber-40 after:left-[20%]
+}
+.level[data-cur="2"]{
+    @apply bg-orange-10 hover:bg-orange-20;
+}
+.level-container[data-cur="2"]{
+    @apply after:bg-orange-40 after:left-[40%]
+}
+.level[data-cur="3"]{
+    @apply bg-green-10 hover:bg-green-20;
+}
+.level-container[data-cur="3"]{
+    @apply after:bg-green-40 after:left-[60%]
+}
+.level[data-cur="4"]{
+    @apply bg-indigo-10 hover:bg-indigo-20;
+}
+.level-container[data-cur="4"]{
+    @apply after:bg-indigo-40 after:left-[80%]
+}
+
+
+.label[data-cur="0"]{
+    @apply text-red-50;
+}
+.label[data-cur="1"]{
+    @apply text-amber-50;
+}
+.label[data-cur="2"]{
+    @apply text-orange-50;
+}
+.label[data-cur="3"]{
+    @apply text-green-50;
+}
+.label[data-cur="4"]{
+    @apply text-indigo-50;
+}

@@ -20,7 +20,7 @@ export default function CheckBox({
                 )}
             />
             <label
-                htmlFor={`${id}`}
+                htmlFor={id}
                 className={classNames(
                     "inline-block w-12 p-[2px] bg-neutral-30 hover:bg-neutral-50 rounded-xl  cursor-pointer transition",
                     "after:content-[''] after:w-5 after:h-5 after:rounded-[50%] after:block after:bg-white after:z-10 after:transition"

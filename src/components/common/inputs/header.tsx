@@ -1,10 +1,15 @@
 import { InputHTMLAttributes, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faRotateRight } from "@fortawesome/free-solid-svg-icons";
+import {
+    faPen,
+    faRotateRight,
+    faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
 import React from "react";
 import { useForceUpdate, useSyncRefs } from "@src/utils/hooks";
 import { assertIsNode } from "@src/utils";
+import { GeneralInputProps } from "./styles";
 
 function CustomButton({
     editable,
@@ -25,104 +30,121 @@ function CustomButton({
         </button>
     );
 }
-type Props = {
+export interface Props extends GeneralInputProps<string> {
     reset: Function;
-    innerRef: React.RefObject<HTMLInputElement>;
     defaultValue?: string;
-} & InputHTMLAttributes<HTMLInputElement>;
-function Component({ defaultValue, reset, innerRef, ...props }: Props) {
-    const [editable, setEditable] = useState(false);
-    const ref = useRef<HTMLDivElement>(null);
-    const forceUpdate = useForceUpdate();
-    const input = useRef<HTMLInputElement>(null);
-    useEffect(() => {
-        if (!ref.current) return;
-        function Listener(e: MouseEvent) {
-            if (!ref.current) return;
-            if (!e.target) return;
-            assertIsNode(e.target);
-            if (!ref.current.contains(e.target)) {
-                setEditable(false);
+    setDelete?: Function;
+}
+
+// eslint-disable-next-line react/display-name
+const Header = React.forwardRef<HTMLInputElement, Props>(
+    ({ defaultValue, reset, setDelete, ...props }, ref) => {
+        const [editable, setEditable] = useState(false);
+        const input = useRef<HTMLInputElement>(null);
+        const [textValue, setTextValue] = useState("");
+        const containerDiv = useRef<HTMLDivElement>(null);
+        useEffect(() => {
+            if (!input.current) return;
+            setTextValue(input.current.value);
+            function Listener(e: MouseEvent) {
+                if (!input.current) return;
+                if (!e.target) return;
+                assertIsNode(e.target);
+                if (!containerDiv.current!.contains(e.target)) {
+                    setEditable(false);
+                }
             }
-        }
-        window.addEventListener("click", Listener);
-        return () => {
-            window.removeEventListener("click", Listener);
-        };
-    }, [ref]);
-    useEffect(() => {
-        forceUpdate();
-    }, [input]);
-    const inputEle = useSyncRefs<HTMLInputElement>(input, innerRef);
-    const textValue = input.current?.value;
-    return (
-        <div
-            className="flex items-center gap-2 group text-xl leading-8 my-3"
-            ref={ref}
-        >
+            window.addEventListener("click", Listener);
+            return () => {
+                window.removeEventListener("click", Listener);
+            };
+        }, [input]);
+
+        const inputEle = useSyncRefs<HTMLInputElement>(input, ref);
+
+        return (
             <div
-                className="self-start text-neutral-90"
-                onClick={() => {
-                    input.current?.focus();
-                }}
+                ref={containerDiv}
+                className="flex items-center gap-2 group text-xl leading-8 my-3 w-fit"
             >
-                <h2 className={classNames({ hidden: editable }, "font-bold")}>
-                    {textValue}
-                </h2>
                 <div
-                    className={classNames(
-                        "after:invisible p-0 relative after:content-[attr(data-value)] min-w-[5rem] w-fit min-h-[1rem] font-bold h-fit",
-                        { hidden: !editable }
-                    )}
-                    data-value={textValue}
+                    className="self-start text-neutral-90"
+                    onClick={() => {
+                        input.current?.focus();
+                    }}
                 >
-                    <input
-                        type="text"
+                    <h2
                         className={classNames(
-                            "focus:outline-none p-0 top-0 left-0 absolute font-bold border-b-2 border-blue-50 border-solid w-full max-w-full"
+                            { hidden: editable },
+                            "font-bold"
                         )}
-                        ref={inputEle}
-                        {...props}
-                        onChange={(e) => {
-                            if (props.onChange) props.onChange(e);
-                            forceUpdate();
+                    >
+                        {textValue}
+                    </h2>
+                    <div
+                        onClick={() => {
+                            input.current!.focus();
                         }}
-                    />
+                        className={classNames(
+                            "after:invisible p-0 relative after:content-[attr(data-value)] min-w-[5rem] w-fit min-h-[1rem] font-bold h-fit",
+                            { hidden: !editable }
+                        )}
+                        data-value={textValue}
+                    >
+                        <input
+                            placeholder="Untitled"
+                            type="text"
+                            {...props}
+                            ref={inputEle}
+                            className={classNames(
+                                "focus:outline-none p-0 top-0 left-0 absolute font-bold border-b-2 border-blue-50 border-solid w-full max-w-full",
+                                props.className
+                            )}
+                            onChange={(e) => {
+                                if (props.onChange) props.onChange(e);
+                                setTextValue(e.currentTarget.value);
+                            }}
+                        />
+                    </div>
                 </div>
-            </div>
-            <CustomButton
-                editable={editable}
-                type="button"
-                onClick={() => {
-                    setEditable(true);
-                }}
-            >
-                <FontAwesomeIcon icon={faPen} />
-            </CustomButton>
-            {(!textValue?.length ||
-                (defaultValue && textValue != defaultValue)) && (
                 <CustomButton
                     editable={editable}
                     type="button"
-                    onClick={() => {
-                        reset();
+                    onClick={(e) => {
+                        e.preventDefault()
+                        setEditable(true);
+                        input.current!.focus();
                     }}
-                    className="font-bold"
                 >
-                    <FontAwesomeIcon icon={faRotateRight} />
+                    <FontAwesomeIcon icon={faPen} />
                 </CustomButton>
-            )}
-        </div>
-    );
-}
-// eslint-disable-next-line react/display-name
-const Header = React.forwardRef<
-    HTMLInputElement,
-    Pick<Props, Exclude<keyof Props, "innerRef">>
->((props, ref) => (
-    <Component
-        {...props}
-        innerRef={ref as any}
-    />
-));
+                {(!textValue?.length ||
+                    (defaultValue && textValue != defaultValue)) && (
+                    <CustomButton
+                        editable={editable}
+                        type="button"
+                        onClick={() => {
+                            reset();
+                        }}
+                        className="font-bold"
+                    >
+                        <FontAwesomeIcon icon={faRotateRight} />
+                    </CustomButton>
+                )}
+                {setDelete && (
+                    <CustomButton
+                        editable={false}
+                        type="button"
+                        onClick={() => {
+                            setDelete();
+                        }}
+                        className="font-bold"
+                    >
+                        <FontAwesomeIcon icon={faTrash} />
+                    </CustomButton>
+                )}
+            </div>
+        );
+    }
+);
 export default Header;

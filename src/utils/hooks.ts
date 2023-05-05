@@ -34,19 +34,7 @@ export function useSyncRefs<TType>(
         [cache]
     );
 }
-export function useSmoothExpand<T extends HTMLElement>(
-    initialValue: T | null,
-    expand: boolean
-) {
-    const ref = useRef<T>(initialValue);
-    // useEffect(() => {
-    //     if (!ref.current) return;
-    //     if (expand) {
-    //         ref.current.style.height = ref.current.clientHeight + "px";
-    //     } else ref.current.style.height = "auto";
-    // }, [ref, expand]);
-    return ref;
-}
+
 export function useNotInitEffect(
     effect: React.EffectCallback,
     deps?: React.DependencyList | undefined
@@ -56,6 +44,23 @@ export function useNotInitEffect(
         if (!state) setState(true);
 
         return effect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },deps);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, deps);
+}
+import { DependencyList } from "react";
+
+export function useDebounceEffect(
+    fn: (deps?: DependencyList) => void,
+    waitTime: number,
+    deps?: DependencyList
+) {
+    useEffect(() => {
+        const t = setTimeout(() => {
+            fn.call(undefined, deps);
+        }, waitTime);
+
+        return () => {
+            clearTimeout(t);
+        };
+    }, deps);
 }

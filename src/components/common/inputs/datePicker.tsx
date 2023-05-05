@@ -2,7 +2,12 @@
 import React from "react";
 import { Dispatch, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import { BottomLine, StyledInput } from "./styles";
+import {
+    BottomLine,
+    StyledInput,
+    LabelElem,
+    GeneralInputProps,
+} from "./styles";
 import { useSyncRefs } from "@src/utils/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,8 +20,8 @@ type Props = {
     label: string;
     labelEnd?: string;
     applyPresent?: boolean;
-    startData?: React.InputHTMLAttributes<HTMLInputElement>;
-    endData?: React.InputHTMLAttributes<HTMLInputElement>;
+    startData?: GeneralInputProps<string | "Present">;
+    endData?: GeneralInputProps<string | "Present">;
 };
 const Months = {
     1: "Jan",
@@ -143,12 +148,12 @@ function DatePic({
 
 const CustomInput = React.forwardRef<
     HTMLInputElement,
-    React.InputHTMLAttributes<HTMLInputElement> & {
+    GeneralInputProps<string | "Present"> & {
         defaultS?: string;
         label?: string;
         applyPresent?: boolean;
     }
->(({ defaultS, label, applyPresent, ...props }, ref) => {
+>(({ defaultS, label, applyPresent, setValue, ...props }, ref) => {
     const inpRef = useRef<HTMLInputElement>(null);
     const AllRef = useSyncRefs(ref, inpRef);
     let State: StateType = [undefined, new Date().getFullYear()];
@@ -161,11 +166,15 @@ const CustomInput = React.forwardRef<
     function changeVal(val: StateType | "Present") {
         const input = inpRef.current;
         if (!input) return;
-        if (val == "Present") return (input.value = "Present");
+        if (val == "Present") {
+            if (setValue) setValue("Present");
+            return (input.value = "Present");
+        }
         let str = "";
         if (val[0]) str = Months[val[0]] + ", " + val[1];
         else str = val[1].toString();
         input.value = str;
+        if (setValue) setValue(str);
     }
     const Pic = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -234,8 +243,7 @@ export default function DatePicker({
     applyPresent,
 }: Props) {
     return (
-        <div>
-            <label className="text-sm text-neutral-40 leading-6">{label}</label>
+        <LabelElem label={label}>
             <div className="flex flex-wrap gap-x-3 gap-y-4">
                 <div className="flex-1">
                     <CustomInput {...startData} />
@@ -248,6 +256,6 @@ export default function DatePicker({
                     />
                 </div>
             </div>
-        </div>
+        </LabelElem>
     );
 }
