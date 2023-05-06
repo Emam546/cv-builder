@@ -64,3 +64,12 @@ export function useDebounceEffect(
         };
     }, deps);
 }
+const useUniqueId = () => {
+    const [id, setId] = useState(null);
+
+    useEffect(() => {
+        setId(uuid());
+    }, []);
+
+    return id;
+};

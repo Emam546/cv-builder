@@ -21,12 +21,17 @@ import InfoGetter from "@src/components/common/InsertCommonData/input";
 import DatePicker from "@src/components/common/inputs/datePicker";
 import { LabelElem } from "@src/components/common/inputs/styles";
 import RangeInput from "@src/components/common/inputs/rangeInput";
-export type NameType = "Projects";
-export const Name: NameType = "Projects";
+import MultiSelectInput from "@src/components/common/inputs/multiSelect";
+import data from "@src/components/main/Skills/data.json";
+const Technologies = data.programming_technologies.map((value) => ({
+    value,
+    label: value,
+}));
+export type NameType = "projects";
+export const Name: NameType = "projects";
 export interface InputData extends FieldsType {
     name: string;
     kind: string;
-    email: string;
     progress: number;
     date: {
         start: string;
@@ -39,6 +44,7 @@ export interface InputData extends FieldsType {
     images: ImageInputData[];
     team: TeamInputData[];
     desc: string;
+    technologies: (string | number)[];
 }
 type LinkPathType = `${NameType}.data.${number}.links`;
 type TeamMemberPathType = `${NameType}.data.${number}.team`;
@@ -119,6 +125,17 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
                         </div>
                     </LabelElem>
                 </Grid2Container>
+                <div>
+                    <LabelElem label={"Technologies"}>
+                        <MultiSelectInput
+                            setValue={(val) =>
+                                setValue(`${Name}.data.${i}.technologies`, val)
+                            }
+                            options={Technologies}
+                            {...register(`${Name}.data.${i}.technologies`)}
+                        />
+                    </LabelElem>
+                </div>
                 <div className="my-4">
                     <InfoGetter
                         formRegister={form as any}
@@ -154,6 +171,7 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
                         noDragging
                     />
                 </div>
+
                 <LabelElem
                     label={"Description"}
                     className="my-4"

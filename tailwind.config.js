@@ -92,7 +92,8 @@ module.exports = {
             "beige-90": "#27241d",
             "beige-100": "#15130d",
         },
-        extend: {},
+        extend: {
+        },
     },
     plugins: [],
 };

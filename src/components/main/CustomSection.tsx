@@ -26,7 +26,10 @@ interface SectionInputData extends FieldsType {
     desc: string;
 }
 export interface InputData {
-    custom: GeneratorData<SectionInputData, SectionTypeName>[];
+    custom: {
+        head: string;
+        data: SectionInputData[];
+    }[];
 }
 function CreateElem<NameType extends SectionTypeName>(Name: NameType) {
     function v(n: unknown) {

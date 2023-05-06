@@ -11,8 +11,8 @@ import UploadButton from "@src/components/common/uploadAvatar";
 import { CreateListItem } from "../links";
 import InfoGetter from "@src/components/common/InsertCommonData/input";
 import { LabelElem } from "@src/components/common/inputs/styles";
-export type NameType = "Team";
-export const Name: NameType = "Team";
+export type NameType = "team";
+export const Name: NameType = "team";
 export interface InputData extends FieldsType {
     name: string;
     jobTitle: string;

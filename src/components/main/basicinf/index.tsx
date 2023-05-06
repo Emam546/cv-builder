@@ -13,20 +13,22 @@ const CITIES: Map<string, string[]> = new Map(Object.entries(data.countries));
 const JOP_TITLES = data.jobs;
 export interface InputData {
     info: {
-        imgUrl: string;
         head: string;
-        jobTitle?: string;
-        firstName?: string;
-        lastName?: string;
-        email?: string;
-        phone?: string;
-        country?: string;
-        city?: string;
-        address?: string;
-        postalCode?: string;
-        nationality?: string;
-        placeOfBirth?: string;
-        [x: string]: any;
+        data: {
+            imgUrl: string;
+            jobTitle?: string;
+            firstName?: string;
+            lastName?: string;
+            email?: string;
+            phone?: string;
+            country?: string;
+            city?: string;
+            address?: string;
+            postalCode?: string;
+            nationality?: string;
+            placeOfBirth?: string;
+            [x: string]: any;
+        };
     };
 }
 
@@ -35,7 +37,6 @@ export default function BasicInfo({
     resetField,
     control,
     setValue,
-    
 }: UseFormReturn<InputData>) {
     const [eddData, setEddData] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
@@ -60,45 +61,44 @@ export default function BasicInfo({
                     label="Wanted Job Title"
                     placeholder="e.g. Teacher"
                     options={JOP_TITLES}
-                    setValue={(val) => setValue("info.jobTitle", val)}
-                    {...register("info.jobTitle")}
+                    setValue={(val) => setValue("info.data.jobTitle", val)}
+                    {...register("info.data.jobTitle")}
                 />
                 <UploadButton
                     label="Upload photo"
-                    
-                    setValue={(val) => setValue("info.imgUrl", val)}
+                    setValue={(val) => setValue("info.data.imgUrl", val)}
                 />
                 <NormalInput
                     label="First Name"
-                    {...register("info.firstName")}
+                    {...register("info.data.firstName")}
                 />
                 <NormalInput
                     label="Last Name"
-                    {...register("info.lastName")}
+                    {...register("info.data.lastName")}
                 />
                 <NormalInput
                     label="Email"
                     type="email"
-                    {...register("info.email")}
+                    {...register("info.data.email")}
                 />
                 <NormalInput
                     label="Phone"
-                    {...register("info.phone")}
+                    {...register("info.data.phone")}
                 />
                 <NormalInput
                     label="Country"
                     options={COUNTRIES}
-                    setValue={(val) => setValue("info.country", val)}
+                    setValue={(val) => setValue("info.data.country", val)}
                     onBlurCapture={(ev) => {
                         setCountry(ev.currentTarget.value);
                     }}
-                    {...register("info.country")}
+                    {...register("info.data.country")}
                 />
                 <NormalInput
                     label="City"
                     options={CITIES.get(country)}
-                    setValue={(val) => setValue("info.city", val)}
-                    {...register("info.city")}
+                    setValue={(val) => setValue("info.data.city", val)}
+                    {...register("info.data.city")}
                 />
             </Grid2Container>
             <div
@@ -113,15 +113,15 @@ export default function BasicInfo({
                     <Grid2Container>
                         <NormalInput
                             label="Address"
-                            {...register("info.address")}
+                            {...register("info.data.address")}
                         />
                         <NormalInput
                             label="Postal Code"
-                            {...register("info.postalCode")}
+                            {...register("info.data.postalCode")}
                         />
                         <NormalInput
                             label="Nationality"
-                            {...register("info.nationality")}
+                            {...register("info.data.nationality")}
                         />
                     </Grid2Container>
                 </div>
