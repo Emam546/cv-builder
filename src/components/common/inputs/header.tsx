@@ -41,11 +41,10 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
     ({ defaultValue, reset, setDelete, ...props }, ref) => {
         const [editable, setEditable] = useState(false);
         const input = useRef<HTMLInputElement>(null);
-        const [textValue, setTextValue] = useState("");
+        const textValue = input.current?.value || defaultValue;
         const containerDiv = useRef<HTMLDivElement>(null);
         useEffect(() => {
             if (!input.current) return;
-            setTextValue(input.current.value);
             function Listener(e: MouseEvent) {
                 if (!input.current) return;
                 if (!e.target) return;
@@ -60,7 +59,7 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
             };
         }, [input]);
 
-        const inputEle = useSyncRefs<HTMLInputElement>(input, ref);
+        const allRef = useSyncRefs<HTMLInputElement>(input, ref);
 
         return (
             <div
@@ -95,15 +94,11 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                             placeholder="Untitled"
                             type="text"
                             {...props}
-                            ref={inputEle}
+                            ref={allRef}
                             className={classNames(
                                 "focus:outline-none p-0 top-0 left-0 absolute font-bold border-b-2 border-blue-50 border-solid w-full max-w-full",
                                 props.className
                             )}
-                            onChange={(e) => {
-                                if (props.onChange) props.onChange(e);
-                                setTextValue(e.currentTarget.value);
-                            }}
                         />
                     </div>
                 </div>
@@ -111,7 +106,7 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                     editable={editable}
                     type="button"
                     onClick={(e) => {
-                        e.preventDefault()
+                        e.preventDefault();
                         setEditable(true);
                         input.current!.focus();
                     }}

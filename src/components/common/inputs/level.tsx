@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable react/display-name */
-import React, {  useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 import classNames from "classnames";
 import { useSyncRefs } from "@src/utils/hooks";
@@ -13,21 +13,29 @@ export interface OptionType {
     label: string;
 }
 export type LevelType = 0 | 1 | 2 | 3 | 4;
-export interface Props extends GeneralInputProps<string> {
+export interface Props extends GeneralInputProps<LevelType> {
     label: string;
     Levels: Record<LevelType, string>;
+    defaultValue?: LevelType;
 }
 
 const newArr: LevelType[] = Array(5)
     .fill(0)
     .map((_, index) => index as LevelType);
 const LevelInput = React.forwardRef<HTMLInputElement, Props>(
-    ({ label,Levels, setValue, ...props }, ref) => {
+    ({ label, Levels, defaultValue, setValue, ...props }, ref) => {
         const [id] = useState(uuid());
         const containerDiv = useRef<HTMLDivElement>(null);
-        const [val, setVal] = useState<LevelType>(0);
+        const [val, setVal] = useState<LevelType>(defaultValue || 0);
         const inputRef = useRef<HTMLInputElement>(null);
         const allRef = useSyncRefs(ref, inputRef);
+        useEffect(() => {
+            if (!inputRef.current) return;
+            const curVal = inputRef.current.value;
+            const newI = newArr.find((pre) => pre == +curVal);
+            if (typeof newI != "undefined") setVal(newI);
+            else setVal(0);
+        }, [inputRef.current?.value]);
         return (
             <LabelElem
                 id={id}
@@ -41,7 +49,7 @@ const LevelInput = React.forwardRef<HTMLInputElement, Props>(
                             )}
                             data-cur={val}
                         >
-                            {Levels[val as LevelType]}
+                            {Levels[val]}
                         </span>
                     </>
                 }
@@ -69,10 +77,7 @@ const LevelInput = React.forwardRef<HTMLInputElement, Props>(
                                     onClick={(e) => {
                                         e.preventDefault();
                                         setVal(i);
-                                        if (inputRef.current)
-                                            inputRef.current.value =
-                                                i.toString();
-                                        if (setValue) setValue(i.toString());
+                                        if (setValue) setValue(i);
                                     }}
                                     aria-selected={i == val}
                                     data-cur={val}
@@ -85,15 +90,7 @@ const LevelInput = React.forwardRef<HTMLInputElement, Props>(
                         type="hidden"
                         ref={allRef}
                         autoComplete="off"
-                        className="appearance-none invisible absolute"
                         id={id}
-                        onChange={(ev) => {
-                            if (props.onChange) props.onChange(ev);
-                            const curVal = ev.currentTarget.value;
-                            const newI = newArr.find((pre) => pre == +curVal);
-                            if (typeof newI != "undefined") setVal(newI);
-                            else setVal(0);
-                        }}
                     />
                 </div>
             </LabelElem>

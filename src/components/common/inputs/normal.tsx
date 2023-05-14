@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/role-supports-aria-props */
 /* eslint-disable react/display-name */
 import { assertIsNode } from "@src/utils";
-import { useSyncRefs } from "@src/utils/hooks";
+import { useForceUpdate, useSyncRefs } from "@src/utils/hooks";
 import classNames from "classnames";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { BottomLine, GeneralInputProps, StyledInput } from "./styles";
@@ -25,7 +25,7 @@ function DropDownComp({
     selectOption: Dispatch<string>;
     containerRef: React.RefObject<HTMLElement>;
     setIsOpen: Dispatch<boolean>;
-} & React.HTMLAttributes<HTMLUListElement>) {
+} & React.HTMLAttributes<HTMLDivElement>) {
     const [highlightedIndex, setHighlightedIndex] = useState(0);
     const validOptions = options.filter((val) =>
         val.toLowerCase().includes(value.toLowerCase())
@@ -65,7 +65,7 @@ function DropDownComp({
     )
         return null;
     return (
-        <ul
+        <div
             {...props}
             className={classNames(
                 "absolute top-full left-0 w-full bg-neutral-10 z-20",
@@ -77,7 +77,7 @@ function DropDownComp({
                     .toLowerCase()
                     .indexOf(value.toLowerCase());
                 return (
-                    <li
+                    <div
                         key={i}
                         onClick={(e) => {
                             selectOption(val);
@@ -91,23 +91,24 @@ function DropDownComp({
                         {val.slice(0, startIndex)}
                         <b>{value}</b>
                         {val.slice(startIndex + value.length, val.length)}
-                    </li>
+                    </div>
                 );
             })}
-        </ul>
+        </div>
     );
 }
 
 const NormalInput = React.forwardRef<HTMLInputElement, Props>(
     ({ label, options, setValue, ...props }, ref) => {
         const inputRef = useRef<HTMLInputElement>(null);
+
         const [focus, setFocus] = useState(false);
         const [open, setIsOpen] = useState(false);
-        const setRef = useSyncRefs(ref, inputRef);
+        const allRef = useSyncRefs(ref, inputRef);
         const containerRef = useRef<HTMLDivElement>(null);
-        const [value, setCurValue] = useState<string>("");
         const [id] = useState(uuid());
-
+        const value = inputRef.current?.value;
+        const forceUpdate = useForceUpdate();
         return (
             <LabelElem
                 ref={containerRef}
@@ -117,15 +118,14 @@ const NormalInput = React.forwardRef<HTMLInputElement, Props>(
                 <div className="relative">
                     <BottomLine>
                         <StyledInput
-                            type="text"
                             {...props}
                             id={id}
                             autoComplete="off"
-                            ref={setRef}
+                            ref={allRef}
                             onChange={(ev) => {
                                 if (props.onChange) props.onChange(ev);
-                                setCurValue(ev.target.value);
                                 setIsOpen(true);
+                                forceUpdate();
                             }}
                             onFocusCapture={(ev) => {
                                 if (props.onFocusCapture)
@@ -151,9 +151,7 @@ const NormalInput = React.forwardRef<HTMLInputElement, Props>(
                             containerRef={containerRef}
                             selectOption={(val) => {
                                 if (setValue) setValue(val);
-                                setCurValue(val);
-                                if (inputRef.current)
-                                    inputRef.current.value = val;
+                                inputRef.current!.value = val;
                                 setFocus(false);
                             }}
                             setIsOpen={setIsOpen}

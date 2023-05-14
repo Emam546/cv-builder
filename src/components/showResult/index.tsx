@@ -1,7 +1,14 @@
 import { faCheck, faClipboard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-export default function ShowResult({ obj }: { obj: Object }) {
+import { convertSection2Data } from "../main/utils";
+import { useAppSelector } from "@src/store";
+export default function ShowResult() {
+    const [res, data] = useAppSelector((state) => [
+        state.form,
+        state.state.data,
+    ]);
+    const obj = convertSection2Data(res, data);
     const string = JSON.stringify(obj, null, 2);
     const [copied, setCopied] = useState(false);
     return (
@@ -23,7 +30,6 @@ export default function ShowResult({ obj }: { obj: Object }) {
                                 navigator.clipboard
                                     .writeText(string)
                                     .then(() => {
-                                        console.log("Text copied successfully");
                                         setCopied(true);
                                         setTimeout(() => {
                                             setCopied(false);

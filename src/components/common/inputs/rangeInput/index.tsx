@@ -3,10 +3,27 @@ import React, { useEffect, useRef } from "react";
 import classNames from "classnames";
 import styles from "./style.module.css";
 import { GeneralInputProps } from "../styles";
-interface Props extends GeneralInputProps<string> {}
+import { useSyncRefs } from "@src/utils/hooks";
+interface Props extends GeneralInputProps<string> {
+    defaultValue?: number;
+}
 const RangeInput = React.forwardRef<HTMLInputElement, Props>(
-    ({ setValue, ...props }, ref) => {
+    ({ setValue, defaultValue = 20, ...props }, ref) => {
         const parentNode = useRef<HTMLDivElement>(null);
+        const inputRef = useRef<HTMLInputElement>(null);
+        const allRef = useSyncRefs(ref, inputRef);
+        useEffect(() => {
+            if (!parentNode.current) return;
+            if (!inputRef.current) return;
+            parentNode.current.style.setProperty(
+                "--value",
+                inputRef.current.value
+            );
+            parentNode.current.style.setProperty(
+                "--text-value",
+                JSON.stringify((+inputRef.current.value).toLocaleString())
+            );
+        }, [inputRef.current?.value]);
         return (
             <div
                 className={classNames(
@@ -18,22 +35,22 @@ const RangeInput = React.forwardRef<HTMLInputElement, Props>(
                 style={
                     {
                         "--prefix": "'%'",
-                        "--min": 0,
-                        "--max": 100,
-                        "--step": 1,
-                        "--value": 20,
-                        "--text-value": "'20'",
+                        "--min": "0",
+                        "--max": "100",
+                        "--step": "1",
+                        "--value": `${defaultValue}`,
+                        "--text-value": `'${defaultValue}'`,
                     } as React.CSSProperties
                 }
             >
                 <input
                     {...props}
-                    ref={ref}
+                    ref={allRef}
                     type="range"
                     min="0"
                     max="100"
                     step="1"
-                    defaultValue="20"
+                    defaultValue={defaultValue}
                     className="w-full"
                     onChange={(e) => {
                         if (props.onChange) props.onChange(e);

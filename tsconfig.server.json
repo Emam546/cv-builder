@@ -4,13 +4,19 @@
         "module": "commonjs",
         "outDir": "dist",
         "noEmit": false,
+        "baseUrl": "./",
         "paths": {
             "@serv/*": [
                 "./server/src/*"
-            ]
+            ],
+            "@src/*": [
+                "./src/*"
+            ],
         }
     },
     "include": [
-        "server"
+        "server",
+        "src",
+        "types/*.d.ts"
     ]
 }

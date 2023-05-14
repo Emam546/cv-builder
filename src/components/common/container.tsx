@@ -7,7 +7,7 @@ export default function Container({
     children,
 }: {
     hiddenState?: boolean;
-    order: number;
+    order?: number;
     children: ReactNode;
 }) {
     const [curOrder, setCurOrder] = useState(order);

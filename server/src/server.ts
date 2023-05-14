@@ -12,7 +12,10 @@ import HttpStatusCodes from "@serv/declarations/major/HttpStatusCodes";
 import { NodeEnvs } from "@serv/declarations/enums";
 import { RouteError } from "@serv/declarations/classes";
 import expressWinstom from "express-winston";
-
+import passport from "./passport.config";
+import fileUpload from "express-fileupload";
+// import session from "express-session";
+import { parseMultiFormData } from "@serv/MiddleWare";
 // **** Init express **** //
 
 const app = express();
@@ -22,12 +25,19 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(EnvVars.cookieProps.secret));
+app.use(fileUpload());
+// app.use(parseMultiFormData);
+// app.use(session({ secret: EnvVars.session.secret, name: "sid" }));
 app.use(
     expressWinstom.logger({
         winstonInstance: logger,
         statusLevels: true,
     })
 );
+//Initialize Passport
+app.use(passport.initialize());
+// app.use(passport.session());
+
 // Show routes called in console during development
 if (EnvVars.nodeEnv === NodeEnvs.Dev) {
     app.use(morgan("dev"));
@@ -41,7 +51,7 @@ if (EnvVars.nodeEnv === NodeEnvs.Production) {
 // **** Add API routes **** //
 
 // Add APIs
-app.use("/api", BaseRouter);
+app.use("/api/v1", BaseRouter);
 
 // Setup error handler
 app.use(

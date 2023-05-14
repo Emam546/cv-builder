@@ -2,7 +2,11 @@ import { NodeEnvs } from "@serv/declarations/enums";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { transports, format, createLogger, Logger } from "winston";
 let logger: Logger = createLogger({
-    transports: [new transports.Console({})],
+    transports: [
+        new transports.Console({
+            level: "error",
+        }),
+    ],
     format: format.combine(
         format.colorize(),
         format.simple(),
@@ -14,7 +18,7 @@ if (EnvVars.nodeEnv == NodeEnvs.Production) {
         transports: [
             new transports.File({
                 level: "error",
-                filename:"production.log"
+                filename: "production.log",
             }),
         ],
         format: format.combine(
@@ -23,6 +27,5 @@ if (EnvVars.nodeEnv == NodeEnvs.Production) {
             format.errors({ stack: true })
         ),
     });
-    
 }
 export default logger;

@@ -6,9 +6,6 @@
     "sourceMap": false,
     "removeComments": true,
     "module": "CommonJS",
-    "paths": {
-      
-    },
     "useUnknownInCatchVariables": false,
     "skipLibCheck": true,
     "baseUrl": "./"

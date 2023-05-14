@@ -11,7 +11,6 @@ export interface GeneralInputProps<T extends string | number | any[]>
 export const StyledInput = React.forwardRef<HTMLInputElement, InputProps>(
     (props, ref) => (
         <input
-            type="text"
             autoComplete="off"
             ref={ref}
             {...props}
@@ -27,11 +26,12 @@ export interface Props
         React.HTMLAttributes<HTMLDivElement>,
         HTMLDivElement
     > {
-    label: string | React.ReactNode;
+    label?: string | React.ReactNode;
 }
 
 export const LabelElem = React.forwardRef<HTMLDivElement, Props>(
     ({ label, id, children, ...props }, ref) => {
+        if (!label) return <>{children}</>;
         return (
             <div
                 ref={ref}

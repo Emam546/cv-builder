@@ -3,21 +3,51 @@
 import { faPen, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageCropper from "@src/components/common/Img_cropper";
-import { GeneralInputProps } from "@src/components/common/inputs/styles";
-import { useSyncRefs } from "@src/utils/hooks";
+import { useAppSelector } from "@src/store";
+import { useSyncRefs, useUploadImage } from "@src/utils/hooks";
 import classNames from "classnames";
-import React, { useRef, useState, Dispatch } from "react";
+import React, { useState, Dispatch, useEffect, useRef } from "react";
+import { GeneralInputProps } from "./inputs/styles";
+import { Control, Controller, useController } from "react-hook-form";
 interface Props {
+    name: string;
     label: string;
     setValue: Dispatch<string>;
+    control: Control;
+    defaultValue?: string;
 }
 const UploadButton = React.forwardRef<HTMLInputElement, Props>(
-    ({ label, setValue, ...props }, ref) => {
-        const [imgSrc, setImgSrc] = useState<string | undefined>(undefined);
+    (
+        {
+            label,
+            setValue,
+            defaultValue,
+
+            name,
+            control,
+        },
+        ref
+    ) => {
         const [edit, setEdit] = useState(false);
+        const [blob, setBlob] = useState<Blob>();
+        const [orgUrl, setOrgUrl] = useState(defaultValue);
+        const [imgUrl, setImgUrl] = useUploadImage(
+            "/api/v1/images",
+            name,
+            blob,
+            defaultValue as string
+        );
+        const { field } = useController({ control, name, defaultValue });
+        useEffect(() => {
+            if (setValue && imgUrl) setValue(imgUrl);
+        }, [imgUrl]);
+        useEffect(() => {
+            if (field.value != "") setOrgUrl(field.value);
+            else setOrgUrl(undefined);
+        }, [field.value, field.name]);
         return (
             <div className="group pt-5 select-none">
-                {!imgSrc && (
+                {!orgUrl && (
                     <div
                         onClick={() => {
                             setEdit(true);
@@ -38,11 +68,11 @@ const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                     </div>
                 )}
 
-                {imgSrc && (
+                {orgUrl && (
                     <div className="flex items-center gap-x-4 h-full">
                         <div className="bg-neutral-10 max-h-[4rem] group-hover:bg-blue-10 aspect-square h-full flex items-center justify-center overflow-hidden">
                             <img
-                                src={imgSrc}
+                                src={orgUrl}
                                 alt="avatar img"
                                 className="max-w-full"
                             />
@@ -66,8 +96,9 @@ const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                         )
                                     )
                                         return;
-                                    setImgSrc(undefined);
+                                    setImgUrl(undefined);
                                     setValue("");
+                                    setOrgUrl(undefined);
                                 }}
                             >
                                 <FontAwesomeIcon icon={faTrash} />
@@ -82,10 +113,10 @@ const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                     })}
                 >
                     <ImageCropper
-                        setValue={(val) => {
-                            if (setValue) setValue(val);
+                        setValue={(blob) => {
                             setEdit(false);
-                            setImgSrc(val);
+                            setBlob(blob);
+                            setOrgUrl(URL.createObjectURL(blob));
                         }}
                         exit={() => setEdit(false)}
                         aspect={1}

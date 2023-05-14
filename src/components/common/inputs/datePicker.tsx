@@ -106,10 +106,10 @@ function DatePic({
                     <FontAwesomeIcon icon={faChevronRight} />
                 </button>
             </div>
-            <ul className="grid grid-cols-4 py-4 gap-x-1 gap-y-2 items-stretch">
+            <div className="grid grid-cols-4 py-4 gap-x-1 gap-y-2 items-stretch">
                 {entries.map(([val, name], i) => {
                     return (
-                        <li
+                        <div
                             key={i}
                             className={classNames(
                                 "capitalize rounded-xl min-w-fit select-none text-center cursor-pointer py-1 px-4 transition",
@@ -124,10 +124,10 @@ function DatePic({
                             }}
                         >
                             {name}
-                        </li>
+                        </div>
                     );
                 })}
-            </ul>
+            </div>
             {applyPresent && (
                 <div className="pb-2">
                     <CheckBox
@@ -159,7 +159,6 @@ const CustomInput = React.forwardRef<
     let State: StateType = [undefined, new Date().getFullYear()];
     if (defaultS) {
         const res = regEx.exec(defaultS);
-        if (res) console.log(res);
     }
     const [val, setVal] = useState<StateType | "Present">(State);
     const [focus, setFocus] = useState(false);

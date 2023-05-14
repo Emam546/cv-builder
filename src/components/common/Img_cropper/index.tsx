@@ -32,15 +32,14 @@ export async function imgPreview(
     canvasPreview(image, canvas, crop, scale, rotate);
     const blob = await toBlob(canvas);
 
-    if (!blob) {
-        console.error("Failed to create blob");
-        return "";
-    }
-    return URL.createObjectURL(blob);
+    if (!blob) throw new Error("Failed to create blob");
+
+    return blob;
+    // return URL.createObjectURL(blob);
 }
 interface Props {
     aspect?: number;
-    setValue: Dispatch<string>;
+    setValue: Dispatch<Blob>;
     exit: Function;
 }
 function centerAspectCrop(
