@@ -19,7 +19,7 @@ passport.use(
         {
             clientID: EnvVars.FaceBook_APP_ID,
             clientSecret: EnvVars.FaceBook_APP_SECRET,
-            callbackURL: `/api/v1/auth/facebook/callback`,
+            callbackURL: `${EnvVars.DOMAIN_URL}/api/v1/auth/facebook/callback`,
             profileFields: ["id", "first_name", "last_name"],
             display: "popup",
         },
