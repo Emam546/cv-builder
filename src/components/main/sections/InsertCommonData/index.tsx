@@ -94,11 +94,11 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
                         );
                     }}
                     resort={(indexes) => {
-                        setEmploymentData((pre) => indexes.map((i) => pre[i]));
                         const data = indexes.map((i) =>
                             getValues(keys.data_i(i))
                         ) as any;
                         setValue(keys.data, data);
+                        setEmploymentData((pre) => [...pre]);
                     }}
                 />
             </div>

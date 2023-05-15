@@ -38,8 +38,6 @@ export default function DraggableComp({
         function DragOver() {
             setDrag(false);
             if (!parentDiv) return;
-            parentDiv.style.left = "0px";
-            parentDiv.style.top = "0px";
             parentDiv.style.width = parentWidth;
         }
         function elementDrag(e: MouseEvent) {

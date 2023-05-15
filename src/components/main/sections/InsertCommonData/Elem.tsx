@@ -30,25 +30,20 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
     ) => {
         const [expand, setExpand] = useState(false);
         const [drag, setDrag] = useState(false);
-        const forceUpdate = useForceUpdate();
         const parentDiv = useRef<HTMLDivElement>(null);
         const allRefs = useSyncRefs(parentDiv, ref);
-
-        useEffect(() => {
-            if (parentDiv.current) forceUpdate();
-        }, []);
         return (
             <div
                 ref={allRefs}
                 className={classNames(
-                    "px-3 border rounded-lg border-solid border-neutral-20 py-1 transition-[height]",
+                    "border rounded-lg border-solid border-neutral-20 py-1 transition-[height]",
                     {
                         "fixed z-50 bg-neutral-5": drag,
-                        relative: !drag,
+                        static: !drag,
                     }
                 )}
             >
-                <div className="group cursor-pointer flex items-center justify-between h-16">
+                <div className="px-3 group relative cursor-pointer flex items-center justify-between h-16">
                     {!noDragging && (
                         <DraggableComp
                             onDragStart={() => {
@@ -104,7 +99,7 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
 
                 <div
                     className={classNames(
-                        "transition-[max-height] duration-300",
+                        "transition-[max-height] duration-300 px-3",
                         {
                             "max-h-[10000px]": expand && !drag,
                             "max-h-0 overflow-hidden": !expand || drag,

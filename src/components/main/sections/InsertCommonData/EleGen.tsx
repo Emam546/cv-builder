@@ -33,32 +33,10 @@ export default function ElemGenerator<P = {}>({
     resort?: (indexes: number[]) => void;
     noDragging?: boolean;
 }) {
-    const [dragger, setDragging] = useState<[boolean, number | null]>([
-        false,
-        null,
-    ]);
+    const [dragger, setDragging] = useState<number>(0);
     const [allEle, setAllEle] = useState<HTMLDivElement[]>([]);
-    const [ypos, setYpos] = useState(0);
-    useEffect(() => {
-        const [state, index] = dragger;
-        if (index == null) return;
-        const ele = allEle[index];
-
-        if (!ele) return;
-        if (!state) {
-            const indexes = allEle
-                .map<[number, number]>((ele, i) => {
-                    if (i == index) return [ypos, i];
-                    const rect = ele.getBoundingClientRect();
-                    return [rect.top + rect.height / 2 + window.scrollY, i];
-                })
-                .sort((a, b) => a[0] - b[0])
-                .map(([_, i]) => i);
-            if (resort) resort(indexes);
-        }
-    }, [dragger]);
     return (
-        <div className="space-y-4 transition-all duration-700 mb-1">
+        <div className="flex flex-col items-stretch space-y-4 transition-all duration-700 mb-1">
             {data.map((props, i) => {
                 return (
                     <Elem
@@ -66,14 +44,21 @@ export default function ElemGenerator<P = {}>({
                         index={i}
                         key={i}
                         deleteSelf={() => deleteSelf && deleteSelf(i)}
-                        onDragStart={(ele) => setDragging([true, i])}
-                        onDragOver={(ele) => setDragging([false, i])}
-                        onDrag={function (ev) {
-                            if (i != dragger[1]) return;
-                            const rect = this.getBoundingClientRect();
-                            setYpos(
-                                rect.top + rect.height / 2 + window.scrollY
-                            );
+                        onDragStart={(ele) => setDragging(i)}
+                        onDragOver={(ele) => {
+                            const indexes = allEle
+                                .map<[number, number]>((ele, i) => {
+                                    const rect = ele.getBoundingClientRect();
+                                    return [
+                                        rect.top +
+                                            rect.height / 2 +
+                                            window.scrollY,
+                                        i,
+                                    ];
+                                })
+                                .sort((a, b) => a[0] - b[0])
+                                .map(([_, i]) => i);
+                            if (resort) resort(indexes);
                         }}
                         ref={(ele) => {
                             if (!ele) return;

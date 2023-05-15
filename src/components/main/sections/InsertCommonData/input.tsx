@@ -73,17 +73,21 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
         },
     };
 
-    const [EleData, setData] = useState(
-        new Array(
-            (lodash.get(formRegister.control._defaultValues, name) || []).length
-        ).fill(1)
-    );
+    const [EleData, setData] = useState<any[]>([
+        ...Object.keys(
+            new Array(
+                (
+                    lodash.get(formRegister.control._defaultValues, name) || []
+                ).length
+            ).fill(1)
+        ),
+    ]);
 
     useEffect(() => {
         const Values = (getValues(keys.root) as T[]).length;
-        if (Values) setData(new Array(Values).fill(1));
-    }, [name]);
-
+        if (Values) setData([...Object.keys(new Array(Values).fill(1))]);
+    }, []);
+    if (getValues(name).length != EleData.length) return null;
     return (
         <LabelElem label={label}>
             <div>

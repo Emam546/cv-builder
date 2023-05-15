@@ -24,7 +24,7 @@ type ImagesPathType = `${NameType}.data.${number}.images`;
 
 const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
-        const { register, control, setValue } = form;
+        const { register, control } = form;
         const { name } = useWatch({
             name: `${Name}.data.${i}`,
             control,
