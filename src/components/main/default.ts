@@ -103,7 +103,7 @@ export const defaultSectionState: SectionStateType = {
             order: curOrder,
         },
         [SkillName]: {
-            hiddenState: true,
+            hiddenState: false,
             order: curOrder,
         },
         [CourseName]: {
