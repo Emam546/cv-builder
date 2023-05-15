@@ -1,11 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/display-name */
 import { faImage, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageCropper from "@src/components/common/Img_cropper";
 import classNames from "classnames";
 import React, { useRef, useState, Dispatch, useEffect } from "react";
-/* eslint-disable react/display-name */
+
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { Control, Path, useController, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";

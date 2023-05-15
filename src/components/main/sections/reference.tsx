@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";

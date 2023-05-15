@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React, { useMemo } from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
@@ -183,7 +182,7 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
                             }),
                         }}
                         unit={{
-                            ...register(`${Name}.data.${i}.budget.unit`, ),
+                            ...register(`${Name}.data.${i}.budget.unit`),
                         }}
                     />
                 </Grid2Container>

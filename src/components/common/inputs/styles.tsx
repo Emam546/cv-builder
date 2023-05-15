@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import classNames from "classnames";
 import React, { Dispatch, InputHTMLAttributes, ReactNode } from "react";
 type InputProps = React.InputHTMLAttributes<HTMLInputElement>;

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Router } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import EnvVars from "@serv/declarations/major/EnvVars";
@@ -13,7 +15,7 @@ router.use(
         max: 3,
     })
 );
-router.route("/").post(async (req, res) => {
+router.route("/").post((req, res) => {
     assertIsAuth(req);
     if (req.files?.img) {
         const img = req.files?.img as UploadedFile;
@@ -53,7 +55,11 @@ router.route("/").post(async (req, res) => {
                 }
             }
         );
-        stream.Readable.from(img.data).pipe(uploadStream);
+        const readableStream = new stream.Readable();
+        readableStream.push(img.data);
+        readableStream.push(null);
+        readableStream.pipe(uploadStream);
+        // stream.Readable.from(img.data).pipe(uploadStream);
     } else {
         res.status(400).json({
             status: false,

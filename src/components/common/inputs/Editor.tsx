@@ -1,23 +1,25 @@
-/* eslint-disable react/display-name */
-import React, { Dispatch, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { EditorProps } from "react-draft-wysiwyg";
 import {
     ContentState,
     EditorState,
     convertFromHTML,
-    convertFromRaw,
     convertToRaw,
 } from "draft-js";
 const Editor = dynamic<EditorProps>(
     () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
     { ssr: false }
 );
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 import draftToHtml from "draftjs-to-html";
-import { BottomLine, GeneralInputProps } from "./styles";
-import { useSyncRefs } from "@src/utils/hooks";
-import { Control, Controller, FieldValues } from "react-hook-form";
+import { BottomLine } from "./styles";
+import {
+    Control,
+    Controller,
+    FieldValues,
+    useController,
+} from "react-hook-form";
 
 interface Props {
     name: string;
@@ -47,50 +49,44 @@ const FinalEditor = React.forwardRef<HTMLInputElement, Props>(
             }
             return EditorState.createEmpty();
         });
+        const { field } = useController({
+            name,
+            control,
+            defaultValue,
+            shouldUnregister: true,
+        });
+        useEffect(() => {
+            const cVal = draftToHtml(
+                convertToRaw(editorState.getCurrentContent())
+            );
+            if (field.value != cVal && checkIfValueIsConvertible(field.value)) {
+                setEditorState(
+                    EditorState.createWithContent(
+                        ContentState.createFromBlockArray(
+                            convertFromHTML(field.value).contentBlocks
+                        )
+                    )
+                );
+            }
+        }, [field.value]);
+        const onEditorStateChange = useCallback(
+            (rawcontent: EditorState) => {
+                setEditorState(rawcontent);
+            },
+            [editorState]
+        );
         return (
             <BottomLine>
                 <div className="bg-neutral-10 relative">
-                    <Controller
-                        name={name}
-                        control={control}
-                        defaultValue={defaultValue}
-                        shouldUnregister
-                        render={function Data({ field, fieldState }) {
-                            useEffect(() => {
-                                const cVal = draftToHtml(
-                                    convertToRaw(
-                                        editorState.getCurrentContent()
-                                    )
-                                );
-                                if (
-                                    field.value != cVal &&
-                                    checkIfValueIsConvertible(field.value)
-                                ) {
-                                    setEditorState(
-                                        EditorState.createWithContent(
-                                            ContentState.createFromBlockArray(
-                                                convertFromHTML(field.value)
-                                                    .contentBlocks
-                                            )
-                                        )
-                                    );
-                                }
-                            }, [field.value]);
-                            return (
-                                <Editor
-                                    editorClassName="min-h-[10rem] px-3"
-                                    editorState={editorState}
-                                    onContentStateChange={(content) => {
-                                        field.onChange(draftToHtml(content));
-                                    }}
-                                    onEditorStateChange={(editorState) => {
-                                        setEditorState(editorState);
-                                    }}
-                                    placeholder={placeholder}
-                                />
-                            );
-                        }}
-                    ></Controller>
+                    <Editor
+                        editorClassName="min-h-[10rem] px-3"
+                        editorState={editorState}
+                        // onContentStateChange={(content) => {
+                        //     field.onChange(draftToHtml(content));
+                        // }}
+                        // onEditorStateChange={onEditorStateChange}
+                        placeholder={placeholder}
+                    />
                 </div>
             </BottomLine>
         );

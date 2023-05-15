@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import React, { RefObject } from "react";
 interface Props extends React.HTMLAttributes<HTMLDivElement> {}
-// eslint-disable-next-line react/display-name
+
 const Grid2Container = React.forwardRef<HTMLDivElement, Props>((props, ref) => (
     <div
         {...props}

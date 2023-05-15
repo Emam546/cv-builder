@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React, { useEffect, useRef } from "react";
 import classNames from "classnames";
 import styles from "./style.module.css";

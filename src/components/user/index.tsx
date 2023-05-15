@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAppSelector } from "@src/store";

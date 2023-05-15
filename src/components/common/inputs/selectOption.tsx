@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/role-supports-aria-props */
-/* eslint-disable react/display-name */
 import React, { InputHTMLAttributes, useEffect, useRef, useState } from "react";
 import { BottomLine, GeneralInputProps, LabelElem } from "./styles";
 import { v4 as uuid } from "uuid";
@@ -44,7 +42,7 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
         },
         ref
     ) => {
-        const [id] = useState(uuid());
+        const [id, setId] = useState("");
         const [expand, setExpand] = useState(false);
         const containerDiv = useRef<HTMLDivElement>(null);
         const inputRef = useRef<HTMLInputElement>(null);
@@ -61,6 +59,9 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
             }
             window.addEventListener("click", handelClick);
             return () => window.removeEventListener("click", handelClick);
+        }, []);
+        useEffect(() => {
+            setId(uuid());
         }, []);
         const [focus, setFocus] = useState(false);
 

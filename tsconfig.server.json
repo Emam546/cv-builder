@@ -1,6 +1,7 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
+        "target": "ES2015",
         "module": "commonjs",
         "outDir": "dist",
         "noEmit": false,
@@ -17,6 +18,7 @@
     "include": [
         "server",
         "src",
-        "types/*.d.ts"
+        "types",
+        "./build.ts"
     ]
 }

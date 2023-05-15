@@ -1,7 +1,6 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { Router } from "express";
 import User from "@serv/models/user";
 import { assertIsAuth } from "@serv/util/utils";
-import { sign } from "@serv/util/jwt";
 const router = Router();
 
 router.get("/data", async (req, res) => {
@@ -15,8 +14,11 @@ router.get("/data", async (req, res) => {
 });
 router.post("/data", async (req, res) => {
     assertIsAuth(req);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     await User.updateOne({ _id: req.user._id }, { $set: { data: req.body } });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     req.user.data = req.body;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     res.status(200).send({ status: true, msg: "success", data: req.body });
 });
 

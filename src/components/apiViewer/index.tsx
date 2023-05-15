@@ -15,13 +15,8 @@ export default function ApiViewer() {
     const baseURL = process.env.NEXT_PUBLIC_API_DOMAIN ?? "";
 
     // Create a new URL object based on the base URL
-    const url = new URL(baseURL);
+    const url = `${baseURL}?apikey=${apiKey}`;
 
-    // Set query parameters using the URLSearchParams object
-    const params = new URLSearchParams({
-        apikey: apiKey,
-    });
-    url.search = params.toString();
     return (
         <div className="py-5">
             <div className="relative flex flex-col justify-center items-center">
@@ -46,12 +41,6 @@ export default function ApiViewer() {
                                             setTimeout(() => {
                                                 setCopied(false);
                                             }, 1000);
-                                        })
-                                        .catch((error) => {
-                                            console.error(
-                                                "Error copying text:",
-                                                error
-                                            );
                                         });
                             }}
                             className="bg-neutral-60 hover:bg-neutral-70 text-white font-bold py-1 px-2 rounded-lg"

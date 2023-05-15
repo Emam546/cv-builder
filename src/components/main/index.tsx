@@ -82,7 +82,9 @@ export default function Main({ values }: { values?: Data }) {
     function dispatchSection(val: ActionType) {
         dispatch(StateActions.setSectionState(val));
     }
-    dispatch(FormAction.setData(copyObject(res)));
+    useEffect(() => {
+        dispatch(FormAction.setData(copyObject(res)));
+    });
 
     const sectionHiddenState = State.data.sections;
     return (

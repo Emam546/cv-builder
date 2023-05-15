@@ -1,12 +1,11 @@
 import Login from "@src/components/login";
-import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import cookies from "js-cookie";
 import { useEffect } from "react";
 import { useAppDispatch } from "@src/store";
 import { UserActions } from "@src/store/user";
-interface Props {}
-const Page: NextPage<Props> = function ({}) {
+
+const Page = function ({}) {
     const dispatch = useAppDispatch();
     useEffect(() => {
         cookies.remove("token");
@@ -30,15 +29,6 @@ const Page: NextPage<Props> = function ({}) {
             </div>
         </>
     );
-};
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-    if (ctx.req.cookies.token) {
-        ctx.res.setHeader("Set-Cookie", "token=; Path=/; HttpOnly; Max-Age=0");
-    }
-
-    return {
-        props: {},
-    };
 };
 
 export default Page;

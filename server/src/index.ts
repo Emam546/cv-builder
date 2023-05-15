@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import "./pre-start"; // Must be the first import
 import logger from "@serv/logger";
 import EnvVars from "@serv/declarations/major/EnvVars";
@@ -24,7 +25,8 @@ connect(EnvVars.MONGODB_URL).then(() => {
         })
         .catch((ex) => {
             mongoose.disconnect().then(() => {
-                console.error(ex.stack);
+                logger.error(ex.stack);
+                // eslint-disable-next-line no-process-exit
                 process.exit(1);
             });
         });

@@ -35,12 +35,7 @@ export default function ShowResult() {
                                             setCopied(false);
                                         }, 1000);
                                     })
-                                    .catch((error) => {
-                                        console.error(
-                                            "Error copying text:",
-                                            error
-                                        );
-                                    });
+                                    
                         }}
                         className="bg-neutral-60 hover:bg-neutral-70 text-white font-bold py-1 px-2 rounded-lg"
                     >

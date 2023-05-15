@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { useAppSelector } from "@src/store";
 import { assertIsNode } from "@src/utils";
 import classNames from "classnames";
@@ -31,7 +30,7 @@ export default function Header() {
                         className="flex items-center"
                     >
                         <img
-                            src="https://flowbite.com/docs/images/logo.svg"
+                            src="./logo.svg"
                             className="mr-3 h-6 sm:h-9"
                             alt="ResumeMaker Logo"
                         />

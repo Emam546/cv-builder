@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
@@ -23,7 +22,13 @@ const Levels: Record<LevelType, string> = {
 };
 const FElem: ElemType<InputData, NameType> = React.forwardRef(
     (
-        { index: i, props: { form: { register, control, setValue }}, ...props },
+        {
+            index: i,
+            props: {
+                form: { register, control, setValue },
+            },
+            ...props
+        },
         ref
     ) => {
         const { label, level } = useWatch({

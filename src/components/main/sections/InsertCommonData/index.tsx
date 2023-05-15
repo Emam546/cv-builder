@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React, { SyntheticEvent, useMemo, useState } from "react";
 import { FieldPath, FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

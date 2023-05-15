@@ -1,4 +1,5 @@
 import "@src/styles/globals.css";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import type { AppProps } from "next/app";
 import wrapper from "@src/store";
 import { Provider } from "react-redux";

@@ -14,8 +14,6 @@ import { RouteError } from "@serv/declarations/classes";
 import expressWinstom from "express-winston";
 import passport from "./passport.config";
 import fileUpload from "express-fileupload";
-// import session from "express-session";
-import { parseMultiFormData } from "@serv/MiddleWare";
 // **** Init express **** //
 
 const app = express();

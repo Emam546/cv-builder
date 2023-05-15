@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React, { InputHTMLAttributes } from "react";
 import Header, { Props } from "./inputs/header";
 

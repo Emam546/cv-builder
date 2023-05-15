@@ -49,7 +49,6 @@ export function useNotInitEffect(
         if (!state) setState(true);
 
         return effect();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, deps);
 }
 

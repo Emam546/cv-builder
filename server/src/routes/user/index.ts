@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Router } from "express";
 import User from "@serv/models/user";
 import { assertIsAuth } from "@serv/util/utils";

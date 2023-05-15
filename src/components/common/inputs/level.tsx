@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/role-supports-aria-props */
-/* eslint-disable react/display-name */
 import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 import classNames from "classnames";
@@ -24,7 +22,10 @@ const newArr: LevelType[] = Array(5)
     .map((_, index) => index as LevelType);
 const LevelInput = React.forwardRef<HTMLInputElement, Props>(
     ({ label, Levels, defaultValue, setValue, ...props }, ref) => {
-        const [id] = useState(uuid());
+        const [id, setId] = useState("");
+        useEffect(() => {
+            setId(uuid());
+        }, []);
         const containerDiv = useRef<HTMLDivElement>(null);
         const [val, setVal] = useState<LevelType>(defaultValue || 0);
         const inputRef = useRef<HTMLInputElement>(null);

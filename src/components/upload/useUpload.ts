@@ -23,6 +23,7 @@ export function useUploadData() {
                     cancelToken: source.token,
                 })
                 .then(() => {
+                    // eslint-disable-next-line no-console
                     console.log("uploaded");
                 });
             return () => {};

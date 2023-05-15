@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
@@ -130,7 +129,10 @@ const EmployElem: ElemType<InputData, NameType> = React.forwardRef(
                         })}
                     />
                 </Grid2Container>
-                <LabelElem className="my-4" label={"Teleologies Used"}>
+                <LabelElem
+                    className="my-4"
+                    label={"Teleologies Used"}
+                >
                     <MultiSelectInput
                         setValue={(val) =>
                             setValue(`${Name}.data.${i}.technologies`, val)

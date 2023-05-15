@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faPen,
@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
 import React from "react";
-import { useForceUpdate, useSyncRefs } from "@src/utils/hooks";
+import { useSyncRefs } from "@src/utils/hooks";
 import { assertIsNode } from "@src/utils";
 import { GeneralInputProps } from "./styles";
 
@@ -36,7 +36,6 @@ export interface Props extends GeneralInputProps<string> {
     setDelete?: Function;
 }
 
-// eslint-disable-next-line react/display-name
 const Header = React.forwardRef<HTMLInputElement, Props>(
     ({ defaultValue, reset, setDelete, ...props }, ref) => {
         const [editable, setEditable] = useState(false);

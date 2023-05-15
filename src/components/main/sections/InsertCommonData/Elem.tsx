@@ -10,7 +10,6 @@ import { useState, useEffect, useRef } from "react";
 import DraggableComp from "../../../common/drag";
 import React from "react";
 import { PrimaryProps } from "./EleGen";
-/* eslint-disable react/display-name */
 
 export interface DraggableItem extends PrimaryProps {
     children: React.ReactNode;
@@ -37,7 +36,6 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
 
         useEffect(() => {
             if (parentDiv.current) forceUpdate();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
         return (
             <div

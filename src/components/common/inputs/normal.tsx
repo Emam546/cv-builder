@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/role-supports-aria-props */
-/* eslint-disable react/display-name */
 import { assertIsNode } from "@src/utils";
 import { useForceUpdate, useSyncRefs } from "@src/utils/hooks";
 import classNames from "classnames";
@@ -106,9 +104,12 @@ const NormalInput = React.forwardRef<HTMLInputElement, Props>(
         const [open, setIsOpen] = useState(false);
         const allRef = useSyncRefs(ref, inputRef);
         const containerRef = useRef<HTMLDivElement>(null);
-        const [id] = useState(uuid());
+        const [id, setId] = useState("");
         const value = inputRef.current?.value;
         const forceUpdate = useForceUpdate();
+        useEffect(() => {
+            setId(uuid());
+        }, []);
         return (
             <LabelElem
                 ref={containerRef}

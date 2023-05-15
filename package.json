@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "nodemon",
-    "build": "npx ts-node build.ts && next build",
-    "start": "node -r module-alias/register ./dist --env=production",
+    "build:server": "./node_modules/.bin/ts-node build.ts --project tsconfig.server.json",
+    "build:next": "next build",
+    "build": "npm run build:server && npm run build:next",
+    "start": "node -r module-alias/register ./dist/server/src --env=production",
     "lint": "next lint",
     "lint:server": "npx eslint -c server/.eslintrc.json --ext .ts server/src/",
     "lint:server-test": "npx eslint -c server/.eslintrc.json --ext .ts server/spec/",
@@ -127,7 +129,8 @@
     "exec": "./node_modules/.bin/ts-node --project tsconfig.server.json --files -r tsconfig-paths/register ./server/src"
   },
   "_moduleAliases": {
-    "@serv": "dist"
+    "@serv": "dist/server/src",
+    "@src":"dist/src"
   },
   "engines": {
     "node": ">=8.10.0"

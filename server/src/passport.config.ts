@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import passport from "passport";
 import passportFacebook from "passport-facebook";
 import EnvVars from "./declarations/major/EnvVars";
@@ -6,11 +7,13 @@ import Users, { UserProvider } from "@serv/models/user";
 import { createUser } from "./util/user";
 const FacebookStrategy = passportFacebook.Strategy;
 declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Express {
-        // tslint:disable-next-line:no-empty-interface
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
         interface User extends UserProvider {}
     }
 }
+
 passport.use(
     new FacebookStrategy(
         {
@@ -29,6 +32,7 @@ passport.use(
             if (result) return done(null, result.toObject());
 
             const newUser = await createUser({
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 name: `${profile.name?.givenName} ${profile.name?.familyName}`,
                 provider_id: profile.id,
                 provider_type: "facebook",
@@ -44,7 +48,7 @@ passport.use(
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: EnvVars.jwt.secret,
         },
-        async function (jwt_payload, done) {
+        function (jwt_payload, done) {
             return done(null, jwt_payload);
         }
     )

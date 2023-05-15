@@ -1,13 +1,10 @@
-/* eslint-disable react/display-name */
 import React from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { Path, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
-import {
-    forwardRef,
-} from "@src/components/main/sections/InsertCommonData/input";
+import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
 export type NameType = "links";
 export const Name: NameType = "links";
 export interface InputData extends FieldsType {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Router } from "express";
 import passport from "passport";
 import { assertIsAuth } from "@serv/util/utils";
