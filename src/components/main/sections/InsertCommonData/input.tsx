@@ -133,7 +133,10 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
                         setData((pre) => [...pre, 1]);
                     }}
                 >
-                    <FontAwesomeIcon icon={faAdd} />
+                    <FontAwesomeIcon
+                        fontSize={"1em"}
+                        icon={faAdd}
+                    />
                     <span>{addButtonLabel}</span>
                 </button>
             </div>

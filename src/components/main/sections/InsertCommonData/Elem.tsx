@@ -84,7 +84,10 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                                     deleteSelf.call(parentDiv.current);
                             }}
                         >
-                            <FontAwesomeIcon icon={faTrashCan} />
+                            <FontAwesomeIcon
+                                fontSize={"1em"}
+                                icon={faTrashCan}
+                            />
                         </button>
                         <button
                             type="button"
@@ -92,6 +95,7 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                             onClick={() => setExpand(!expand)}
                         >
                             <FontAwesomeIcon
+                                fontSize={"1em"}
                                 icon={expand ? faChevronUp : faChevronDown}
                             />
                         </button>

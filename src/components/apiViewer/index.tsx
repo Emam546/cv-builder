@@ -47,7 +47,10 @@ export default function ApiViewer() {
                         >
                             {!copied && (
                                 <>
-                                    <FontAwesomeIcon icon={faClipboard} />
+                                    <FontAwesomeIcon
+                                        icon={faClipboard}
+                                        fontSize={"2.25rem"}
+                                    />
                                     <span className="ml-2">Copy</span>
                                 </>
                             )}
@@ -56,6 +59,7 @@ export default function ApiViewer() {
                                     <FontAwesomeIcon
                                         icon={faCheck}
                                         className="font-bold"
+                                        fontSize={"2.25rem"}
                                     />
                                     <span className="ml-2">Copied</span>
                                 </>

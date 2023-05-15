@@ -110,7 +110,10 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                         input.current!.focus();
                     }}
                 >
-                    <FontAwesomeIcon icon={faPen} />
+                    <FontAwesomeIcon
+                        fontSize={"1em"}
+                        icon={faPen}
+                    />
                 </CustomButton>
                 {(!textValue?.length ||
                     (defaultValue && textValue != defaultValue)) && (
@@ -122,7 +125,10 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                         }}
                         className="font-bold"
                     >
-                        <FontAwesomeIcon icon={faRotateRight} />
+                        <FontAwesomeIcon
+                            fontSize={"1em"}
+                            icon={faRotateRight}
+                        />
                     </CustomButton>
                 )}
                 {setDelete && (
@@ -134,7 +140,10 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                         }}
                         className="font-bold"
                     >
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FontAwesomeIcon
+                            fontSize={"1em"}
+                            icon={faTrash}
+                        />
                     </CustomButton>
                 )}
             </div>

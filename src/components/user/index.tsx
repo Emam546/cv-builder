@@ -54,6 +54,7 @@ export default function UserComponent() {
                         <>
                             <FontAwesomeIcon
                                 size={"1x"}
+                                fontSize={"1em"}
                                 icon={faUser}
                             />
                         </>

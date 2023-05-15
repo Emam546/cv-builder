@@ -34,14 +34,16 @@ export default function ShowResult() {
                                         setTimeout(() => {
                                             setCopied(false);
                                         }, 1000);
-                                    })
-                                    
+                                    });
                         }}
                         className="bg-neutral-60 hover:bg-neutral-70 text-white font-bold py-1 px-2 rounded-lg"
                     >
                         {!copied && (
                             <>
-                                <FontAwesomeIcon icon={faClipboard} />
+                                <FontAwesomeIcon
+                                    fontSize={"1em"}
+                                    icon={faClipboard}
+                                />
                                 <span className="ml-2">Copy</span>
                             </>
                         )}
@@ -49,6 +51,7 @@ export default function ShowResult() {
                             <>
                                 <FontAwesomeIcon
                                     icon={faCheck}
+                                    fontSize={"1em"}
                                     className="font-bold"
                                 />
                                 <span className="ml-2">Copied</span>

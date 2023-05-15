@@ -36,6 +36,7 @@ export default function LoginModel() {
                         }}
                     >
                         <FontAwesomeIcon
+                            fontSize={"1em"}
                             icon={faXmark}
                             className="text-3xl transition-all duration-300 text-neutral-100 hover:text-neutral-50"
                         />

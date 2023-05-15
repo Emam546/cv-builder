@@ -101,6 +101,7 @@ function Item({
                     "text-neutral-50": hiddenState,
                 })}
                 icon={icon}
+                fontSize={"2.25rem"}
             />
             <span
                 className={classNames(" font-medium text-xl", {
@@ -136,6 +137,7 @@ export function AddSection({}: {}) {
                     <FontAwesomeIcon
                         className={classNames("text-4xl text-blue-50")}
                         icon={faToolbox}
+                        fontSize={"2.25rem"}
                     />
                     <span
                         className={classNames(

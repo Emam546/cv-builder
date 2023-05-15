@@ -52,6 +52,12 @@ import ProjectsElem, {
     Name as ProjectsName,
     InitData as ProjectInitData,
 } from "./sections/Projects";
+import ImagesElem, {
+    InputData as ImagesDataType,
+    NameType as ImagesNameType,
+    Name as ImagesName,
+    InitData as ImageInitData,
+} from "./sections/photos";
 import Professional from "./sections/professional";
 import Hobbies, { Name as HobbiesName } from "./sections/hobbies";
 import CustomSection from "./sections/CustomSection";
@@ -60,7 +66,6 @@ import React, { useEffect } from "react";
 
 import Container from "@src/components/common/container";
 import { defaultData } from "./default";
-import { useDebounceInitialEffect } from "@src/utils/hooks";
 import { useDispatch } from "react-redux";
 import { FormAction } from "@src/store/form";
 import { useAppSelector } from "@src/store";
@@ -90,6 +95,18 @@ export default function Main({ values }: { values?: Data }) {
     return (
         <main className="flex flex-col items-stretch">
             <BasicInfo {...(form as any)} />
+            <InfoGetter
+                formRegister={
+                    form as unknown as UseFormReturn<
+                        GeneratorData<ImagesDataType, ImagesNameType>
+                    >
+                }
+                addButtonLabel="Add one more Picture group"
+                name={ImagesName}
+                initData={ImageInitData}
+                Elem={ImagesElem}
+                desc="Show your relevant Images (last 10 years)"
+            />
             <Professional {...(form as any)} />
             <InfoGetter
                 formRegister={

@@ -40,6 +40,10 @@ import type {
     InputData as ProjectsDataType,
     NameType as ProjectsNameType,
 } from "@src/components/main/sections/Projects";
+import type {
+    InputData as PhotosDataType,
+    NameType as PhotosNameType,
+} from "@src/components/main/sections/photos";
 import type { InputData as ProInputData } from "@src/components/main/sections/professional";
 import type { InputData as HobbiesData } from "@src/components/main/sections/hobbies";
 import type {
@@ -73,6 +77,7 @@ declare global {
         GeneratorData<TeamDataType, TeamNameType> &
         GeneratorData<ProjectsDataType, ProjectsNameType> &
         GeneratorData<ReferenceDataType, ReferenceNameType> &
+        GeneratorData<PhotosDataType, PhotosNameType> &
         CustomInputData;
 
     type SectionNamesType = Exclude<keyof Data, CustomNameType>;

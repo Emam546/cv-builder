@@ -27,6 +27,7 @@ function StyledButton({ icon, label, ...props }: Props) {
                 <FontAwesomeIcon
                     icon={icon}
                     className="font-bold"
+                    fontSize={"1em"}
                 />
                 <span className="ml-8 font-bold">{label}</span>
             </div>

@@ -140,7 +140,10 @@ export default function BasicInfo({
             >
                 {eddData && <span>Hide additional details</span>}
                 {!eddData && <span>Edit additional details</span>}
-                <FontAwesomeIcon icon={eddData ? faChevronDown : faChevronUp} />
+                <FontAwesomeIcon
+                    fontSize={"1em"}
+                    icon={eddData ? faChevronDown : faChevronUp}
+                />
             </button>
         </section>
     );

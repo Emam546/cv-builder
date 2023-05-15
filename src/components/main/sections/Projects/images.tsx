@@ -131,6 +131,7 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                             <div className="text-center">
                                 <FontAwesomeIcon
                                     icon={faImage}
+                                    fontSize={"3.75rem"}
                                     className="text-neutral-50 group-hover:text-blue-50 text-6xl"
                                 />
                                 <span className="block mt-3 text-blue-50 group-hover:text-neutral-50">
@@ -167,7 +168,10 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                             className="block text-blue-40 hover:text-blue-50 cursor-pointer"
                                             onClick={(e) => setEdit(true)}
                                         >
-                                            <FontAwesomeIcon icon={faPen} />
+                                            <FontAwesomeIcon
+                                                fontSize={"1em"}
+                                                icon={faPen}
+                                            />
                                             <span className="px-3">
                                                 Edit photo
                                             </span>
@@ -187,7 +191,10 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                                 setValue("");
                                             }}
                                         >
-                                            <FontAwesomeIcon icon={faTrash} />
+                                            <FontAwesomeIcon
+                                                fontSize={"1em"}
+                                                icon={faTrash}
+                                            />
                                             <span className="px-3">Delete</span>
                                         </button>
                                     </div>

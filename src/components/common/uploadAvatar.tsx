@@ -49,6 +49,7 @@ function UploadButton({
                     <div className="bg-neutral-10 min-h-[4rem] group-hover:bg-blue-10 aspect-square h-full flex items-center justify-center">
                         <FontAwesomeIcon
                             icon={faUser}
+                            fontSize={"1em"}
                             className="text-neutral-50 group-hover:text-blue-50 text-4xl"
                         />
                     </div>
@@ -75,7 +76,10 @@ function UploadButton({
                             className="block text-blue-50 hover:text-blue-80 cursor-pointer"
                             onClick={() => setEdit(true)}
                         >
-                            <FontAwesomeIcon icon={faPen} />
+                            <FontAwesomeIcon
+                                fontSize={"1em"}
+                                icon={faPen}
+                            />
                             <span className="px-3">Edit photo</span>
                         </button>
                         <button
@@ -93,7 +97,10 @@ function UploadButton({
                                 setOrgUrl(undefined);
                             }}
                         >
-                            <FontAwesomeIcon icon={faTrash} />
+                            <FontAwesomeIcon
+                                fontSize={"1em"}
+                                icon={faTrash}
+                            />
                             <span className="px-3">Delete</span>
                         </button>
                     </div>

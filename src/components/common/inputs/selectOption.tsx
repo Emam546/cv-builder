@@ -86,6 +86,7 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
                         >
                             <span>{options[val].label}</span>
                             <FontAwesomeIcon
+                                fontSize={"1em"}
                                 icon={faChevronDown}
                                 className={classNames(
                                     "text-blue-60 transition duration-200",

@@ -4,11 +4,11 @@ import { Name as LangName } from "./sections/languages";
 import { Name as SkillName } from "./sections/Skills";
 import { Name as CourseName } from "./sections/courses";
 import { Name as InternShipName } from "./sections/internships";
-
 import { Name as ReferenceName } from "./sections/reference";
 import { Name as ExtraActivitesName } from "./sections/ExtraActivites";
 import { Name as TeamName } from "./sections/Team";
 import { Name as ProjectsName } from "./sections/Projects";
+import { Name as PhotosName } from "./sections/photos";
 import { Name as CustomName } from "./sections/CustomSection/types";
 import { Name as HobbiesName } from "./sections/hobbies";
 let curOrder = 0;
@@ -79,6 +79,10 @@ export const defaultData: Data = {
         data: [],
     },
     [CustomName]: [],
+    [PhotosName]: {
+        head: "Pictures",
+        data: [],
+    },
 };
 export const defaultSectionState: SectionStateType = {
     sections: {
@@ -131,6 +135,10 @@ export const defaultSectionState: SectionStateType = {
             order: curOrder++,
         },
         [ProjectsName]: {
+            hiddenState: false,
+            order: curOrder++,
+        },
+        [PhotosName]: {
             hiddenState: false,
             order: curOrder++,
         },

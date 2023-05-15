@@ -110,7 +110,10 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
                     setValue(keys.data_i(EmploymentsData.length), data as any);
                 }}
             >
-                <FontAwesomeIcon icon={faAdd} />
+                <FontAwesomeIcon
+                    fontSize={"1em"}
+                    icon={faAdd}
+                />
                 <span>{addButtonLabel}</span>
             </button>
         </section>
