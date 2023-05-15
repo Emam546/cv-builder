@@ -72,7 +72,8 @@
     "tailwindcss": "3.3.1",
     "ts-jest": "^29.1.0",
     "uuid": "^9.0.0",
-    "winston": "^3.8.2"
+    "winston": "^3.8.2",
+    "winston-mongodb": "^5.1.1"
   },
   "devDependencies": {
     "@types/apicache": "^1.6.1",
@@ -130,7 +131,7 @@
   },
   "_moduleAliases": {
     "@serv": "dist/server/src",
-    "@src":"dist/src"
+    "@src": "dist/src"
   },
   "engines": {
     "node": ">=8.10.0"

@@ -1,5 +1,4 @@
 import React from "react";
-import Grid2Container from "../common/2GridInputHolder";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     IconDefinition,
@@ -9,17 +8,6 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import classNames from "classnames";
-import { useAppSelector } from "@src/store";
-// import queryString from "query-string";
-// const queryString = require("query-string");
-// const stringifiedParams = queryString.stringify({
-//     client_id: process.env.FaceBook_APP_ID,
-//     redirect_uri: "/",
-//     scope: ["email", "user_friends"].join(","),
-//     response_type: "code",
-//     auth_type: "rerequest",
-//     display: "popup",
-// });
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label: string;
@@ -46,7 +34,6 @@ function StyledButton({ icon, label, ...props }: Props) {
     );
 }
 
-// const facebookLoginUrl = `https://www.facebook.com/v4.0/dialog/oauth?${stringifiedParams}`;
 export default function Login() {
     return (
         <div className="py-8">
