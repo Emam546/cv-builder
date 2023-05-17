@@ -17,9 +17,8 @@ import LangElem, {
     Name as LangName,
 } from "./sections/languages";
 import SkillElem, {
-    InputData as SkillDataType,
-    NameType as SkillNameType,
     Name as SkillName,
+    InitData as SkillInitData,
 } from "./sections/Skills";
 import CourseElem, {
     InputData as CourseDataType,
@@ -206,12 +205,9 @@ export default function Main({ values }: { values?: Data }) {
 
             <InfoGetter
                 formRegister={form as any}
-                addButtonLabel="Add one more skill"
+                addButtonLabel="Add one more group"
                 name={SkillName}
-                initData={{
-                    label: "",
-                    level: 0 as LevelType,
-                }}
+                initData={SkillInitData}
                 Elem={SkillElem}
                 desc="Choose 5 important skills that show you fit the position. Make sure they match the key skills mentioned in the job listing (especially when applying via an online system)."
             />

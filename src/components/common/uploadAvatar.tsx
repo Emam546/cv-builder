@@ -12,14 +12,7 @@ interface Props {
     control: Control;
     defaultValue?: string;
 }
-function UploadButton({
-    label,
-    setValue,
-    defaultValue,
-
-    name,
-    control,
-}: Props) {
+function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
     const [edit, setEdit] = useState(false);
     const [blob, setBlob] = useState<Blob>();
     const [orgUrl, setOrgUrl] = useState(defaultValue);

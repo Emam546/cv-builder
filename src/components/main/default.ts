@@ -28,6 +28,7 @@ export const defaultData: Data = {
             phone: "",
             placeOfBirth: "",
             postalCode: "",
+            availability: "immediately",
         },
     },
     professional: {

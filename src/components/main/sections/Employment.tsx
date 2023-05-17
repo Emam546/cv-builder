@@ -134,22 +134,15 @@ const EmployElem: ElemType<InputData, NameType> = React.forwardRef(
                     label={"Teleologies Used"}
                 >
                     <MultiSelectInput
-                        setValue={(val) =>
-                            setValue(`${Name}.data.${i}.technologies`, val)
-                        }
                         options={Technologies}
-                        defaultValues={ConvValToOptions(
+                        defaultValue={ConvValToOptions(
                             lodash.get(
                                 control._defaultValues.projects,
                                 `${Name}.data.${i}.technologies`
                             )
                         )}
-                        {...register(`${Name}.data.${i}.technologies`)}
-                        value={ConvValToOptions(
-                            getValues(
-                                `${Name}.data.${i}.technologies`
-                            ) as string[]
-                        )}
+                        control={control}
+                        name={`${Name}.data.${i}.technologies`}
                     />
                 </LabelElem>
                 <LabelElem

@@ -9,6 +9,9 @@ import data from "./data.json";
 import UploadButton from "@src/components/common/uploadAvatar";
 import lodash from "lodash";
 import classNames from "classnames";
+import SelectInput, {
+    OptionType,
+} from "@src/components/common/inputs/selectOption";
 const COUNTRIES = Object.keys(data.countries).map((name) => name);
 const CITIES: Map<string, string[]> = new Map(Object.entries(data.countries));
 const JOP_TITLES = data.jobs;
@@ -28,11 +31,11 @@ export interface InputData extends FieldValues {
             postalCode?: string;
             nationality?: string;
             placeOfBirth?: string;
-            [x: string]: any;
+            availability?: string;
         };
     };
 }
-
+const AvailabilityOptions: OptionType[] = data.availabilityOptions;
 export default function BasicInfo({
     register,
     resetField,
@@ -54,10 +57,7 @@ export default function BasicInfo({
                 })}
                 defaultValue={control._defaultValues.info?.head}
             />
-            <Grid2Container
-                ref={ref}
-                className="overflow-hidden"
-            >
+            <Grid2Container ref={ref}>
                 <NormalInput
                     label="Wanted Job Title"
                     placeholder="e.g. Teacher"
@@ -101,11 +101,14 @@ export default function BasicInfo({
                     }}
                     {...register("info.data.country")}
                 />
-                <NormalInput
-                    label="City"
-                    options={CITIES.get(country)}
-                    setValue={(val) => setValue("info.data.city", val)}
-                    {...register("info.data.city")}
+                <SelectInput
+                    options={AvailabilityOptions}
+                    label="availability"
+                    control={control as any}
+                    {...register(`info.data.availability`)}
+                    defaultValue={
+                        control._defaultValues["info"]?.data?.availability
+                    }
                 />
             </Grid2Container>
             <div
@@ -118,6 +121,12 @@ export default function BasicInfo({
             >
                 <div className="overflow-hidden">
                     <Grid2Container>
+                        <NormalInput
+                            label="City"
+                            options={CITIES.get(country)}
+                            setValue={(val) => setValue("info.data.city", val)}
+                            {...register("info.data.city")}
+                        />
                         <NormalInput
                             label="Address"
                             {...register("info.data.address")}

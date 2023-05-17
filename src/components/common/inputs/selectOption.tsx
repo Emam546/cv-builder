@@ -6,13 +6,16 @@ import { assertIsNode } from "@src/utils";
 import { useSyncRefs } from "@src/utils/hooks";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Control, useController } from "react-hook-form";
 export interface OptionType {
     val: string | "";
     label: string;
 }
 export interface Props extends GeneralInputProps<string> {
     label?: string;
+    control: Control;
     options: OptionType[];
+    name: string;
 }
 function LiElem({
     val,
@@ -38,6 +41,9 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
             options = [{ val: "", label: "Select Option" }],
             setValue,
             label,
+            control,
+            name,
+            defaultValue,
             ...props
         },
         ref
@@ -45,9 +51,8 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
         const [id, setId] = useState("");
         const [expand, setExpand] = useState(false);
         const containerDiv = useRef<HTMLDivElement>(null);
-        const inputRef = useRef<HTMLInputElement>(null);
-        const v = inputRef.current?.value;
-        const inpVal = options.findIndex((val) => v && val.val == v);
+        const { field } = useController({ defaultValue, name, control });
+        const inpVal = options.findIndex((val) => val.val == field.value);
         const val = (inpVal > -1 && inpVal) || 0;
         useEffect(() => {
             function handelClick(e: MouseEvent) {
@@ -58,14 +63,10 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
                 if (!state) setExpand(false);
             }
             window.addEventListener("click", handelClick);
+            setId(uuid());
             return () => window.removeEventListener("click", handelClick);
         }, []);
-        useEffect(() => {
-            setId(uuid());
-        }, []);
         const [focus, setFocus] = useState(false);
-
-        const allRef = useSyncRefs(ref, inputRef);
         return (
             <LabelElem
                 label={label}
@@ -113,8 +114,7 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
                                     tabIndex={i}
                                     aria-selected={i == val}
                                     onClick={() => {
-                                        if (!inputRef.current) return;
-                                        inputRef.current.value = options[i].val;
+                                        field.onChange(options[i].val);
                                         setExpand(false);
                                     }}
                                 />
@@ -123,10 +123,11 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
                     </div>
                     <input
                         {...props}
+                        ref={field.ref}
+                        name={name}
+                        defaultValue={defaultValue}
                         type="hidden"
-                        ref={allRef}
                         autoComplete="off"
-                        className="appearance-none invisible absolute"
                         id={id}
                         onFocusCapture={(ev) => {
                             if (props.onFocusCapture) props.onFocusCapture(ev);

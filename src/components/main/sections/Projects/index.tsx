@@ -183,28 +183,22 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
                         }}
                         unit={{
                             ...register(`${Name}.data.${i}.budget.unit`),
+                            control: control,
                         }}
                     />
                 </Grid2Container>
                 <div className="flex flex-col items-stretch gap-4 my-4">
                     <LabelElem label={"Technologies"}>
                         <MultiSelectInput
-                            setValue={(val) =>
-                                setValue(`${Name}.data.${i}.technologies`, val)
-                            }
                             options={Technologies}
-                            defaultValues={ConvValToOptions(
+                            defaultValue={ConvValToOptions(
                                 lodash.get(
                                     control._defaultValues.projects,
                                     `${Name}.data.${i}.technologies`
                                 )
                             )}
-                            {...register(`${Name}.data.${i}.technologies`)}
-                            value={ConvValToOptions(
-                                form.getValues(
-                                    `${Name}.data.${i}.technologies`
-                                ) as string[]
-                            )}
+                            name={`${Name}.data.${i}.technologies`}
+                            control={control}
                         />
                     </LabelElem>
 

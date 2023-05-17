@@ -47,9 +47,7 @@ export default function ApiViewer() {
                         >
                             {!copied && (
                                 <>
-                                    <FontAwesomeIcon
-                                        icon={faClipboard}
-                                    />
+                                    <FontAwesomeIcon icon={faClipboard} />
                                     <span className="ml-2">Copy</span>
                                 </>
                             )}

@@ -1,5 +1,6 @@
 import SelectInput, {
     OptionType,
+    Props as SelectProps,
 } from "@src/components/common/inputs/selectOption";
 import {
     StyledInput,
@@ -7,6 +8,8 @@ import {
     GeneralInputProps,
 } from "@src/components/common/inputs/styles";
 import currencies from "./options.json";
+import { Control } from "react-hook-form";
+
 const options: OptionType[] = currencies.map((val) => ({
     label: `${val.name} (${val.code})`,
     val: val.code,
@@ -14,7 +17,7 @@ const options: OptionType[] = currencies.map((val) => ({
 type Props = {
     label: string;
     price?: GeneralInputProps<number>;
-    unit?: GeneralInputProps<string>;
+    unit: Omit<SelectProps, "options">;
 };
 
 export default function BudgetInput({ label, price, unit }: Props) {
@@ -25,10 +28,7 @@ export default function BudgetInput({ label, price, unit }: Props) {
                     <StyledInput {...price} />
                 </div>
                 <div className="flex-1">
-                    <SelectInput
-                        options={options}
-                        {...unit}
-                    />
+                    <SelectInput {...{ ...unit, options: options }} />
                 </div>
             </div>
         </LabelElem>

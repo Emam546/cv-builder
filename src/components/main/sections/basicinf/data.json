@@ -84236,5 +84236,43 @@
         "Data Mining Specialist",
         "Data Visualization Specialist",
         "Quantum Computing Scientist"
+    ],
+    "availabilityOptions": [
+        {
+            "label": "Immediately Available",
+            "val": "immediately"
+        },
+        {
+            "label": "Currently Employed, but Open to Opportunities",
+            "val": "employed_open"
+        },
+        {
+            "label": "Part-Time",
+            "val": "part_time"
+        },
+        {
+            "label": "Full-Time",
+            "val": "full_time"
+        },
+        {
+            "label": "Contract",
+            "val": "contract"
+        },
+        {
+            "label": "Temporary",
+            "val": "temporary"
+        },
+        {
+            "label": "Availability for Remote Work",
+            "val": "remote_work"
+        },
+        {
+            "label": "Availability for Relocation",
+            "val": "relocation"
+        },
+        {
+            "label": "Flexible",
+            "val": "flexible"
+        }
     ]
 }
