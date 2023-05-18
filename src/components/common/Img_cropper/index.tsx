@@ -7,13 +7,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
-import React, { Dispatch, useEffect, useRef, useState } from "react";
-import ReactCrop, {
-    Crop,
-    PixelCrop,
-    centerCrop,
-    makeAspectCrop,
-} from "react-image-crop";
+import React, {
+    Dispatch,
+    MouseEventHandler,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
+import { PixelCrop, centerCrop, makeAspectCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { canvasPreview } from "./canvasPreview";
 function toBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
@@ -60,6 +61,12 @@ function centerAspectCrop(
         mediaHeight
     );
 }
+interface Crop {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
 function Container({
     children,
     exit,
@@ -87,40 +94,84 @@ function Container({
         </div>
     );
 }
-export default function ImageCropper({ exit, setValue, aspect }: Props) {
-    const [crop, setCrop] = useState<Crop>();
-    const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
+    const [crop, setCrop] = useState<Crop>({
+        height: 0,
+        width: 0,
+        x: 0,
+        y: 0,
+    });
     const [scale, setScale] = useState(1);
     const [rotate, setRotate] = useState(0);
     const imgRef = useRef<HTMLImageElement>(null);
     const [completeRotate, setCompleteRotate] = useState(0);
     const [loading, setLoading] = useState(false);
     const [imgSrc, setImgSrc] = useState<string>();
+    const [maxWidth, setWidth] = useState(96);
+    const [spos, setSpos] = useState<{ x: number; y: number } | false>(false);
+    const [sCrop, setSCrop] = useState<Crop>({
+        width: 0,
+        height: 0,
+        x: 0,
+        y: 0,
+    });
     function onImageLoad() {
         if (aspect && imgRef.current) {
             const { width, height } = imgRef.current;
-
-            setCrop(centerAspectCrop(width, height, aspect));
+            const defaultWidth = Math.min(width, maxWidth);
+            const defaultHeight = defaultWidth * aspect;
+            setCrop({
+                width: defaultWidth,
+                height: defaultHeight,
+                x: width / 2 - defaultWidth / 2,
+                y: height / 2 - defaultHeight / 2,
+            });
         }
     }
     useEffect(() => {
         onImageLoad();
     }, [aspect]);
+    function Move(ev: MouseEvent) {
+        if (!imgRef.current || !spos) return;
+        const { width, height } = imgRef.current;
+
+        const x = Math.max(
+            0,
+            Math.min(width * scale - maxWidth, sCrop.x + (spos.x - ev.pageX))
+        );
+        const y = Math.max(
+            0,
+            Math.min(
+                (height * scale) - (maxWidth * aspect),
+                sCrop.y + (spos.y - ev.pageY)
+            )
+        );
+        setCrop({
+            ...crop,
+            x,
+            y,
+        });
+    }
+    useEffect(() => {
+        window.addEventListener("mouseup", () => {
+            setSpos(false);
+        });
+    }, []);
     const realRotate = completeRotate + rotate;
     async function onDownloadCropClick() {
-        // Returns an image source you should set to state and pass
-        // `{previewSrc && <img alt="Crop preview" src={previewSrc} />}`
-        if (imgRef.current && completedCrop)
+        if (imgRef.current)
             setValue(
                 await imgPreview(
                     imgRef.current,
-                    completedCrop,
+                    {
+                        unit: "px",
+                        ...crop,
+                    },
                     scale,
                     realRotate
                 )
             );
     }
-
     if (!imgSrc)
         return (
             <Container exit={exit}>
@@ -176,20 +227,50 @@ export default function ImageCropper({ exit, setValue, aspect }: Props) {
             <div className="p-4">
                 <div
                     className={classNames(
-                        "bg-neutral-100/70 z-10 relative flex-1 overflow-hidden",
-                        "before:content-[''] before:w-full before:h-full before:absolute before:bg-neutral-100/95"
+                        "bg-neutral-100/70 w-10/12 mx-auto z-10 flex-1 overflow-hidden relative",
+                        "before:content-[''] before:w-full before:h-full before:absolute before:bg-neutral-100/80"
                     )}
                 >
-                    <div className="w-[25rem] flex justify-center relative mx-auto h-[25rem]">
-                        <div className="">
-                            <ReactCrop
-                                crop={crop}
-                                onChange={(_, percentCrop) =>
-                                    setCrop(percentCrop)
-                                }
-                                onComplete={(c) => setCompletedCrop(c)}
-                                aspect={aspect}
-                                className="overflow-hidden max-h-[25rem]"
+                    <div className="w-[20rem] flex items-center justify-center mx-auto h-[25rem] relative">
+                        <div className="w-fit relative">
+                            <div
+                                ref={(cur) => {
+                                    if (cur) setWidth(cur.offsetWidth);
+                                }}
+                                onMouseDown={(ev) => {
+                                    setSpos({
+                                        x: ev.pageX,
+                                        y: ev.pageY,
+                                    });
+                                    setSCrop({ ...crop });
+                                }}
+                                onMouseMove={Move as any}
+                                onMouseUp={() => {
+                                    setSpos(false);
+                                }}
+                                className="overflow-hidden w-[15rem] relative "
+                                style={{
+                                    aspectRatio: aspect,
+                                    MozWindowDragging: "no-drag",
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        transform: `scale(${scale}) rotate(${realRotate}deg)`,
+                                        top: `-${crop.y}px`,
+                                        left: `-${crop.x}px`,
+                                        backgroundImage: `url(${imgSrc})`,
+                                        width: imgRef.current?.width,
+                                        height: imgRef.current?.height,
+                                    }}
+                                    className="absolute max-w-[17rem] bg-contain origin-top-left"
+                                ></div>
+                            </div>
+                            <div
+                                className={classNames(
+                                    "absolute w-fit top-0 left-0",
+                                    "before:content-[''] before:w-full before:h-full before:absolute before:bg-neutral-100/80"
+                                )}
                             >
                                 <img
                                     ref={imgRef}
@@ -197,21 +278,15 @@ export default function ImageCropper({ exit, setValue, aspect }: Props) {
                                     src={imgSrc}
                                     style={{
                                         transform: `scale(${scale}) rotate(${realRotate}deg)`,
+                                        top: `-${crop.y}px`,
+                                        left: `-${crop.x}px`,
                                     }}
-                                    className="max-w-full max-h-full"
+                                    className="absolute max-w-[17rem] -z-10 origin-top-left"
                                     onLoad={onImageLoad}
                                 />
-                            </ReactCrop>
+                            </div>
                         </div>
 
-                        <img
-                            alt="Crop me"
-                            src={imgSrc}
-                            style={{
-                                transform: `scale(${scale}) rotate(${realRotate}deg)`,
-                            }}
-                            className="absolute left-0 top-0 -z-10"
-                        />
                         <div className="absolute z-10 text-neutral-70 -right-20 top-1/2 -translate-y-1/2 text-center">
                             <div>Zoom</div>
                             <div>x3</div>
@@ -227,6 +302,9 @@ export default function ImageCropper({ exit, setValue, aspect }: Props) {
                                     max="3"
                                     step="0.1"
                                     onChange={(e) => {
+                                        setCrop({
+                                            ...crop,
+                                        });
                                         setScale(+e.currentTarget.value);
                                     }}
                                     defaultValue={0}
