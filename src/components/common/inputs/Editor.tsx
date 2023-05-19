@@ -1,12 +1,7 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { EditorProps } from "react-draft-wysiwyg";
-import {
-    ContentState,
-    EditorState,
-    convertFromHTML,
-    convertToRaw,
-} from "draft-js";
+import { ContentState, EditorState, convertFromHTML } from "draft-js";
 const Editor = dynamic<EditorProps>(
     () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
     { ssr: false }
@@ -14,12 +9,7 @@ const Editor = dynamic<EditorProps>(
 
 import draftToHtml from "draftjs-to-html";
 import { BottomLine } from "./styles";
-import {
-    Control,
-    Controller,
-    FieldValues,
-    useController,
-} from "react-hook-form";
+import { Control, FieldValues, useController } from "react-hook-form";
 
 interface Props {
     name: string;

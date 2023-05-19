@@ -61,7 +61,7 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
     label?: string;
     noDragging?: boolean;
 }) {
-    const { setValue, getValues, watch } = formRegister;
+    const { setValue, getValues } = formRegister;
 
     const keys = {
         root: `${name}` as FieldPath<ListData<T, Name>>,

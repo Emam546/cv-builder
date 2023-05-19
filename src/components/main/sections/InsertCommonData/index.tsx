@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import HeadSection from "@src/components/common/head";
 import ElemGenerator, { ElemType as OrgElemType } from "./EleGen";
-import { ListElemType, ListProps } from "./input";
 import lodash from "lodash";
 export interface ElemProps<
     T extends FieldsType,

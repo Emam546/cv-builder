@@ -44,7 +44,9 @@ export const State = createSlice({
                     state.data.custom.push({ order: state.curOrder });
                     break;
                 case "DELETE":
-                    state.data.custom.filter((_, i) => i != action.index);
+                    state.data.custom = state.data.custom.filter(
+                        (_, i) => i != action.index
+                    );
                     break;
                 default:
                     throw new Error();
