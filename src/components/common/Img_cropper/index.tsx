@@ -107,7 +107,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
     const [completeRotate, setCompleteRotate] = useState(0);
     const [loading, setLoading] = useState(false);
     const [imgSrc, setImgSrc] = useState<string>();
-    const [maxWidth, setWidth] = useState(96);
+    const [maxWidth, setWidth] = useState<number>();
     const [spos, setSpos] = useState<{ x: number; y: number } | false>(false);
     const [sCrop, setSCrop] = useState<Crop>({
         width: 0,
@@ -116,10 +116,10 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
         y: 0,
     });
     function onImageLoad() {
-        if (aspect && imgRef.current) {
+        if (imgRef.current && maxWidth) {
             const { width, height } = imgRef.current;
             const defaultWidth = Math.min(width, maxWidth);
-            const defaultHeight = defaultWidth * aspect;
+            const defaultHeight = defaultWidth / aspect;
             setCrop({
                 width: defaultWidth,
                 height: defaultHeight,
@@ -133,18 +133,14 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
     }, [aspect]);
     function Move(ev: MouseEvent) {
         if (!imgRef.current || !spos) return;
-        const { width, height } = imgRef.current;
-
+        const { width, height } = imgRef.current.getBoundingClientRect();
         const x = Math.max(
             0,
-            Math.min(width * scale - maxWidth, sCrop.x + (spos.x - ev.pageX))
+            Math.min(width - sCrop.width, sCrop.x + (spos.x - ev.pageX))
         );
         const y = Math.max(
             0,
-            Math.min(
-                (height * scale) - (maxWidth * aspect),
-                sCrop.y + (spos.y - ev.pageY)
-            )
+            Math.min(height - sCrop.height, sCrop.y + (spos.y - ev.pageY))
         );
         setCrop({
             ...crop,
@@ -157,6 +153,12 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
             setSpos(false);
         });
     }, []);
+    useEffect(() => {
+        window.addEventListener("mousemove", Move);
+        return () => {
+            window.removeEventListener("mousemove", Move);
+        };
+    }, [spos]);
     const realRotate = completeRotate + rotate;
     async function onDownloadCropClick() {
         if (imgRef.current)
@@ -244,7 +246,6 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                                     });
                                     setSCrop({ ...crop });
                                 }}
-                                onMouseMove={Move as any}
                                 onMouseUp={() => {
                                     setSpos(false);
                                 }}
@@ -314,7 +315,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-between items-center px-10 text-neutral-50 mt-5">
+                {/* <div className="flex justify-between items-center px-10 text-neutral-50 mt-5">
                     <button
                         type="button"
                         className="text-center"
@@ -364,7 +365,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                             fontSize={"1.5rem"}
                         />
                     </button>
-                </div>
+                </div> */}
             </div>
             <div className="border-t flex justify-between items-center border-solid border-neutral-40/20 py-5 px-5 ">
                 <label
