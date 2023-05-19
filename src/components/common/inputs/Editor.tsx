@@ -83,10 +83,6 @@ const FinalEditor = React.forwardRef<HTMLInputElement, Props>(
                         placeholder={placeholder}
                     />
                 </div>
-                <input
-                    type="hidden"
-                    {...field}
-                />
             </BottomLine>
         );
     }
