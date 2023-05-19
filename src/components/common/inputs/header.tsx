@@ -17,9 +17,10 @@ function CustomButton({
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { editable: boolean }) {
     return (
         <button
+            type="button"
             {...props}
             className={classNames(
-                "hover:text-blue-50  text-neutral-30 group-hover:visible",
+                "hover:text-blue-50  text-neutral-30 group-hover:visible p-2 mx-1",
                 {
                     "lg:invisible": !editable,
                 },
@@ -63,10 +64,10 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
         return (
             <div
                 ref={containerDiv}
-                className="flex items-center gap-2 group text-xl leading-8 my-3 w-fit"
+                className="group text-xl leading-8 my-3 w-fit"
             >
                 <div
-                    className="self-start text-neutral-90"
+                    className="self-start text-neutral-90 inline-block"
                     onClick={() => {
                         input.current?.focus();
                     }}
@@ -109,6 +110,7 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                         setEditable(true);
                         input.current!.focus();
                     }}
+                    aria-label="edit header"
                 >
                     <FontAwesomeIcon
                         fontSize={"1em"}
@@ -124,6 +126,7 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                             reset();
                         }}
                         className="font-bold"
+                        aria-label="reset header"
                     >
                         <FontAwesomeIcon
                             fontSize={"1em"}
@@ -139,6 +142,7 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                             setDelete();
                         }}
                         className="font-bold"
+                        aria-label="delete section"
                     >
                         <FontAwesomeIcon
                             fontSize={"1em"}

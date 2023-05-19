@@ -132,6 +132,8 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
                         );
                         setData((pre) => [...pre, 1]);
                     }}
+                    type="button"
+                    aria-label="add"
                 >
                     <FontAwesomeIcon
                         fontSize={"1em"}

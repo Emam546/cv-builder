@@ -49,6 +49,7 @@ export default function UserComponent() {
                     onClick={(ev) => {
                         setExpand(!expand);
                     }}
+                    aria-label="upload photo"
                 >
                     {user.photo == "" ? (
                         <>
@@ -79,9 +80,9 @@ export default function UserComponent() {
                         <li className="py-1">Account Settings</li>
                         <li className="py-1">Updates</li>
                         <li className="py-1">FAQ</li>
-                        <Link href="/login">
-                            <li className="py-1">Log Out</li>
-                        </Link>
+                        <li className="py-1">
+                            <Link href="/login">Log Out</Link>
+                        </li>
                     </ul>
                 </div>
             </div>

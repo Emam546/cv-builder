@@ -164,6 +164,7 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                             type="button"
                                             className="block text-blue-40 hover:text-blue-50 cursor-pointer"
                                             onClick={(e) => setEdit(true)}
+                                            aria-label="edit"
                                         >
                                             <FontAwesomeIcon
                                                 fontSize={"1em"}
@@ -187,6 +188,7 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                                 setOrgImg(undefined);
                                                 setValue("");
                                             }}
+                                            aria-label="delete"
                                         >
                                             <FontAwesomeIcon
                                                 fontSize={"1em"}

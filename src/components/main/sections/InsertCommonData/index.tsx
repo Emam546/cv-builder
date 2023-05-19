@@ -115,6 +115,8 @@ export default function InfoGetter<
                     setEmploymentData((pre) => [...pre, pre.length]);
                     setValue(keys.data_i(EmploymentsData.length), data as any);
                 }}
+                type="button"
+                aria-label="add"
             >
                 <FontAwesomeIcon
                     fontSize={"1em"}

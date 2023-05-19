@@ -53,21 +53,25 @@ export default function Login() {
                     onClick={() => {
                         window.location.href = "/api/v1/auth/facebook";
                     }}
+                    aria-label="sign in with facebook"
                 />
                 <StyledButton
                     className="bg-red-60 text-white mx-auto sm:ml-0"
                     icon={faGoogle}
                     label="Google"
+                    aria-label="sign in with google"
                 />
                 <StyledButton
                     className="bg-blue-70 text-white mx-auto sm:mr-0"
                     icon={faLinkedinIn}
                     label="LinkedIn"
+                    aria-label="sign in with linkedin"
                 />
                 <StyledButton
                     className="bg-white text-blue-60 border border-solid border-blue-60 mx-auto sm:ml-0"
                     icon={faEnvelope}
                     label="Email"
+                    aria-label="sign in with email"
                 />
             </div>
         </div>

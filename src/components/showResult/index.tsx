@@ -24,7 +24,7 @@ export default function ShowResult() {
             <div className="absolute right-0 top-0 p-3 mr-4">
                 <div className="relative px-1">
                     <button
-                        id="copyButton"
+                        type="button"
                         onClick={() => {
                             if (!copied)
                                 navigator.clipboard

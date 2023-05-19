@@ -78,6 +78,7 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                                 if (parentDiv.current)
                                     deleteSelf.call(parentDiv.current);
                             }}
+                            aria-label="delete"
                         >
                             <FontAwesomeIcon
                                 fontSize={"1em"}
@@ -88,6 +89,7 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                             type="button"
                             className="group-hover:text-blue-60"
                             onClick={() => setExpand(!expand)}
+                            aria-label={expand ? "expand" : "close"}
                         >
                             <FontAwesomeIcon
                                 fontSize={"1em"}

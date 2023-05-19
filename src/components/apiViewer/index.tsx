@@ -31,7 +31,6 @@ export default function ApiViewer() {
                 <div className="absolute right-0 top-0 p-3 mr-4">
                     <div className="relative px-1">
                         <button
-                            id="copyButton"
                             onClick={() => {
                                 if (!copied)
                                     navigator.clipboard

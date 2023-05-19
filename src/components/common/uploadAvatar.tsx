@@ -68,6 +68,7 @@ function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
                             type="button"
                             className="block text-blue-50 hover:text-blue-80 cursor-pointer"
                             onClick={() => setEdit(true)}
+                            aria-label="edit"
                         >
                             <FontAwesomeIcon
                                 fontSize={"1em"}
@@ -89,10 +90,12 @@ function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
                                 setValue("");
                                 setOrgUrl(undefined);
                             }}
+                            aria-label="delete"
                         >
                             <FontAwesomeIcon
                                 fontSize={"1em"}
                                 icon={faTrash}
+                                aria-label="delete"
                             />
                             <span className="px-3">Delete</span>
                         </button>

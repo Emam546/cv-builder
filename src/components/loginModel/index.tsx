@@ -34,6 +34,7 @@ export default function LoginModel() {
                         onClick={() => {
                             dispatch(LoginModelActions.close());
                         }}
+                        aria-label="close"
                     >
                         <FontAwesomeIcon
                             fontSize={"1em"}

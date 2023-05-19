@@ -109,7 +109,6 @@ function CreateElem(Name: NameRules) {
         }
     ) as ElemType<SectionInputData, NameRules>;
 }
-
 function CreateEle({
     order,
     i,

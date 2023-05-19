@@ -82,6 +82,7 @@ function Container({
                     <button
                         type="button"
                         onClick={() => exit()}
+                        aria-label="close"
                     >
                         <FontAwesomeIcon
                             icon={faXmark}

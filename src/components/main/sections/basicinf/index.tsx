@@ -144,6 +144,7 @@ export default function BasicInfo({
             </div>
 
             <button
+                type="button"
                 className="text-blue-60 hover:text-blue-90 font-medium mt-5"
                 onClick={() => setEddData(!eddData)}
             >

@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { defaultSectionState } from "@src/components/main/default";
-import { HYDRATE } from "next-redux-wrapper";
 export type ActionType =
     | {
           type: "SHOW" | "HIDE";

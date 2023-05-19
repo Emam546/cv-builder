@@ -28,6 +28,8 @@ const Home: NextPage<Props> = function ({ values, isSigned }) {
         <>
             <Head>
                 <title>Make your Resume api</title>
+                <meta name="description" content="Resume API Creator - Simplify resume generation for developers by importing project information. Retrieve project details, including names, descriptions, and technologies used, with ease. Embed your portfolio into websites or applications using the generated API. Showcase your coding skills effortlessly with Resume API Creator."/>
+
             </Head>
             <Header />
             <div className="container relative px-4 mx-auto">

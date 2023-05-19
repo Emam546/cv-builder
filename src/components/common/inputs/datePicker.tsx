@@ -66,6 +66,7 @@ function DatePic({
                     onClick={() => {
                         setDate([date[0], date[1] - 1]);
                     }}
+                    aria-label="left"
                 >
                     <FontAwesomeIcon
                         fontSize={"1.125rem"}
@@ -89,6 +90,7 @@ function DatePic({
                     {date[1]}
                 </button>
                 <button
+                    aria-label="right"
                     type="button"
                     className="cursor-pointer"
                     onClick={() => {
