@@ -142,17 +142,12 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
                         startData={{
                             ...register(`${Name}.data.${i}.date.start`),
                             placeholder: "MM / YYYY",
-                            setValue(val) {
-                                setValue(`${Name}.data.${i}.date.start`, val);
-                            },
                         }}
                         endData={{
                             ...register(`${Name}.data.${i}.date.end`),
                             placeholder: "MM / YYYY",
-                            setValue(val) {
-                                setValue(`${Name}.data.${i}.date.end`, val);
-                            },
                         }}
+                        control={control as any}
                         labelEnd="Currently Work here."
                     />
                     <LabelElem label="Progress">
@@ -183,7 +178,7 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
                         }}
                         unit={{
                             ...register(`${Name}.data.${i}.budget.unit`),
-                            control: control,
+                            control: control as any,
                         }}
                     />
                 </Grid2Container>
@@ -198,7 +193,7 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
                                 )
                             )}
                             name={`${Name}.data.${i}.technologies`}
-                            control={control}
+                            control={control as any}
                         />
                     </LabelElem>
 
@@ -213,7 +208,7 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
                     <InfoGetter
                         formRegister={form as any}
                         addButtonLabel="Add one more mate"
-                        Elem={TeamItem}
+                        Elem={TeamItem as any}
                         initData={{ role: "" }}
                         name={TeamPath}
                         label={"Team Mates"}
@@ -244,7 +239,7 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
 
                     <LabelElem label={"Description"}>
                         <FinalEditor
-                            control={control}
+                            control={control as any}
                             defaultValue={
                                 form.control._defaultValues[Name]?.data?.[i]
                                     ?.desc

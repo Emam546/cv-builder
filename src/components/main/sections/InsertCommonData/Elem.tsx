@@ -101,7 +101,7 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                     className={classNames(
                         "transition-[max-height] duration-300 px-3",
                         {
-                            "max-h-[10000px]": expand && !drag,
+                            "max-h-[100000rem]": expand && !drag,
                             "max-h-0 overflow-hidden": !expand || drag,
                         }
                     )}

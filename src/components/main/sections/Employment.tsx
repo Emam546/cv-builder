@@ -28,7 +28,7 @@ export interface InputData extends FieldsType {
     teamSize: number;
     technologies: string[];
 }
-const iniData: InputData = {
+export const IniData: InputData = {
     jobTitle: "",
     employer: "",
     date: {
@@ -105,17 +105,12 @@ const EmployElem: ElemType<InputData, NameType> = React.forwardRef(
                         startData={{
                             ...register(`${Name}.data.${i}.date.start`),
                             placeholder: "MM / YYYY",
-                            setValue(val) {
-                                setValue(`${Name}.data.${i}.date.start`, val);
-                            },
                         }}
                         endData={{
                             ...register(`${Name}.data.${i}.date.end`),
                             placeholder: "MM / YYYY",
-                            setValue(val) {
-                                setValue(`${Name}.data.${i}.date.end`, val);
-                            },
                         }}
+                        control={control as any}
                         labelEnd="Currently Work here."
                     />
                     <NormalInput
@@ -137,11 +132,11 @@ const EmployElem: ElemType<InputData, NameType> = React.forwardRef(
                         options={Technologies}
                         defaultValue={ConvValToOptions(
                             lodash.get(
-                                control._defaultValues.projects,
+                                control._defaultValues,
                                 `${Name}.data.${i}.technologies`
                             )
                         )}
-                        control={control}
+                        control={control as any}
                         name={`${Name}.data.${i}.technologies`}
                     />
                 </LabelElem>
@@ -150,7 +145,7 @@ const EmployElem: ElemType<InputData, NameType> = React.forwardRef(
                     className="my-4"
                 >
                     <FinalEditor
-                        control={control}
+                        control={control as any}
                         defaultValue={
                             control._defaultValues[Name]?.data?.[i]?.desc
                         }

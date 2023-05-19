@@ -74,7 +74,7 @@ const FElem: ElemType<InputData, NameType> = React.forwardRef(
                             {...register(`${Name}.data.${i}.language`)}
                         />
                         <SelectInput
-                            control={control}
+                            control={control as any}
                             options={Options}
                             label="link"
                             setValue={(val) =>

@@ -2,18 +2,18 @@ import { faImage, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageCropper from "@src/components/common/Img_cropper";
 import classNames from "classnames";
-import React, { useRef, useState, Dispatch, useEffect } from "react";
+import React, { useState, Dispatch, useEffect } from "react";
 
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
-import { Control, Path, useController, useWatch } from "react-hook-form";
+import { Control, useController, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
-import { useSyncRefs, useUploadImage } from "@src/utils/hooks";
-import { GeneralInputProps } from "@src/components/common/inputs/styles";
+import { useUploadImage } from "@src/utils/hooks";
 
-export type NameType = "links";
-export const Name: NameType = "links";
+export type NameType = "images";
+export const Name: NameType = "images";
+export type NameRules=string
 export interface InputData extends FieldsType {
     widthRation: number;
     heightRation: number;
@@ -23,11 +23,8 @@ function assertISValidData(data: unknown): InputData {
     return data as InputData;
 }
 
-export function CreateListItem<NameType extends string>(Name: NameType) {
-    function v(s: string) {
-        return s as Path<ListData<InputData, NameType>>;
-    }
-    return forwardRef<InputData, NameType>(
+export function CreateListItem(Name: NameRules) {
+    return forwardRef<InputData, NameRules>(
         (
             {
                 index: i,
@@ -40,7 +37,7 @@ export function CreateListItem<NameType extends string>(Name: NameType) {
         ) => {
             const { widthRation, heightRation } = assertISValidData(
                 useWatch({
-                    name: v(`${Name}.${i}`),
+                    name: `${Name}.${i}`,
                     control,
                 })
             );
@@ -60,13 +57,13 @@ export function CreateListItem<NameType extends string>(Name: NameType) {
                         <Grid2Container>
                             <NormalInput
                                 label="Width ratio"
-                                {...register(v(`${Name}.${i}.widthRation`), {
+                                {...register(`${Name}.${i}.widthRation`, {
                                     valueAsNumber: true,
                                 })}
                             />
                             <NormalInput
                                 label="Height ration"
-                                {...register(v(`${Name}.${i}.heightRation`), {
+                                {...register(`${Name}.${i}.heightRation`, {
                                     valueAsNumber: true,
                                 })}
                             />
@@ -74,11 +71,11 @@ export function CreateListItem<NameType extends string>(Name: NameType) {
                         <UploadButton
                             label="Upload Image"
                             setValue={(val) =>
-                                setValue(v(`${Name}.${i}.image`), val as any)
+                                setValue(`${Name}.${i}.image`, val as any)
                             }
                             aspect={widthRation / (heightRation || 1)}
-                            {...register(v(`${Name}.${i}.image`))}
-                            control={control}
+                            {...register(`${Name}.${i}.image`)}
+                            control={control as any}
                         />
                     </div>
                 </Elem>

@@ -1,12 +1,7 @@
 import React from "react";
 import { Dispatch, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import {
-    BottomLine,
-    StyledInput,
-    LabelElem,
-    GeneralInputProps,
-} from "./styles";
+import { BottomLine, StyledInput, LabelElem, InputProps } from "./styles";
 import { useSyncRefs } from "@src/utils/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,13 +10,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { assertIsNode } from "@src/utils";
 import CheckBox from "@src/components/common/inputs/checkBox";
-type Props = {
-    label: string;
-    labelEnd?: string;
-    applyPresent?: boolean;
-    startData?: GeneralInputProps<string | "Present">;
-    endData?: GeneralInputProps<string | "Present">;
-};
+import { Control, useController } from "react-hook-form";
+
 const Months = {
     1: "Jan",
     2: "Feb",
@@ -150,113 +140,129 @@ function DatePic({
         </div>
     );
 }
-
-const CustomInput = React.forwardRef<
-    HTMLInputElement,
-    GeneralInputProps<string | "Present"> & {
-        defaultS?: string;
-        label?: string;
-        applyPresent?: boolean;
-    }
->(({ defaultS, label, applyPresent, setValue, ...props }, ref) => {
-    const inpRef = useRef<HTMLInputElement>(null);
-    const AllRef = useSyncRefs(ref, inpRef);
-    let State: StateType = [undefined, new Date().getFullYear()];
-    if (defaultS) {
-        const res = regEx.exec(defaultS);
-    }
-    const [val, setVal] = useState<StateType | "Present">(State);
-    const [focus, setFocus] = useState(false);
-    function changeVal(val: StateType | "Present") {
-        const input = inpRef.current;
-        if (!input) return;
-        if (val == "Present") {
-            if (setValue) setValue("Present");
-            return (input.value = "Present");
+type CustomInputProps = InputProps & {
+    defaultS?: string;
+    label?: string;
+    applyPresent?: boolean;
+    control: Control;
+    name: string;
+};
+const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
+    ({ defaultS, label, applyPresent, control, ...props }, ref) => {
+        const inpRef = useRef<HTMLInputElement>(null);
+        const AllRef = useSyncRefs(ref, inpRef);
+        let State: StateType = [undefined, new Date().getFullYear()];
+        if (defaultS) {
+            const res = regEx.exec(defaultS);
         }
-        let str = "";
-        if (val[0]) str = Months[val[0]] + ", " + val[1];
-        else str = val[1].toString();
-        input.value = str;
-        if (setValue) setValue(str);
-    }
-    const Pic = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        function getTarget(ev: MouseEvent) {
-            if (!inpRef.current) return;
-            if (!Pic.current) return;
-            assertIsNode(ev.target);
-            const state =
-                Pic.current.contains(ev.target) ||
-                inpRef.current.contains(ev.target);
-            if (!state) setFocus(false);
+        const { field } = useController({ control, name: props.name });
+        const [val, setVal] = useState<StateType | "Present">(State);
+        const [focus, setFocus] = useState(false);
+        function changeVal(val: StateType | "Present") {
+            const input = inpRef.current;
+            if (!input) return;
+            if (val == "Present") {
+                field.onChange("Present");
+                return (input.value = "Present");
+            }
+            let str = "";
+            if (val[0]) str = Months[val[0]] + ", " + val[1];
+            else str = val[1].toString();
+            input.value = str;
+            field.onChange(str);
         }
-        window.addEventListener("click", getTarget);
-        return () => {
-            window.removeEventListener("click", getTarget);
-        };
-    }, [inpRef]);
-    return (
-        <div className="relative">
-            <BottomLine>
-                <StyledInput
-                    {...props}
-                    type="text"
-                    autoComplete="off"
-                    onFocusCapture={(ev) => {
-                        if (props.onFocusCapture) props.onFocusCapture(ev);
-                        setFocus(true);
-                    }}
-                    onBlurCapture={(ev) => {
-                        if (props.onBlurCapture) props.onBlurCapture(ev);
-                        const match = regEx.test(ev.target.value);
-                        if (match || ev.target.value == "") return;
-                        changeVal(val);
-                    }}
-                    ref={AllRef}
-                />
-            </BottomLine>
-            <div
-                className={classNames(
-                    "absolute top-[calc(100%+5px)] left-0 bg-white z-10 min-w-fit max-w-none",
-                    {
-                        "invisible -z-50": !focus,
-                    }
-                )}
-            >
-                <DatePic
-                    sendDate={(val) => {
-                        changeVal(val);
-                        setVal(val);
-                        setFocus(false);
-                    }}
-                    defaultData={State}
-                    innerRef={Pic}
-                    label={label}
-                    applyPresent={applyPresent}
-                />
+        const Pic = useRef<HTMLDivElement>(null);
+        useEffect(() => {
+            function getTarget(ev: MouseEvent) {
+                if (!inpRef.current) return;
+                if (!Pic.current) return;
+                assertIsNode(ev.target);
+                const state =
+                    Pic.current.contains(ev.target) ||
+                    inpRef.current.contains(ev.target);
+                if (!state) setFocus(false);
+            }
+            window.addEventListener("click", getTarget);
+            return () => {
+                window.removeEventListener("click", getTarget);
+            };
+        }, [inpRef]);
+        return (
+            <div className="relative">
+                <BottomLine>
+                    <StyledInput
+                        {...props}
+                        type="text"
+                        autoComplete="off"
+                        onFocusCapture={(ev) => {
+                            if (props.onFocusCapture) props.onFocusCapture(ev);
+                            setFocus(true);
+                        }}
+                        onBlurCapture={(ev) => {
+                            if (props.onBlurCapture) props.onBlurCapture(ev);
+                            const match = regEx.test(ev.target.value);
+                            if (match || ev.target.value == "") return;
+                            changeVal(val);
+                        }}
+                        ref={AllRef}
+                    />
+                </BottomLine>
+                <div
+                    className={classNames(
+                        "absolute top-[calc(100%+5px)] left-0 bg-white z-10 min-w-fit max-w-none",
+                        {
+                            "invisible -z-50": !focus,
+                        }
+                    )}
+                >
+                    <DatePic
+                        sendDate={(val) => {
+                            changeVal(val);
+                            setVal(val);
+                            setFocus(false);
+                        }}
+                        defaultData={State}
+                        innerRef={Pic}
+                        label={label}
+                        applyPresent={applyPresent}
+                    />
+                </div>
             </div>
-        </div>
-    );
-});
+        );
+    }
+);
+
+type Props = {
+    label: string;
+    labelEnd?: string;
+    applyPresent?: boolean;
+    startData: Omit<CustomInputProps, "control">;
+    endData: Omit<CustomInputProps, "control">;
+    control: Control;
+};
 export default function DatePicker({
     label,
     startData,
     endData,
     labelEnd = "",
     applyPresent,
+    control,
 }: Props) {
     return (
         <LabelElem label={label}>
             <div className="flex flex-wrap gap-x-3 gap-y-4">
                 <div className="flex-1">
-                    <CustomInput {...startData} />
+                    <CustomInput
+                        {...startData}
+                        control={control}
+                    />
                 </div>
                 <div className="flex-1">
                     <CustomInput
                         {...endData}
                         label={labelEnd}
                         applyPresent={applyPresent}
+                        control={control}
                     />
                 </div>
             </div>

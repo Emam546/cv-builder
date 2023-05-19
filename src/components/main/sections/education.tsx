@@ -14,11 +14,11 @@ import {
 } from "@src/components/main/sections/photos";
 import InfoGetter from "./InsertCommonData/input";
 import lodash from "lodash";
-export const Name = "courses";
+export const Name = "education";
 export type NameType = typeof Name;
 export type NameRules = string;
-export interface InputData extends FieldsType {
-    label: string;
+export interface InputData {
+    degree: string;
     institution: string;
     date: {
         start: string;
@@ -27,10 +27,11 @@ export interface InputData extends FieldsType {
     desc: string;
     images: ImageInputData[];
 }
+
 export function CreateItem(Name: NameRules) {
     return React.forwardRef(({ index: i, props: { form }, ...props }, ref) => {
-        const { register, control, setValue } = form;
-        const { label, institution } = useWatch({
+        const { register, control } = form;
+        const { degree, institution } = useWatch({
             name: `${Name}.${i}`,
             control,
         });
@@ -41,12 +42,12 @@ export function CreateItem(Name: NameRules) {
                 headLabel={() => (
                     <p className="font-bold group-hover:text-blue-60">
                         {`${
-                            (label == "" &&
+                            (degree == "" &&
                                 institution == "" &&
                                 "(Not specified)") ||
                             ""
-                        } ${label} ${
-                            (label != "" && institution != "" && "at") || ""
+                        } ${degree} ${
+                            (degree != "" && institution != "" && "at") || ""
                         } ${institution}`}
                     </p>
                 )}
@@ -55,11 +56,11 @@ export function CreateItem(Name: NameRules) {
             >
                 <Grid2Container>
                     <NormalInput
-                        label="Course"
-                        {...register(`${Name}.${i}.label`)}
+                        label="Degree"
+                        {...register(`${Name}.${i}.degree`)}
                     />
                     <NormalInput
-                        label="Institution"
+                        label="Collage or Institution"
                         {...register(`${Name}.${i}.institution`)}
                     />
                     <DatePicker
@@ -110,7 +111,7 @@ export function CreateItem(Name: NameRules) {
     }) as ElemType<InputData, NameRules>;
 }
 export const InitData: InputData = {
-    label: "",
+    degree: "",
     institution: "",
     date: {
         start: "",

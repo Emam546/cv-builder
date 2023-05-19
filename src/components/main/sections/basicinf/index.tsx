@@ -15,7 +15,7 @@ import SelectInput, {
 const COUNTRIES = Object.keys(data.countries).map((name) => name);
 const CITIES: Map<string, string[]> = new Map(Object.entries(data.countries));
 const JOP_TITLES = data.jobs;
-export interface InputData extends FieldValues {
+export interface InputData {
     info: {
         head: string;
         data: {

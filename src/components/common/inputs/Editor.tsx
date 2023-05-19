@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { EditorProps } from "react-draft-wysiwyg";
 import {
@@ -53,13 +53,11 @@ const FinalEditor = React.forwardRef<HTMLInputElement, Props>(
             name,
             control,
             defaultValue,
-            shouldUnregister: true,
         });
+        const lastState = useRef(field.value);
         useEffect(() => {
-            const cVal = draftToHtml(
-                convertToRaw(editorState.getCurrentContent())
-            );
-            if (field.value != cVal && checkIfValueIsConvertible(field.value)) {
+            const v = lastState.current;
+            if (v != field.value) {
                 setEditorState(
                     EditorState.createWithContent(
                         ContentState.createFromBlockArray(
@@ -67,27 +65,28 @@ const FinalEditor = React.forwardRef<HTMLInputElement, Props>(
                         )
                     )
                 );
+                lastState.current = field.value;
             }
-        }, [field.value]);
-        const onEditorStateChange = useCallback(
-            (rawcontent: EditorState) => {
-                setEditorState(rawcontent);
-            },
-            [editorState]
-        );
+        }, [field.name, field.value]);
+
         return (
             <BottomLine>
                 <div className="bg-neutral-10 relative">
                     <Editor
                         editorClassName="min-h-[10rem] px-3"
                         editorState={editorState}
-                        // onContentStateChange={(content) => {
-                        //     field.onChange(draftToHtml(content));
-                        // }}
-                        // onEditorStateChange={onEditorStateChange}
+                        onContentStateChange={(content) => {
+                            field.onChange(draftToHtml(content));
+                            lastState.current = draftToHtml(content);
+                        }}
+                        onEditorStateChange={(state) => setEditorState(state)}
                         placeholder={placeholder}
                     />
                 </div>
+                <input
+                    type="hidden"
+                    {...field}
+                />
             </BottomLine>
         );
     }

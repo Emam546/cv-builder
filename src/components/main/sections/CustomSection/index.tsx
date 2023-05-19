@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import InfoGetter, {
     ElemType,
 } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
-import { Path, UseFormReturn, useWatch } from "react-hook-form";
+import { UseFormReturn, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import DatePicker from "@src/components/common/inputs/datePicker";
@@ -19,13 +19,12 @@ import {
     Name as CustomName,
     SectionInputData,
 } from "./types";
+import lodash from "lodash";
 
 type SectionTypeName = `${CustomNameType}.${number}`;
-function CreateElem<NameType extends SectionTypeName>(Name: NameType) {
-    function v(n: unknown) {
-        return n as Path<GeneratorData<SectionInputData, NameType>>;
-    }
-    const CustomElem: ElemType<SectionInputData, NameType> = React.forwardRef(
+type NameRules = string;
+function CreateElem(Name: NameRules) {
+    return React.forwardRef(
         (
             {
                 index: i,
@@ -37,11 +36,9 @@ function CreateElem<NameType extends SectionTypeName>(Name: NameType) {
             ref
         ) => {
             const { title, city, date } = useWatch({
-                name: v(`${Name}.data.${i}`),
+                name: `${Name}.data.${i}`,
                 control,
-            }) as any;
-            const CurI = parseInt(Name.split(".")[1]);
-
+            });
             return (
                 <Elem
                     headLabel={() => (
@@ -70,35 +67,24 @@ function CreateElem<NameType extends SectionTypeName>(Name: NameType) {
                     <Grid2Container>
                         <NormalInput
                             label="Activity name ,Job title,book title etc"
-                            {...register(v(`${Name}.data.${i}.title`))}
+                            {...register(`${Name}.data.${i}.title`)}
                         />
                         <NormalInput
                             label="City"
-                            {...register(v(`${Name}.data.${i}.city`))}
+                            {...register(`${Name}.data.${i}.city`)}
                         />
                         <DatePicker
                             applyPresent
                             label="Start &End Time"
                             startData={{
-                                ...register(v(`${Name}.data.${i}.date.start`)),
+                                ...register(`${Name}.data.${i}.date.start`),
                                 placeholder: "MM / YYYY",
-                                setValue(val) {
-                                    setValue(
-                                        v(`${Name}.data.${i}.date.start`),
-                                        val as any
-                                    );
-                                },
                             }}
                             endData={{
-                                ...register(v(`${Name}.data.${i}.date.end`)),
+                                ...register(`${Name}.data.${i}.date.end`),
                                 placeholder: "MM / YYYY",
-                                setValue(val) {
-                                    setValue(
-                                        v(`${Name}.data.${i}.date.end`),
-                                        val as any
-                                    );
-                                },
                             }}
+                            control={control as any}
                             labelEnd="Currently Work here."
                         />
                     </Grid2Container>
@@ -107,11 +93,12 @@ function CreateElem<NameType extends SectionTypeName>(Name: NameType) {
                         className="mt-5 pb-5"
                     >
                         <FinalEditor
-                            control={control}
+                            control={control as any}
                             defaultValue={
-                                (control._defaultValues as any)[CustomName]?.[
-                                    CurI
-                                ]?.data?.[i]?.desc
+                                lodash.get(
+                                    control._defaultValues,
+                                    `${Name}.data.${i}.desc`
+                                ) as any
                             }
                             name={`${Name}.data.${i}.desc`}
                             placeholder="e.g. Created and implemented lesson plans based on child-led interests and curiosities"
@@ -120,11 +107,57 @@ function CreateElem<NameType extends SectionTypeName>(Name: NameType) {
                 </Elem>
             );
         }
-    );
-    return CustomElem;
+    ) as ElemType<SectionInputData, NameRules>;
 }
 
-function CustomSection({
+function CreateEle({
+    order,
+    i,
+    form,
+}: {
+    order: number;
+    i: number;
+    form: UseFormReturn<InputData>;
+}) {
+    const path: SectionTypeName = `${CustomName}.${i}`;
+    const dispatch = useDispatch();
+    const Elem = useMemo(() => CreateElem(path), [i]);
+    return (
+        <Container
+            hiddenState={false}
+            order={order}
+        >
+            <InfoGetter
+                addButtonLabel="Add one more item"
+                initData={{
+                    city: "",
+                    date: {
+                        start: "",
+                        end: "",
+                    },
+                    desc: "",
+                    title: "",
+                }}
+                formRegister={form as any}
+                Elem={Elem}
+                name={path}
+                setDelete={() => {
+                    dispatch(
+                        StateActions.setSectionState({
+                            type: "DELETE",
+                            index: i,
+                        })
+                    );
+                    form.setValue(
+                        CustomName,
+                        form.getValues(CustomName).filter((_, ei) => ei != i)
+                    );
+                }}
+            />
+        </Container>
+    );
+}
+export default function CustomSection({
     form,
 }: {
     form: UseFormReturn<InputData>;
@@ -139,57 +172,25 @@ function CustomSection({
             form.setValue(CustomName, [
                 ...form.getValues(CustomName),
                 {
-                    data: [],
                     head: "Untitled",
+                    data: [],
                 },
             ]);
         }
     }, [sectionNum]);
+
     return (
         <>
             {orders.map(({ order }, i) => {
-                const path: SectionTypeName = `${CustomName}.${i}`;
                 return (
-                    <Container
-                        key={i}
-                        hiddenState={false}
+                    <CreateEle
                         order={order}
-                    >
-                        <InfoGetter
-                            addButtonLabel="Add one more item"
-                            initData={{
-                                city: "",
-                                date: {
-                                    start: "",
-                                    end: "",
-                                },
-                                desc: "",
-                                title: "",
-                            }}
-                            formRegister={form as any}
-                            Elem={CreateElem(path)}
-                            name={path}
-                            setDelete={() => {
-                                dispatch(
-                                    StateActions.setSectionState({
-                                        type: "DELETE",
-                                        index: i,
-                                    })
-                                );
-
-                                form.setValue(
-                                    CustomName,
-                                    form
-                                        .getValues(CustomName)
-                                        .filter((_, ei) => ei != i)
-                                );
-                            }}
-                            key={i}
-                        />
-                    </Container>
+                        i={i}
+                        key={i}
+                        form={form}
+                    />
                 );
             })}
         </>
     );
 }
-export default CustomSection;

@@ -33,7 +33,6 @@ export default function ElemGenerator<P = {}>({
     resort?: (indexes: number[]) => void;
     noDragging?: boolean;
 }) {
-    const [dragger, setDragging] = useState<number>(0);
     const [allEle, setAllEle] = useState<HTMLDivElement[]>([]);
     return (
         <div className="flex flex-col items-stretch space-y-4 transition-all duration-700 mb-1">
@@ -43,8 +42,10 @@ export default function ElemGenerator<P = {}>({
                         noDragging={noDragging}
                         index={i}
                         key={i}
-                        deleteSelf={() => deleteSelf && deleteSelf(i)}
-                        onDragStart={(ele) => setDragging(i)}
+                        deleteSelf={() => {
+                            setAllEle((pre) => pre.filter((_, ix) => ix != i));
+                            deleteSelf && deleteSelf(i);
+                        }}
                         onDragOver={(ele) => {
                             const indexes = allEle
                                 .map<[number, number]>((ele, i) => {

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { ElemType } from "@src/components/main/sections/InsertCommonData";
+import { ListElemType as ElemType } from "@src/components/main/sections/InsertCommonData/input";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
@@ -10,9 +10,9 @@ import {
 } from "../Projects/images";
 import InfoGetter from "@src/components/main/sections/InsertCommonData/input";
 
-export type NameType = "images";
-export const Name: NameType = "images";
-export interface InputData extends FieldsType {
+export const Name = "images";
+export type NameType = typeof Name;
+export interface InputData {
     label: string;
     images: ImageInputData[];
 }
@@ -20,23 +20,27 @@ export const InitData: InputData = {
     images: [],
     label: "",
 };
-type ImagesPathType = `${NameType}.data.${number}.images`;
+export type NameRules = string;
+export function CreateElem(Name: NameRules) {
+    type ImagesPathType = `${NameRules}.${number}.images`;
 
-const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
-    ({ index: i, props: { form }, ...props }, ref) => {
+    return React.forwardRef(({ index: i, props: { form }, ...props }, ref) => {
         const { register, control } = form;
-        const { name } = useWatch({
-            name: `${Name}.data.${i}`,
+        const { label } = useWatch({
+            name: `${Name}.${i}`,
             control,
         });
-        const ImagePath: ImagesPathType = `${Name}.data.${i}.images`;
-        const ImageInputItem = useMemo(() => CreateImageItem(ImagePath), [i]);
+        const ImagePath: ImagesPathType = `${Name}.${i}.images`;
+        const ImageInputItem = useMemo(
+            () => CreateImageItem(ImagePath as any),
+            [i]
+        );
         return (
             <Elem
                 headLabel={() => (
                     <div className="font-bold group-hover:text-blue-60">
                         <p className="font-bold group-hover:text-blue-60">
-                            {name || "(Not Specified)"}
+                            {label || "(Not Specified)"}
                         </p>
                     </div>
                 )}
@@ -46,7 +50,7 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
                 <Grid2Container>
                     <NormalInput
                         label="label"
-                        {...register(`${Name}.data.${i}.name`)}
+                        {...register(`${Name}.${i}.label`)}
                     />
                 </Grid2Container>
                 <div className="flex flex-col items-stretch gap-4 my-4">
@@ -65,6 +69,6 @@ const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
                 </div>
             </Elem>
         );
-    }
-);
-export default ProjectElem;
+    }) as ElemType<InputData, NameRules>;
+}
+export default CreateElem(`${Name}.data`);

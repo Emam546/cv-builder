@@ -44,26 +44,31 @@ import type {
     InputData as PhotosDataType,
     NameType as PhotosNameType,
 } from "@src/components/main/sections/photos";
+import type {
+    InputData as EducationDataType,
+    NameType as EducationNameType,
+} from "@src/components/main/sections/education";
 import type { InputData as ProInputData } from "@src/components/main/sections/professional";
 import type { InputData as HobbiesData } from "@src/components/main/sections/hobbies";
 import type {
     InputData as CustomInputData,
     NameType as CustomNameType,
 } from "@src/components/main/sections/CustomSection/types";
-import { FieldValues } from "react-hook-form";
+import { FieldValues, Path } from "react-hook-form";
+import { type } from "os";
 declare global {
     interface FieldsType {
         [k: string]: any;
     }
-    export interface ListData<T, Name extends string> extends FieldValues {
-        [f: Name]: T[];
-    }
-    interface GeneratorData<T, Name extends string> extends FieldValues {
-        [f: Name]: {
+    export type ListData<T, Name extends string> = {
+        [f in Name]: T[];
+    };
+    type GeneratorData<T, Name extends string> = {
+        [f in Name]: {
             head: string;
             data: T[];
         };
-    }
+    };
     type Data = BasicInputData &
         ProInputData &
         HobbiesData &
@@ -78,6 +83,7 @@ declare global {
         GeneratorData<ProjectsDataType, ProjectsNameType> &
         GeneratorData<ReferenceDataType, ReferenceNameType> &
         GeneratorData<PhotosDataType, PhotosNameType> &
+        GeneratorData<EducationDataType, EducationNameType> &
         CustomInputData;
 
     type SectionNamesType = Exclude<keyof Data, CustomNameType>;

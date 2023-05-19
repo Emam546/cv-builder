@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React, { Dispatch, InputHTMLAttributes, ReactNode } from "react";
-type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 export interface SetInputProps<T> {
     setValue?: Dispatch<T>;
 }

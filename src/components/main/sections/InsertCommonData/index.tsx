@@ -1,18 +1,22 @@
-import React, { SyntheticEvent, useMemo, useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { FieldPath, FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import HeadSection from "@src/components/common/head";
-import lodash from "lodash";
 import ElemGenerator, { ElemType as OrgElemType } from "./EleGen";
-
-export interface ElemProps<T extends FieldsType, Name extends string> {
+import { ListElemType, ListProps } from "./input";
+import lodash from "lodash";
+export interface ElemProps<
+    T extends FieldsType,
+    Name extends Path<GeneratorData<T, string>>
+> {
     index: number;
     form: UseFormReturn<GeneratorData<T, Name>>;
 }
-export type ElemType<T extends FieldValues, Name extends string> = OrgElemType<
-    ElemProps<T, Name>
->;
+export type ElemType<
+    T extends FieldValues,
+    Name extends Path<GeneratorData<T, string>>
+> = OrgElemType<ElemProps<T, Name>>;
 
 export type PathsKeysType<TFieldValues extends FieldValues> = {
     head: FieldPath<TFieldValues>;
@@ -21,7 +25,10 @@ export type PathsKeysType<TFieldValues extends FieldValues> = {
     data_i_key: (i: number, key: string) => FieldPath<TFieldValues>;
 };
 
-export default function InfoGetter<T extends FieldsType, Name extends string>({
+export default function InfoGetter<
+    T extends FieldsType,
+    Name extends Path<GeneratorData<T, string>>
+>({
     name,
     initData,
     addButtonLabel = "Add",

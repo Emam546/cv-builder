@@ -62,7 +62,6 @@ import Hobbies, { Name as HobbiesName } from "./sections/hobbies";
 import CustomSection from "./sections/CustomSection";
 import InfoGetter from "@src/components/main/sections/InsertCommonData/index";
 import React, { useEffect } from "react";
-
 import Container from "@src/components/common/container";
 import { defaultData } from "./default";
 import { useDispatch } from "react-redux";
@@ -71,7 +70,6 @@ import { useAppSelector } from "@src/store";
 import { ActionType, StateActions } from "@src/store/state";
 import { copyObject } from "@src/utils";
 import loadash from "lodash";
-import { LevelType } from "../common/inputs/level";
 
 export default function Main({ values }: { values?: Data }) {
     const dispatch = useDispatch();
@@ -103,7 +101,7 @@ export default function Main({ values }: { values?: Data }) {
                 addButtonLabel="Add one more Picture group"
                 name={ImagesName}
                 initData={ImageInitData}
-                Elem={ImagesElem}
+                Elem={ImagesElem as any}
                 desc="Show your relevant Images (last 10 years)"
             />
             <Professional {...(form as any)} />
@@ -174,7 +172,7 @@ export default function Main({ values }: { values?: Data }) {
                     label: "",
                     link: "",
                 }}
-                Elem={LinkElem}
+                Elem={LinkElem as any}
                 desc="You can add links to websites you want hiring managers to see! Perhaps It will be  a link to your portfolio, LinkedIn profile, or personal website"
             />
             <Container
@@ -208,7 +206,7 @@ export default function Main({ values }: { values?: Data }) {
                 addButtonLabel="Add one more group"
                 name={SkillName}
                 initData={SkillInitData}
-                Elem={SkillElem}
+                Elem={SkillElem as any}
                 desc="Choose 5 important skills that show you fit the position. Make sure they match the key skills mentioned in the job listing (especially when applying via an online system)."
             />
 
@@ -238,8 +236,9 @@ export default function Main({ values }: { values?: Data }) {
                         },
                         desc: "",
                         institution: "",
+                        images: [],
                     }}
-                    Elem={CourseElem}
+                    Elem={CourseElem as any}
                 />
             </Container>
             <Container

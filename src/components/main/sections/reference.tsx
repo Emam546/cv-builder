@@ -12,7 +12,7 @@ export interface InputData extends FieldsType {
     phone: string;
     email: string;
 }
-const CourseElem: ElemType<InputData, NameType> = React.forwardRef(
+const ReferenceElem: ElemType<InputData, NameType> = React.forwardRef(
     (
         {
             index: i,
@@ -62,4 +62,4 @@ const CourseElem: ElemType<InputData, NameType> = React.forwardRef(
         );
     }
 );
-export default CourseElem;
+export default ReferenceElem;

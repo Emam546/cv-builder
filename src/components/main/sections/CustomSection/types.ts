@@ -1,7 +1,7 @@
 export type NameType = "custom";
 export const Name: NameType = "custom";
 
-export interface SectionInputData extends FieldsType {
+export interface SectionInputData {
     title: string;
     city: string;
     date: {

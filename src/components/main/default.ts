@@ -11,7 +11,9 @@ import { Name as ProjectsName } from "./sections/Projects";
 import { Name as PhotosName } from "./sections/photos";
 import { Name as CustomName } from "./sections/CustomSection/types";
 import { Name as HobbiesName } from "./sections/hobbies";
+import { Name as EducationName } from "./sections/education";
 let curOrder = 0;
+
 export const defaultData: Data = {
     info: {
         head: "Personal Details",
@@ -84,6 +86,10 @@ export const defaultData: Data = {
         head: "Pictures",
         data: [],
     },
+    [EducationName]: {
+        head: "Education",
+        data: [],
+    },
 };
 export const defaultSectionState: SectionStateType = {
     sections: {
@@ -140,6 +146,10 @@ export const defaultSectionState: SectionStateType = {
             order: curOrder++,
         },
         [PhotosName]: {
+            hiddenState: false,
+            order: curOrder++,
+        },
+        [EducationName]: {
             hiddenState: false,
             order: curOrder++,
         },

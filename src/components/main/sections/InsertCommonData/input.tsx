@@ -82,12 +82,6 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
             ).fill(1)
         ),
     ]);
-
-    useEffect(() => {
-        const Values = (getValues(keys.root) as T[]).length;
-        if (Values) setData([...Object.keys(new Array(Values).fill(1))]);
-    }, []);
-    if (getValues(name).length != EleData.length) return null;
     return (
         <LabelElem label={label}>
             <div>
@@ -115,13 +109,15 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
                                 setData((pre) => [...pre]);
                             }}
                             deleteSelf={(i) => {
+                                setData((pre) =>
+                                    pre.filter((_, ix) => ix != i)
+                                );
                                 setValue(
                                     keys.root,
                                     (getValues(keys.root) as T[]).filter(
                                         (val, ix) => i != ix
                                     ) as any
                                 );
-                                setData((pre) => pre.slice(0, pre.length - 1));
                             }}
                         />
                     </div>

@@ -62,12 +62,12 @@ const TeamElem: ElemType<InputData, NameType> = React.forwardRef(
                         setValue={(val) =>
                             setValue(`${Name}.data.${i}.avatar`, val)
                         }
-                        {...register(`${Name}.data.${i}.avatar`)}
+                        name={`${Name}.data.${i}.avatar`}
                         defaultValue={lodash.get(
                             control._defaultValues,
                             `${Name}.data.${i}.avatar`
                         )}
-                        control={control}
+                        control={control as any}
                     />
                     <NormalInput
                         label="Job Title"
@@ -93,7 +93,7 @@ const TeamElem: ElemType<InputData, NameType> = React.forwardRef(
                     className="my-4"
                 >
                     <FinalEditor
-                        control={control}
+                        control={control as any}
                         defaultValue={
                             form.control._defaultValues[Name]?.data?.[i]?.desc
                         }

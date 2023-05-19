@@ -1,15 +1,19 @@
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
-
-import { Path, useWatch } from "react-hook-form";
+import React from "react";
+import { UseFormReturn, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
+import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
 import {
-    forwardRef,
-} from "@src/components/main/sections/InsertCommonData/input";
-import { Name as TeamName } from "@src/components/main/sections/Team";
+    Name as TeamName,
+    InputData as TeamInputData,
+} from "@src/components/main/sections/Team";
+
 import FElem from "../links";
-export type NameType = "links";
-export const Name: NameType = "links";
+import { ElemType } from "../InsertCommonData/EleGen";
+export const Name = "links";
+export type NameType = typeof Name;
+export type NameRules = string;
 export interface InputData extends FieldsType {
     index?: number;
     role: string;
@@ -17,12 +21,8 @@ export interface InputData extends FieldsType {
 function assertISValidData(data: unknown): InputData {
     return data as InputData;
 }
-
-export function CreateListItem<NameType extends string>(Name: NameType) {
-    function v(s: string) {
-        return s as Path<ListData<InputData, NameType>>;
-    }
-    return forwardRef<InputData, NameType>(
+export function CreateListItem(Name: NameRules) {
+    return React.forwardRef(
         (
             {
                 index: i,
@@ -35,14 +35,14 @@ export function CreateListItem<NameType extends string>(Name: NameType) {
         ) => {
             const { index: mateI = -1, role } = assertISValidData(
                 useWatch({
-                    name: v(`${Name}.${i}`),
+                    name: `${Name}.${i}`,
                     control,
                 })
             );
             const AllTEamMates = useWatch({
-                name: v(`${TeamName}.data`),
+                name: `${TeamName}.data`,
                 control,
-            }) as any;
+            });
             const mateName = AllTEamMates?.[mateI]?.name;
             const mateJobTitle = AllTEamMates?.[mateI]?.jobTitle;
             return (
@@ -62,7 +62,7 @@ export function CreateListItem<NameType extends string>(Name: NameType) {
                         <Grid2Container>
                             <NormalInput
                                 label="Index"
-                                {...register(v(`${Name}.${i}.index`), {
+                                {...register(`${Name}.${i}.index`, {
                                     valueAsNumber: true,
                                 })}
                             />
@@ -70,16 +70,27 @@ export function CreateListItem<NameType extends string>(Name: NameType) {
                                 options={[mateJobTitle]}
                                 label="Role"
                                 setValue={(val) =>
-                                    setValue(v(`${Name}.${i}.role`), val as any)
+                                    setValue(`${Name}.${i}.role`, val as any)
                                 }
-                                {...register(v(`${Name}.${i}.role`))}
+                                {...register(`${Name}.${i}.role`)}
                             />
                         </Grid2Container>
                     </div>
                 </Elem>
             );
         }
-    );
+    ) as ElemType<{
+        index: number;
+        form: UseFormReturn<
+            {
+                [f: NameRules]: InputData[];
+            } & {
+                [TeamName]: {
+                    data: TeamInputData[];
+                };
+            }
+        >;
+    }>;
 }
 
 export default FElem;

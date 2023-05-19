@@ -66,17 +66,12 @@ const ExtraActivites: ElemType<InputData, NameType> = React.forwardRef(
                         startData={{
                             ...register(`${Name}.data.${i}.date.start`),
                             placeholder: "MM / YYYY",
-                            setValue(val) {
-                                setValue(`${Name}.data.${i}.date.start`, val);
-                            },
                         }}
                         endData={{
                             ...register(`${Name}.data.${i}.date.end`),
                             placeholder: "MM / YYYY",
-                            setValue(val) {
-                                setValue(`${Name}.data.${i}.date.end`, val);
-                            },
                         }}
+                        control={control as any}
                         labelEnd="Currently Work here."
                     />
                     <NormalInput
@@ -89,7 +84,7 @@ const ExtraActivites: ElemType<InputData, NameType> = React.forwardRef(
                     className="mt-5 pb-5"
                 >
                     <FinalEditor
-                        control={control}
+                        control={control as any}
                         defaultValue={
                             control._defaultValues[Name]?.data?.[i]?.desc
                         }

@@ -9,36 +9,29 @@ import FinalEditor from "@src/components/common/inputs/Editor";
 import { LabelElem } from "@src/components/common/inputs/styles";
 export type NameType = "links";
 export const Name: NameType = "links";
+export type NameRules = string;
 export interface InputData extends FieldsType {
     title: string;
     desc: string;
 }
-function assertISValidData(data: unknown): InputData {
-    return data as InputData;
-}
 
-export function CreateListItem<NameType extends string>(Name: NameType) {
-    function v(s: string) {
-        return s as Path<ListData<InputData, NameType>>;
-    }
-    return forwardRef<InputData, NameType>(
+export function CreateListItem(Name: NameRules) {
+    return forwardRef<InputData, NameRules>(
         (
             {
                 index: i,
                 props: {
                     form: { register, control, setValue },
-                    
                 },
                 ...props
             },
             ref
         ) => {
-            const { title, desc } = assertISValidData(
-                useWatch({
-                    name: v(`${Name}.${i}`),
-                    control,
-                })
-            );
+            const { title, desc } = useWatch({
+                name: `${Name}.${i}`,
+                control,
+            });
+
             return (
                 <Elem
                     headLabel={() => (
@@ -55,11 +48,11 @@ export function CreateListItem<NameType extends string>(Name: NameType) {
                         <Grid2Container>
                             <NormalInput
                                 label="Title"
-                                {...register(v(`${Name}.${i}.title`))}
+                                {...register(`${Name}.${i}.title`)}
                             />
                             <LabelElem label="Desc">
                                 <FinalEditor
-                                    control={control}
+                                    control={control as any}
                                     name={`${Name}.${i}.desc`}
                                 />
                             </LabelElem>
