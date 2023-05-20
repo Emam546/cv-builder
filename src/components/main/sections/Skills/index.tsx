@@ -9,7 +9,6 @@ import data from "./data.json";
 import LevelInput, { LevelType } from "@src/components/common/inputs/level";
 import { LabelElem } from "@src/components/common/inputs/styles";
 const programmingLangs = data.programming_technologies;
-
 export type NameType = "skills";
 export const Name: NameType = "skills";
 export interface ElemInputData extends FieldsType {

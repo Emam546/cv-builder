@@ -21,9 +21,9 @@ import lodash from "lodash";
 import classNames from "classnames";
 import ElemGenerator, { ElemType, ListProps as OrgListProps } from "./EleGen";
 
-export interface ListProps<T extends FieldValues, Name extends string> {
+export interface ListProps<T extends FieldValues, NameRules extends string> {
     index: number;
-    form: UseFormReturn<ListData<T, Name>>;
+    form: UseFormReturn<ListData<T, NameRules>>;
 }
 
 export type ListElemType<
@@ -43,8 +43,8 @@ export function forwardRef<
 ): ListElemType<T, Name, P> {
     return React.forwardRef(render);
 }
-
-export default function InfoGetter<T extends FieldsType, Name extends string>({
+type NameRules = string;
+export default function InfoGetter<T extends FieldsType>({
     name,
     initData,
     addButtonLabel = "Add",
@@ -53,35 +53,25 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
     label,
     noDragging,
 }: {
-    name: Name;
-    formRegister: UseFormReturn<ListData<T, Name>>;
+    name: NameRules;
+    formRegister: UseFormReturn<ListData<T, NameRules>>;
     initData: T;
     addButtonLabel: string;
-    Elem: ListElemType<T, Name>;
+    Elem: ListElemType<T, NameRules>;
     label?: string;
     noDragging?: boolean;
 }) {
-    const { setValue, getValues } = formRegister;
-
+    const { setValue, getValues, watch } = formRegister;
     const keys = {
-        root: `${name}` as FieldPath<ListData<T, Name>>,
-        data_i(i: number): FieldPath<ListData<T, Name>> {
-            return `${this.root}.${i}` as Path<ListData<T, Name>>;
+        root: `${name}`,
+        data_i(i: number) {
+            return `${this.root}.${i}`;
         },
-        data_i_key(i: number, key: string): FieldPath<ListData<T, Name>> {
-            return `${this.data_i(i)}.${key}` as Path<ListData<T, Name>>;
+        data_i_key(i: number, key: string) {
+            return `${this.data_i(i)}.${key}`;
         },
     };
-
-    const [EleData, setData] = useState<any[]>([
-        ...Object.keys(
-            new Array(
-                (
-                    lodash.get(formRegister.control._defaultValues, name) || []
-                ).length
-            ).fill(1)
-        ),
-    ]);
+    const EleData = watch(name);
     return (
         <LabelElem label={label}>
             <div>
@@ -100,18 +90,14 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
                             }))}
                             resort={(indexes) => {
                                 const data = indexes.map((i) =>
-                                    getValues(keys.data_i(i))
+                                    getValues(`${name}.${i}`)
                                 ) as PathValue<
-                                    ListData<T, Name>,
-                                    Path<ListData<T, Name>>
+                                    ListData<T, NameRules>,
+                                    Path<ListData<T, NameRules>>
                                 >;
                                 setValue(keys.root, data);
-                                setData((pre) => [...pre]);
                             }}
                             deleteSelf={(i) => {
-                                setData((pre) =>
-                                    pre.filter((_, ix) => ix != i)
-                                );
                                 setValue(
                                     keys.root,
                                     (getValues(keys.root) as T[]).filter(
@@ -130,7 +116,6 @@ export default function InfoGetter<T extends FieldsType, Name extends string>({
                             keys.data_i((getValues(keys.root) as T[]).length),
                             data as any
                         );
-                        setData((pre) => [...pre, 1]);
                     }}
                     type="button"
                     aria-label="add"

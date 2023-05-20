@@ -31,10 +31,7 @@ export function CreateElem(Name: NameRules) {
             control,
         });
         const ImagePath: ImagesPathType = `${Name}.${i}.images`;
-        const ImageInputItem = useMemo(
-            () => CreateImageItem(ImagePath as any),
-            [i]
-        );
+        const ImageInputItem = useMemo(() => CreateImageItem(ImagePath), [i]);
         return (
             <Elem
                 headLabel={() => (
