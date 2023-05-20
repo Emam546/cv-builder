@@ -89,7 +89,7 @@ function ConvValToOptions(vals?: string[]) {
         return [...acc, res];
     }, [] as { value: string; label: string }[]) as any;
 }
-const ProjectElem: ElemType<InputData, NameType> = React.forwardRef(
+const ProjectElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
         const { register, control, setValue } = form;
         const { name, kind: jobTitle } = useWatch({

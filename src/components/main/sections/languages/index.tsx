@@ -33,7 +33,7 @@ const Options: OptionType[] = [
     { val: "A1", label: "A1" },
 ];
 const OptionsMap = new Map(Options.map((val) => [val.val, val]));
-const FElem: ElemType<InputData, NameType> = React.forwardRef(
+const FElem: ElemType<InputData> = React.forwardRef(
     (
         {
             props: {

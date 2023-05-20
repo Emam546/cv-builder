@@ -1,5 +1,5 @@
-import { SyntheticEvent, useState } from "react";
-import { FieldPath, FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { SyntheticEvent } from "react";
+import { FieldValues, UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import HeadSection from "@src/components/common/head";

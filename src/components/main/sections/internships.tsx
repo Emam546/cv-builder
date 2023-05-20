@@ -19,7 +19,7 @@ export interface InputData extends FieldsType {
     city: string;
     desc: string;
 }
-const EmployElem: ElemType<InputData, NameType> = React.forwardRef(
+const EmployElem: ElemType<InputData> = React.forwardRef(
     (
         {
             index: i,

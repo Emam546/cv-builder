@@ -93,7 +93,7 @@ export function CreateElem(Name: NameRules) {
 }
 type SkillsPath = `${NameType}.data.${number}.skills`;
 
-export const FElem: ElemType<ElemInputData, NameType> = React.forwardRef(
+export const FElem: ElemType<ElemInputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
         const { register, control, setValue } = form;
         const { label } = useWatch({

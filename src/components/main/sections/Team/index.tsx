@@ -25,7 +25,7 @@ export interface InputData extends FieldsType {
 }
 type LinkPath = `${NameType}.data.${number}.links`;
 
-const TeamElem: ElemType<InputData, NameType> = React.forwardRef(
+const TeamElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
         const { register, control, setValue } = form;
         const { name, jobTitle } = useWatch({
@@ -63,10 +63,12 @@ const TeamElem: ElemType<InputData, NameType> = React.forwardRef(
                             setValue(`${Name}.data.${i}.avatar`, val)
                         }
                         name={`${Name}.data.${i}.avatar`}
-                        defaultValue={lodash.get(
-                            control._defaultValues,
-                            `${Name}.data.${i}.avatar`
-                        )}
+                        defaultValue={
+                            lodash.get(
+                                control._defaultValues,
+                                `${Name}.data.${i}.avatar`
+                            ) as string
+                        }
                         control={control as any}
                     />
                     <NormalInput

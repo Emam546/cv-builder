@@ -19,7 +19,7 @@ export interface InputData extends FieldsType {
     city: string;
     desc: string;
 }
-const ExtraActivites: ElemType<InputData, NameType> = React.forwardRef(
+const ExtraActivites: ElemType<InputData> = React.forwardRef(
     (
         {
             index: i,

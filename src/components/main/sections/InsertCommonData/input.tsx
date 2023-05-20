@@ -1,23 +1,8 @@
-import React, {
-    ForwardRefExoticComponent,
-    ForwardRefRenderFunction,
-    PropsWithoutRef,
-    RefAttributes,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
-import {
-    FieldPath,
-    FieldValues,
-    Path,
-    PathValue,
-    UseFormReturn,
-} from "react-hook-form";
+import React, { ForwardRefRenderFunction } from "react";
+import { FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { LabelElem } from "../../../common/inputs/styles";
-import lodash from "lodash";
 import classNames from "classnames";
 import ElemGenerator, { ElemType, ListProps as OrgListProps } from "./EleGen";
 

@@ -107,7 +107,7 @@ function CreateElem(Name: NameRules) {
                 </Elem>
             );
         }
-    ) as ElemType<SectionInputData, NameRules>;
+    ) as ElemType<SectionInputData>;
 }
 function CreateEle({
     order,

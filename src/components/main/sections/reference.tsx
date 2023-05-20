@@ -12,7 +12,7 @@ export interface InputData extends FieldsType {
     phone: string;
     email: string;
 }
-const ReferenceElem: ElemType<InputData, NameType> = React.forwardRef(
+const ReferenceElem: ElemType<InputData> = React.forwardRef(
     (
         {
             index: i,

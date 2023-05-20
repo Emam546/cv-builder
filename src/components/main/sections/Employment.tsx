@@ -50,7 +50,7 @@ function ConvValToOptions(vals?: string[]) {
         return [...acc, res];
     }, [] as { value: string; label: string }[]) as any;
 }
-const EmployElem: ElemType<InputData, NameType> = React.forwardRef(
+const EmployElem: ElemType<InputData> = React.forwardRef(
     (
         {
             index: i,
@@ -134,7 +134,7 @@ const EmployElem: ElemType<InputData, NameType> = React.forwardRef(
                             lodash.get(
                                 control._defaultValues,
                                 `${Name}.data.${i}.technologies`
-                            )
+                            ) as string[]
                         )}
                         control={control as any}
                         name={`${Name}.data.${i}.technologies`}
