@@ -70,7 +70,7 @@ export function CreateListItem(Name: NameRules) {
                                 options={[mateJobTitle]}
                                 label="Role"
                                 setValue={(val) =>
-                                    setValue(`${Name}.${i}.role`, val as any)
+                                    setValue(`${Name}.${i}.role`, val)
                                 }
                                 {...register(`${Name}.${i}.role`)}
                             />

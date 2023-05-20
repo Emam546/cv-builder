@@ -13,7 +13,7 @@ import { useUploadImage } from "@src/utils/hooks";
 
 export type NameType = "images";
 export const Name: NameType = "images";
-export type NameRules=string
+export type NameRules = string;
 export interface InputData extends FieldsType {
     widthRation: number;
     heightRation: number;
@@ -35,12 +35,11 @@ export function CreateListItem(Name: NameRules) {
             },
             ref
         ) => {
-            const { widthRation, heightRation } = assertISValidData(
-                useWatch({
-                    name: `${Name}.${i}`,
-                    control,
-                })
-            );
+            const { widthRation, heightRation } = useWatch({
+                name: `${Name}.${i}`,
+                control,
+            });
+
             return (
                 <Elem
                     headLabel={() => (
@@ -71,7 +70,7 @@ export function CreateListItem(Name: NameRules) {
                         <UploadButton
                             label="Upload Image"
                             setValue={(val) =>
-                                setValue(`${Name}.${i}.image`, val as any)
+                                setValue(`${Name}.${i}.image`, val)
                             }
                             aspect={widthRation / (heightRation || 1)}
                             {...register(`${Name}.${i}.image`)}

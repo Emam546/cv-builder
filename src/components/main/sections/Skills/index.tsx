@@ -1,16 +1,17 @@
 import React, { useMemo } from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
-import { Path, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
+import InfoGetter, { ListElemType } from "../InsertCommonData/input";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
-export type NameType = "skills";
-export const Name: NameType = "skills";
 import data from "./data.json";
 import LevelInput, { LevelType } from "@src/components/common/inputs/level";
-import InfoGetter from "../InsertCommonData/input";
 import { LabelElem } from "@src/components/common/inputs/styles";
 const programmingLangs = data.programming_technologies;
+
+export type NameType = "skills";
+export const Name: NameType = "skills";
 export interface ElemInputData extends FieldsType {
     label: string;
     level: LevelType;
@@ -30,8 +31,9 @@ const Levels: Record<LevelType, string> = {
     "3": "Experienced",
     "4": "Expert",
 };
-export function CreateElem<NameType extends Path<any>>(Name: NameType) {
-    const FElem: ElemType<ElemInputData, NameType> = React.forwardRef(
+type NameRules = string;
+export function CreateElem(Name: NameRules) {
+    return React.forwardRef(
         (
             {
                 index: i,
@@ -67,7 +69,7 @@ export function CreateElem<NameType extends Path<any>>(Name: NameType) {
                             <NormalInput
                                 label="Skill"
                                 setValue={(val) =>
-                                    setValue(`${Name}.${i}.label`, val as any)
+                                    setValue(`${Name}.${i}.label`, val)
                                 }
                                 options={programmingLangs}
                                 {...register(`${Name}.${i}.label`)}
@@ -77,7 +79,7 @@ export function CreateElem<NameType extends Path<any>>(Name: NameType) {
                                 label="link"
                                 Levels={Levels}
                                 setValue={(val) =>
-                                    setValue(`${Name}.${i}.level`, val as any)
+                                    setValue(`${Name}.${i}.level`, val)
                                 }
                                 {...register(`${Name}.${i}.level`, {
                                     valueAsNumber: true,
@@ -88,8 +90,7 @@ export function CreateElem<NameType extends Path<any>>(Name: NameType) {
                 </Elem>
             );
         }
-    );
-    return FElem;
+    ) as ListElemType<ElemInputData, NameRules>;
 }
 type SkillsPath = `${NameType}.data.${number}.skills`;
 
@@ -128,9 +129,9 @@ export const FElem: ElemType<ElemInputData, NameType> = React.forwardRef(
                     className="my-4"
                 >
                     <InfoGetter
-                        Elem={SkillElem}
-                        formRegister={form}
                         name={skillPath}
+                        Elem={SkillElem as any}
+                        formRegister={form as any}
                         initData={{
                             label: "",
                             level: 0,
