@@ -153,10 +153,10 @@ export default function Main({ values }: { values?: Data }) {
                         GeneratorData<ProjectsDataType, ProjectsNameType>
                     >
                 }
-                addButtonLabel="Add one more Project"
+                addButtonLabel="Add one more group"
                 name={ProjectsName}
-                initData={ProjectInitData}
                 Elem={ProjectsElem}
+                initData={ProjectInitData}
                 desc="Show your relevant Projects"
             />
 

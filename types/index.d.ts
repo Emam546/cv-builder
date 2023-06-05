@@ -37,7 +37,7 @@ import type {
     NameType as TeamNameType,
 } from "@src/components/main/sections/Team";
 import type {
-    InputData as ProjectsDataType,
+    EleInputData as ProjectsDataType,
     NameType as ProjectsNameType,
 } from "@src/components/main/sections/Projects";
 import type {

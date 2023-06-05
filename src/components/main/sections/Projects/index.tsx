@@ -5,7 +5,7 @@ import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import { CreateListItem } from "../links";
+import { CreateListItem as CreateLinkListItem } from "../links";
 import {
     CreateListItem as CreateTeamItem,
     InputData as TeamInputData,
@@ -18,7 +18,9 @@ import {
     CreateListItem as CreateLessonItem,
     InputData as LessonInputData,
 } from "./lessons";
-import InfoGetter from "@src/components/main/sections/InsertCommonData/input";
+import InfoGetter, {
+    ListElemType,
+} from "@src/components/main/sections/InsertCommonData/input";
 import DatePicker from "@src/components/common/inputs/datePicker";
 import { LabelElem } from "@src/components/common/inputs/styles";
 import RangeInput from "@src/components/common/inputs/rangeInput";
@@ -28,9 +30,10 @@ const Technologies = data.programming_technologies.map((value) => ({
     value,
     label: value,
 }));
+export type EleNameType = string;
 export type NameType = "projects";
 export const Name: NameType = "projects";
-export interface InputData extends FieldsType {
+export interface EleInputData {
     name: string;
     kind: string;
     progress: number;
@@ -53,7 +56,7 @@ export interface InputData extends FieldsType {
     lessons: LessonInputData[];
     technologies: (string | number)[];
 }
-export const InitData: InputData = {
+export const EleInitData: EleInputData = {
     links: [],
     name: "",
     desc: "",
@@ -73,10 +76,10 @@ export const InitData: InputData = {
     },
     lessons: [],
 };
-type LinkPathType = `${NameType}.data.${number}.links`;
-type TeamMemberPathType = `${NameType}.data.${number}.team`;
-type ImagesPathType = `${NameType}.data.${number}.images`;
-type LessonPathType = `${NameType}.data.${number}.lessons`;
+type LinkPathType = `${EleNameType}.${number}.links`;
+type TeamMemberPathType = `${EleNameType}.${number}.team`;
+type ImagesPathType = `${EleNameType}.${number}.images`;
+type LessonPathType = `${EleNameType}.${number}.lessons`;
 import lodash from "lodash";
 import BudgetInput from "./budget";
 function ConvValToOptions(vals?: string[]) {
@@ -89,15 +92,15 @@ function ConvValToOptions(vals?: string[]) {
         return [...acc, res];
     }, [] as { value: string; label: string }[]) as any;
 }
-const ProjectElem: ElemType<InputData> = React.forwardRef(
-    ({ index: i, props: { form }, ...props }, ref) => {
+const CreateListItem = function (EleName: EleNameType) {
+    return React.forwardRef(({ index: i, props: { form }, ...props }, ref) => {
         const { register, control, setValue } = form;
         const { name, kind: jobTitle } = useWatch({
-            name: `${Name}.data.${i}`,
+            name: `${EleName}.${i}`,
             control,
         });
-        const allData: InputData[] = useWatch({
-            name: `${Name}.data`,
+        const allData: EleInputData[] = useWatch({
+            name: `${EleName}`,
             control,
         });
         const kinds = allData
@@ -105,11 +108,11 @@ const ProjectElem: ElemType<InputData> = React.forwardRef(
             .filter((value, index, self) => {
                 return self.indexOf(value) === index;
             });
-        const LinkPath: LinkPathType = `${Name}.data.${i}.links`;
-        const TeamPath: TeamMemberPathType = `${Name}.data.${i}.team`;
-        const ImagePath: ImagesPathType = `${Name}.data.${i}.images`;
-        const LessonPath: LessonPathType = `${Name}.data.${i}.lessons`;
-        const LinkEle = useMemo(() => CreateListItem(LinkPath), [i]);
+        const LinkPath: LinkPathType = `${EleName}.${i}.links`;
+        const TeamPath: TeamMemberPathType = `${EleName}.${i}.team`;
+        const ImagePath: ImagesPathType = `${EleName}.${i}.images`;
+        const LessonPath: LessonPathType = `${EleName}.${i}.lessons`;
+        const LinkEle = useMemo(() => CreateLinkListItem(LinkPath), [i]);
         const TeamItem = useMemo(() => CreateTeamItem(TeamPath), [i]);
         const ImageInputItem = useMemo(() => CreateImageItem(ImagePath), [i]);
         const LessonItem = useMemo(() => CreateLessonItem(LessonPath), [i]);
@@ -129,22 +132,22 @@ const ProjectElem: ElemType<InputData> = React.forwardRef(
                 <Grid2Container>
                     <NormalInput
                         label="Project Name"
-                        {...register(`${Name}.data.${i}.name`)}
+                        {...register(`${EleName}.${i}.name`)}
                     />
                     <NormalInput
                         label="Kind"
                         options={kinds}
-                        {...register(`${Name}.data.${i}.kind`)}
+                        {...register(`${EleName}.${i}.kind`)}
                     />
                     <DatePicker
                         applyPresent
                         label="Start &End Time"
                         startData={{
-                            ...register(`${Name}.data.${i}.date.start`),
+                            ...register(`${EleName}.${i}.date.start`),
                             placeholder: "MM / YYYY",
                         }}
                         endData={{
-                            ...register(`${Name}.data.${i}.date.end`),
+                            ...register(`${EleName}.${i}.date.end`),
                             placeholder: "MM / YYYY",
                         }}
                         control={control as any}
@@ -153,31 +156,33 @@ const ProjectElem: ElemType<InputData> = React.forwardRef(
                     <LabelElem label="Progress">
                         <div>
                             <RangeInput
-                                {...register(`${Name}.data.${i}.progress`, {
+                                {...register(`${EleName}.${i}.progress`, {
                                     valueAsNumber: true,
                                 })}
                                 defaultValue={
-                                    control._defaultValues.projects?.data?.[i]
-                                        ?.progress
+                                    lodash.get(
+                                        control._defaultValues,
+                                        `${EleName}.${i}.progress`
+                                    ) as any
                                 }
                             />
                         </div>
                     </LabelElem>
                     <NormalInput
                         label="Team Size"
-                        {...register(`${Name}.data.${i}.teamSize`, {
+                        {...register(`${EleName}.${i}.teamSize`, {
                             valueAsNumber: true,
                         })}
                     />
                     <BudgetInput
                         label="Project Budget"
                         price={{
-                            ...register(`${Name}.data.${i}.budget.num`, {
+                            ...register(`${EleName}.${i}.budget.num`, {
                                 valueAsNumber: true,
                             }),
                         }}
                         unit={{
-                            ...register(`${Name}.data.${i}.budget.unit`),
+                            ...register(`${EleName}.${i}.budget.unit`),
                             control: control as any,
                         }}
                     />
@@ -189,10 +194,10 @@ const ProjectElem: ElemType<InputData> = React.forwardRef(
                             defaultValue={ConvValToOptions(
                                 lodash.get(
                                     control._defaultValues.projects,
-                                    `${Name}.data.${i}.technologies`
+                                    `${EleName}.${i}.technologies`
                                 )
                             )}
-                            name={`${Name}.data.${i}.technologies`}
+                            name={`${EleName}.${i}.technologies`}
                             control={control as any}
                         />
                     </LabelElem>
@@ -241,13 +246,64 @@ const ProjectElem: ElemType<InputData> = React.forwardRef(
                         <FinalEditor
                             control={control as any}
                             defaultValue={
-                                form.control._defaultValues[Name]?.data?.[i]
-                                    ?.desc
+                                lodash.get(
+                                    control._defaultValues,
+                                    `${EleName}.${i}.desc`
+                                ) as unknown as string
                             }
-                            {...register(`${Name}.data.${i}.desc`)}
+                            {...register(`${EleName}.${i}.desc`)}
                             placeholder="Description about team mate and his role"
                         />
                     </LabelElem>
+                </div>
+            </Elem>
+        );
+    }) as ListElemType<EleInputData, EleNameType>;
+};
+
+export interface InputData {
+    label: string;
+    data: EleInputData[];
+}
+export const InitData: InputData = {
+    label: "",
+    data: [],
+};
+type PathType = `${NameType}.data.${number}.data`;
+const ProjectElem: ElemType<InputData> = React.forwardRef(
+    ({ index: i, props: { form }, ...props }, ref) => {
+        const { control, register } = form;
+        const { label } = useWatch({
+            name: `${Name}.data.${i}`,
+            control,
+        });
+        const path: PathType = `${Name}.data.${i}.data`;
+        const ProjectElem = useMemo(() => CreateListItem(path), [i]);
+        return (
+            <Elem
+                headLabel={() => (
+                    <div className="font-bold group-hover:text-blue-60">
+                        <p className="font-bold group-hover:text-blue-60">
+                            {label || "(Not Specified)"}
+                        </p>
+                    </div>
+                )}
+                {...props}
+                ref={ref}
+            >
+                <NormalInput
+                    label="Project Name"
+                    {...register(`${Name}.data.${i}.label`)}
+                />
+                <div className="my-4">
+                    <InfoGetter
+                        Elem={ProjectElem}
+                        addButtonLabel="Add project"
+                        initData={EleInitData}
+                        name={path}
+                        label="Projects"
+                        formRegister={form as any}
+                    />
                 </div>
             </Elem>
         );

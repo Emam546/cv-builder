@@ -47,9 +47,9 @@ import TeamElem, {
     Name as TeamName,
 } from "@src/components/main/sections/Team";
 import ProjectsElem, {
-    InputData as ProjectsDataType,
-    NameType as ProjectsNameType,
-    Name as ProjectsName,
+    EleInputData as ProjectsDataType,
+    EleNameType as ProjectsNameType,
+    EleName as ProjectsName,
 } from "@src/components/main/sections/Projects";
 import Professional from "@src/components/main/sections/professional";
 import Hobbies, {

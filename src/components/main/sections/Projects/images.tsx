@@ -19,9 +19,6 @@ export interface InputData extends FieldsType {
     heightRation: number;
     image: string;
 }
-function assertISValidData(data: unknown): InputData {
-    return data as InputData;
-}
 
 export function CreateListItem(Name: NameRules) {
     return forwardRef<InputData, NameRules>(
