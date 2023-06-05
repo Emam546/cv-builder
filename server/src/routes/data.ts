@@ -4,6 +4,7 @@ import apicache from "apicache";
 import User from "@serv/models/user";
 import { convertSection2Data } from "@src/components/main/utils";
 import rateLimiter from "express-rate-limit";
+import lodash from "lodash";
 const router = Router();
 router.use(cors({ origin: "*" }));
 const cache = apicache.middleware;
@@ -32,6 +33,34 @@ router.get("/", async (req, res) => {
         status: true,
         msg: "success",
         data: convertSection2Data(data.sections, data.sectionState),
+    });
+});
+router.get("/*", async (req, res) => {
+    if (!req.query.apikey && typeof req.query.apikey == "string") {
+        return res
+            .status(400)
+            .json({ status: false, msg: "ApiKey is not provided" });
+    }
+    const result = await User.findOne({ apiKey: req.query.apikey }).hint({
+        apiKey: 1,
+    });
+    if (!result)
+        return res.status(401).json({ status: false, msg: "Invalid API key" });
+    const data = result.data;
+    if (!data)
+        return res.status(404).json({ status: false, msg: "Unprovided Data" });
+    const path = req.path
+        .substring(req.path.indexOf("data/") + 2)
+        .split("/")
+        .join(".");
+    const convertedData = convertSection2Data(data.sections, data.sectionState);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const sendedData = lodash.get(convertedData, path);
+    res.status(200).json({
+        status: true,
+        msg: "success",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        data: sendedData,
     });
 });
 export default router;

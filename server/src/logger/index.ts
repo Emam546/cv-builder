@@ -6,7 +6,7 @@ import "winston-mongodb";
 let logger: Logger = createLogger({
     transports: [
         new transports.Console({
-            level: "error",
+            level: "warn",
         }),
     ],
     format: format.combine(
@@ -25,7 +25,7 @@ if (EnvVars.nodeEnv == NodeEnvs.Production) {
             new transports.MongoDB({
                 level: "error",
                 db: EnvVars.MONGODB_URL,
-                dbName:"Resume_logs",
+                dbName: "Resume_logs",
                 collection: "logs",
                 // format: format.metadata(),
             }),
