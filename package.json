@@ -10,7 +10,6 @@
     "start": "node -r module-alias/register ./dist/server/src --env=production",
     "lint": "next lint",
     "lint:server": "npx eslint -c server/.eslintrc.json --ext .ts server/src/",
-    "lint:server-test": "npx eslint -c server/.eslintrc.json --ext .ts server/spec/",
     "test": "jest"
   },
   "dependencies": {

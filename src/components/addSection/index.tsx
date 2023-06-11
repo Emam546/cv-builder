@@ -1,64 +1,10 @@
-import BasicInfo from "@src/components/main/sections/basicinf";
-import { UseFormReturn, useForm } from "react-hook-form";
-
-import EmployElem, {
-    InputData as EmployDataType,
-    NameType as EmployNameType,
-    Name as EmployName,
-} from "@src/components/main/sections/Employment";
-import LinkElem, {
-    InputData as LinkDataType,
-    NameType as LinkNameType,
-    Name as LinkName,
-} from "@src/components/main/sections/links";
-import LangElem, {
-    InputData as LangDataType,
-    NameType as LangNameType,
-    Name as LangName,
-} from "@src/components/main/sections/languages";
-import SkillElem, {
-    InputData as SkillDataType,
-    NameType as SkillNameType,
-    Name as SkillName,
-} from "@src/components/main/sections/Skills";
-import CourseElem, {
-    InputData as CourseDataType,
-    NameType as CourseNameType,
-    Name as CourseName,
-} from "@src/components/main/sections/courses";
-import InternShipElem, {
-    InputData as InternShipDataType,
-    NameType as InternShipNameType,
-    Name as InternShipName,
-} from "@src/components/main/sections/internships";
-import ReferenceElem, {
-    InputData as ReferenceDataType,
-    NameType as ReferenceNameType,
-    Name as ReferenceName,
-} from "@src/components/main/sections/reference";
-import ExtraActivitesElem, {
-    InputData as ExtraActivitesDataType,
-    NameType as ExtraActivitesNameType,
-    Name as ExtraActivitesName,
-} from "@src/components/main/sections/ExtraActivites";
-import TeamElem, {
-    InputData as TeamDataType,
-    NameType as TeamNameType,
-    Name as TeamName,
-} from "@src/components/main/sections/Team";
-import ProjectsElem, {
-    EleInputData as ProjectsDataType,
-    EleNameType as ProjectsNameType,
-    EleName as ProjectsName,
-} from "@src/components/main/sections/Projects";
-import Professional from "@src/components/main/sections/professional";
-import Hobbies, {
-    Name as HobbiesName,
-} from "@src/components/main/sections/hobbies";
-import CustomSection from "@src/components/main/sections/CustomSection";
-import { Name as CustomName } from "@src/components/main/sections/CustomSection/types";
-import InfoGetter from "@src/components/main/sections/InsertCommonData/index";
-import React, { Dispatch, useReducer, useState } from "react";
+import { Name as LangName } from "@src/components/main/sections/languages";
+import { Name as CourseName } from "@src/components/main/sections/courses";
+import { Name as InternShipName } from "@src/components/main/sections/internships";
+import { Name as ReferenceName } from "@src/components/main/sections/reference";
+import { Name as ExtraActivitesName } from "@src/components/main/sections/ExtraActivites";
+import { Name as HobbiesName } from "@src/components/main/sections/hobbies";
+import { Dispatch } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBook,
