@@ -59,6 +59,9 @@ export default function Login() {
                     className="bg-red-60 text-white mx-auto sm:ml-0"
                     icon={faGoogle}
                     label="Google"
+                    onClick={() => {
+                        window.location.href = "/api/v1/auth/google";
+                    }}
                     aria-label="sign in with google"
                 />
                 <StyledButton
