@@ -30,7 +30,8 @@
   "include": [
     "src",
     "server",
-    "types"
+    "types",
+    "build.ts"
   ],
   "exclude": [
     "node_modules"

@@ -18,7 +18,6 @@
     "include": [
         "server",
         "src",
-        "types",
-        "./build.ts"
+        "types"
     ]
 }

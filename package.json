@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon",
-    "build:server": "./node_modules/.bin/ts-node build.ts --project tsconfig.server.json",
+    "build:server": "npx ts-node build.ts",
     "build:next": "next build",
     "build": "npm run build:server && npm run build:next",
     "start": "node -r module-alias/register ./dist/server/src --env=production",
