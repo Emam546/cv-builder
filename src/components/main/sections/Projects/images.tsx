@@ -234,7 +234,6 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                 >
                     <ImageCropper
                         setValue={(val) => {
-                            console.log("set blob");
                             setEdit(false);
                             setBlob(val);
                             setLoading(true);
