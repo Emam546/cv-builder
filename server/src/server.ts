@@ -36,14 +36,15 @@ app.use(
 app.use(passport.initialize());
 // app.use(passport.session());
 
-// Show routes called in console during development
-if (EnvVars.nodeEnv === NodeEnvs.Dev) {
-    app.use(morgan("dev"));
-}
 
 // Security
 if (EnvVars.nodeEnv === NodeEnvs.Production) {
-    app.use(helmet());
+    app.use(
+        helmet({
+            contentSecurityPolicy: false,
+            crossOriginEmbedderPolicy: false,
+        })
+    );
 }
 
 // **** Add API routes **** //
