@@ -16,7 +16,7 @@ export interface InputData extends FieldsType {
 }
 
 export function CreateListItem(Name: NameRules) {
-    return forwardRef<InputData, NameRules>(
+    return forwardRef<InputData>(
         (
             {
                 index: i,

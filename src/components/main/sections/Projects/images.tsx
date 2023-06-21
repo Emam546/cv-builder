@@ -19,9 +19,13 @@ export interface InputData extends FieldsType {
     heightRation: number;
     image: string;
 }
-
+export const InitData: InputData = {
+    widthRation: 1,
+    heightRation: 1,
+    image: "",
+};
 export function CreateListItem(Name: NameRules) {
-    return forwardRef<InputData, NameRules>(
+    return forwardRef<InputData>(
         (
             {
                 index: i,

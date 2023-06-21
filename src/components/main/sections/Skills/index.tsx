@@ -89,11 +89,11 @@ export function CreateElem(Name: NameRules) {
                 </Elem>
             );
         }
-    ) as ListElemType<ElemInputData, NameRules>;
+    ) as ListElemType<ElemInputData>;
 }
 type SkillsPath = `${NameType}.data.${number}.skills`;
 
-export const FElem: ElemType<ElemInputData> = React.forwardRef(
+export const FElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
         const { register, control, setValue } = form;
         const { label } = useWatch({
@@ -128,9 +128,9 @@ export const FElem: ElemType<ElemInputData> = React.forwardRef(
                     className="my-4"
                 >
                     <InfoGetter
+                        formRegister={form as any}
                         name={skillPath}
                         Elem={SkillElem as any}
-                        formRegister={form as any}
                         initData={{
                             label: "",
                             level: 0,

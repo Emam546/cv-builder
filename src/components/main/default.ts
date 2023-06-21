@@ -12,6 +12,7 @@ import { Name as PhotosName } from "./sections/photos";
 import { Name as CustomName } from "./sections/CustomSection/types";
 import { Name as HobbiesName } from "./sections/hobbies";
 import { Name as EducationName } from "./sections/education";
+import { Name as TestimonialsName } from "./sections/tesimonial";
 let curOrder = 0;
 
 export const defaultData: Data = {
@@ -90,6 +91,10 @@ export const defaultData: Data = {
         head: "Education",
         data: [],
     },
+    [TestimonialsName]: {
+        head: "Testimonials",
+        data: [],
+    },
 };
 export const defaultSectionState: SectionStateType = {
     sections: {
@@ -101,15 +106,31 @@ export const defaultSectionState: SectionStateType = {
             hiddenState: false,
             order: curOrder++,
         },
+        [PhotosName]: {
+            hiddenState: false,
+            order: curOrder++,
+        },
         [EmployName]: {
             hiddenState: false,
             order: curOrder++,
         },
-        [LinkName]: {
+        [ProjectsName]: {
             hiddenState: false,
             order: curOrder++,
         },
-        [LangName]: {
+        [TeamName]: {
+            hiddenState: false,
+            order: curOrder++,
+        },
+        [TestimonialsName]: {
+            hiddenState: false,
+            order: curOrder++,
+        },
+        [EducationName]: {
+            hiddenState: false,
+            order: curOrder++,
+        },
+        [CourseName]: {
             hiddenState: true,
             order: curOrder,
         },
@@ -117,9 +138,13 @@ export const defaultSectionState: SectionStateType = {
             hiddenState: false,
             order: curOrder,
         },
-        [CourseName]: {
+        [LangName]: {
             hiddenState: true,
             order: curOrder,
+        },
+        [LinkName]: {
+            hiddenState: false,
+            order: curOrder++,
         },
         [InternShipName]: {
             hiddenState: true,
@@ -129,27 +154,11 @@ export const defaultSectionState: SectionStateType = {
             hiddenState: true,
             order: curOrder,
         },
-        [ReferenceName]: {
-            hiddenState: false,
-            order: curOrder++,
-        },
         [ExtraActivitesName]: {
             hiddenState: true,
             order: curOrder,
         },
-        [TeamName]: {
-            hiddenState: false,
-            order: curOrder++,
-        },
-        [ProjectsName]: {
-            hiddenState: false,
-            order: curOrder++,
-        },
-        [PhotosName]: {
-            hiddenState: false,
-            order: curOrder++,
-        },
-        [EducationName]: {
+        [ReferenceName]: {
             hiddenState: false,
             order: curOrder++,
         },

@@ -6,6 +6,12 @@ import EmployElem, {
     NameType as EmployNameType,
     Name as EmployName,
 } from "./sections/Employment";
+import EducElem, {
+    InputData as EducDataType,
+    NameType as EducNameType,
+    Name as EducName,
+    InitData as EducInitData,
+} from "./sections/education";
 import LinkElem, {
     InputData as LinkDataType,
     NameType as LinkNameType,
@@ -57,6 +63,12 @@ import ImagesElem, {
     Name as ImagesName,
     InitData as ImageInitData,
 } from "./sections/photos";
+import TestimonialsElem, {
+    InputData as TestimonialsDataType,
+    NameType as TestimonialsNameType,
+    Name as TestimonialsName,
+    InitData as TestimonialsInitData,
+} from "./sections/tesimonial";
 import Professional from "./sections/professional";
 import Hobbies, { Name as HobbiesName } from "./sections/hobbies";
 import CustomSection from "./sections/CustomSection";
@@ -101,7 +113,7 @@ export default function Main({ values }: { values?: Data }) {
                 addButtonLabel="Add one more Picture group"
                 name={ImagesName}
                 initData={ImageInitData}
-                Elem={ImagesElem as any}
+                Elem={ImagesElem}
                 desc="Show your relevant Images (last 10 years)"
             />
             <Professional {...(form as any)} />
@@ -131,6 +143,30 @@ export default function Main({ values }: { values?: Data }) {
             <InfoGetter
                 formRegister={
                     form as unknown as UseFormReturn<
+                        GeneratorData<EducDataType, EducNameType>
+                    >
+                }
+                addButtonLabel="Add Education"
+                name={EducName}
+                initData={EducInitData}
+                Elem={EducElem}
+                desc="A varied education on your resume sums up the value that your learnings and background will bring to job."
+            />
+            <InfoGetter
+                formRegister={
+                    form as unknown as UseFormReturn<
+                        GeneratorData<ProjectsDataType, ProjectsNameType>
+                    >
+                }
+                addButtonLabel="Add one more group"
+                name={ProjectsName}
+                Elem={ProjectsElem}
+                initData={ProjectInitData}
+                desc="Show your relevant Projects"
+            />
+            <InfoGetter
+                formRegister={
+                    form as unknown as UseFormReturn<
                         GeneratorData<TeamDataType, TeamNameType>
                     >
                 }
@@ -147,34 +183,47 @@ export default function Main({ values }: { values?: Data }) {
                 Elem={TeamElem}
                 desc="Show your relevant teammates ."
             />
-            <InfoGetter
-                formRegister={
-                    form as unknown as UseFormReturn<
-                        GeneratorData<ProjectsDataType, ProjectsNameType>
-                    >
-                }
-                addButtonLabel="Add one more group"
-                name={ProjectsName}
-                Elem={ProjectsElem}
-                initData={ProjectInitData}
-                desc="Show your relevant Projects"
-            />
 
-            <InfoGetter
-                formRegister={
-                    form as unknown as UseFormReturn<
-                        GeneratorData<LinkDataType, LinkNameType>
-                    >
-                }
-                addButtonLabel="Add one more link"
-                name={LinkName}
-                initData={{
-                    label: "",
-                    link: "",
-                }}
-                Elem={LinkElem as any}
-                desc="You can add links to websites you want hiring managers to see! Perhaps It will be  a link to your portfolio, LinkedIn profile, or personal website"
-            />
+            <Container
+                hiddenState={sectionHiddenState[LinkName].hiddenState}
+                order={sectionHiddenState[LinkName].order}
+            >
+                <InfoGetter
+                    formRegister={
+                        form as unknown as UseFormReturn<
+                            GeneratorData<LinkDataType, LinkNameType>
+                        >
+                    }
+                    addButtonLabel="Add one more link"
+                    name={LinkName}
+                    initData={{
+                        label: "",
+                        link: "",
+                    }}
+                    Elem={LinkElem}
+                    desc="You can add links to websites you want hiring managers to see! Perhaps It will be  a link to your portfolio, LinkedIn profile, or personal website"
+                />
+            </Container>
+            <Container
+                hiddenState={sectionHiddenState[TestimonialsName].hiddenState}
+                order={sectionHiddenState[TestimonialsName].order}
+            >
+                <InfoGetter
+                    formRegister={
+                        form as unknown as UseFormReturn<
+                            GeneratorData<
+                                TestimonialsDataType,
+                                TestimonialsNameType
+                            >
+                        >
+                    }
+                    addButtonLabel="Add one more link"
+                    name={TestimonialsName}
+                    initData={TestimonialsInitData}
+                    Elem={TestimonialsElem}
+                    desc="Highlight the positive experiences of your clients by collecting their testimonials and ratings. Their valuable feedback will showcase their satisfaction with your services. Use this section to demonstrate the high quality of your work and build trust with potential clients"
+                />
+            </Container>
             <Container
                 hiddenState={sectionHiddenState[LangName].hiddenState}
                 order={sectionHiddenState[LangName].order}
@@ -200,15 +249,19 @@ export default function Main({ values }: { values?: Data }) {
                     Elem={LangElem}
                 />
             </Container>
-
-            <InfoGetter
-                formRegister={form as any}
-                addButtonLabel="Add one more group"
-                name={SkillName}
-                initData={SkillInitData}
-                Elem={SkillElem as any}
-                desc="Choose 5 important skills that show you fit the position. Make sure they match the key skills mentioned in the job listing (especially when applying via an online system)."
-            />
+            <Container
+                hiddenState={sectionHiddenState[SkillName].hiddenState}
+                order={sectionHiddenState[SkillName].order}
+            >
+                <InfoGetter
+                    formRegister={form as any}
+                    addButtonLabel="Add one more group"
+                    name={SkillName}
+                    initData={SkillInitData}
+                    Elem={SkillElem}
+                    desc="Choose 5 important skills that show you fit the position. Make sure they match the key skills mentioned in the job listing (especially when applying via an online system)."
+                />
+            </Container>
 
             <Container
                 hiddenState={sectionHiddenState[CourseName].hiddenState}
@@ -238,7 +291,7 @@ export default function Main({ values }: { values?: Data }) {
                         institution: "",
                         images: [],
                     }}
-                    Elem={CourseElem as any}
+                    Elem={CourseElem}
                 />
             </Container>
             <Container

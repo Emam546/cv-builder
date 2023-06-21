@@ -48,12 +48,17 @@ import type {
     InputData as EducationDataType,
     NameType as EducationNameType,
 } from "@src/components/main/sections/education";
+import type {
+    InputData as TestimonialData,
+    NameType as TestimonialNameType,
+} from "@src/components/main/sections/tesimonial";
 import type { InputData as ProInputData } from "@src/components/main/sections/professional";
 import type { InputData as HobbiesData } from "@src/components/main/sections/hobbies";
 import type {
     InputData as CustomInputData,
     NameType as CustomNameType,
 } from "@src/components/main/sections/CustomSection/types";
+
 import { FieldValues, Path } from "react-hook-form";
 import { type } from "os";
 declare global {
@@ -84,6 +89,7 @@ declare global {
         GeneratorData<ReferenceDataType, ReferenceNameType> &
         GeneratorData<PhotosDataType, PhotosNameType> &
         GeneratorData<EducationDataType, EducationNameType> &
+        GeneratorData<TestimonialData, TestimonialNameType> &
         CustomInputData;
 
     type SectionNamesType = Exclude<keyof Data, CustomNameType>;

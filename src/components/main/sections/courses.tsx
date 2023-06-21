@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
-import { ListElemType as ElemType } from "@src/components/main/sections/InsertCommonData/input";
+import { ListElemType } from "@src/components/main/sections/InsertCommonData/input";
+import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { Path, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
@@ -107,7 +108,7 @@ export function CreateItem(Name: NameRules) {
                 </LabelElem>
             </Elem>
         );
-    }) as ElemType<InputData, NameRules>;
+    }) as ListElemType<InputData>;
 }
 export const InitData: InputData = {
     label: "",
@@ -119,4 +120,4 @@ export const InitData: InputData = {
     desc: "",
     images: [],
 };
-export default CreateItem(`${Name}.data`);
+export default CreateItem(`${Name}.data`) as unknown as ElemType<InputData>;

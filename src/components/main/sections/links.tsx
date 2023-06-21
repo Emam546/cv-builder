@@ -3,16 +3,20 @@ import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
+import { ElemType } from "@src/components/main/sections/InsertCommonData";
 export type NameType = "links";
 export const Name: NameType = "links";
 export interface InputData extends FieldsType {
     label: string;
     link: string;
 }
-
+export const InitData: InputData = {
+    label: "",
+    link: "",
+};
 type NameRules = string;
 export function CreateListItem(Name: NameRules) {
-    return forwardRef<InputData, NameRules>(
+    return forwardRef<InputData>(
         (
             {
                 index: i,
@@ -61,4 +65,4 @@ export function CreateListItem(Name: NameRules) {
     );
 }
 
-export default CreateListItem(`${Name}.data`);
+export default CreateListItem(`${Name}.data`) as unknown as ElemType<InputData>;

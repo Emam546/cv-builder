@@ -4,6 +4,7 @@ import { Name as InternShipName } from "@src/components/main/sections/internship
 import { Name as ReferenceName } from "@src/components/main/sections/reference";
 import { Name as ExtraActivitesName } from "@src/components/main/sections/ExtraActivites";
 import { Name as HobbiesName } from "@src/components/main/sections/hobbies";
+import { Name as TestimonialsName } from "@src/components/main/sections/tesimonial";
 import { Dispatch } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -14,6 +15,7 @@ import {
     faLanguage,
     faPlateWheat,
     faToolbox,
+    faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -94,6 +96,17 @@ export function AddSection({}: {}) {
                     </span>
                 </div>
                 <Item
+                    label="Testimonials"
+                    hiddenState={data[TestimonialsName].hiddenState}
+                    icon={faUsers}
+                    setData={() => {
+                        dispatchSection({
+                            name: TestimonialsName,
+                            type: "SHOW",
+                        });
+                    }}
+                />
+                <Item
                     label="Extra-curricular Activities"
                     hiddenState={data[ExtraActivitesName].hiddenState}
                     icon={faPlateWheat}
@@ -104,6 +117,7 @@ export function AddSection({}: {}) {
                         });
                     }}
                 />
+
                 <Item
                     label="Hobbies"
                     hiddenState={data[HobbiesName].hiddenState}

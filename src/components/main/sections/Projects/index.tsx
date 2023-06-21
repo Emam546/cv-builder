@@ -258,7 +258,7 @@ const CreateListItem = function (EleName: EleNameType) {
                 </div>
             </Elem>
         );
-    }) as ListElemType<EleInputData, EleNameType>;
+    }) as ListElemType<EleInputData>;
 };
 
 export interface InputData {
@@ -270,7 +270,7 @@ export const InitData: InputData = {
     data: [],
 };
 type PathType = `${NameType}.data.${number}.data`;
-const ProjectElem: ElemType<InputData> = React.forwardRef(
+const ProjectElem: ElemType<InputData> = React.forwardRef( 
     ({ index: i, props: { form }, ...props }, ref) => {
         const { control, register } = form;
         const { label } = useWatch({

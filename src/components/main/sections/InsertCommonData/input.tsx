@@ -2,33 +2,21 @@ import React, { ForwardRefRenderFunction } from "react";
 import { FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
-import { LabelElem } from "../../../common/inputs/styles";
+import { LabelElem } from "@src/components/common/inputs/styles";
 import classNames from "classnames";
 import ElemGenerator, { ElemType, ListProps as OrgListProps } from "./EleGen";
-
-export interface ListProps<T extends FieldValues, NameRules extends string> {
+export type NameRules = string;
+export interface ListProps<T extends FieldValues> {
     index: number;
     form: UseFormReturn<ListData<T, NameRules>>;
 }
 
-export type ListElemType<
-    T extends FieldValues,
-    Name extends string,
-    P extends Record<string, any> = {}
-> = ElemType<ListProps<T, Name> & P>;
-export function forwardRef<
-    T extends FieldValues,
-    Name extends string,
-    P extends Record<string, any> = {}
->(
-    render: ForwardRefRenderFunction<
-        HTMLDivElement,
-        OrgListProps<ListProps<T, Name> & P>
-    >
-): ListElemType<T, Name, P> {
+export type ListElemType<T extends FieldValues> = ElemType<ListProps<T>>;
+export function forwardRef<T extends FieldValues>(
+    render: ForwardRefRenderFunction<HTMLDivElement, OrgListProps<ListProps<T>>>
+): ListElemType<T> {
     return React.forwardRef(render);
 }
-type NameRules = string;
 export default function InfoGetter<T extends FieldsType>({
     name,
     initData,
@@ -42,7 +30,7 @@ export default function InfoGetter<T extends FieldsType>({
     formRegister: UseFormReturn<ListData<T, NameRules>>;
     initData: T;
     addButtonLabel: string;
-    Elem: ListElemType<T, NameRules>;
+    Elem: ListElemType<T>;
     label?: string;
     noDragging?: boolean;
 }) {
