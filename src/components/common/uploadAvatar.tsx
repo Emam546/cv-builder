@@ -1,10 +1,11 @@
 import { faPen, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageCropper from "@src/components/common/Img_cropper";
-import { useUploadImage } from "@src/utils/hooks";
+import { useNotInitEffect, useUploadImage } from "@src/utils/hooks";
 import classNames from "classnames";
 import React, { useState, Dispatch, useEffect } from "react";
 import { Control, useController } from "react-hook-form";
+import LoadingPanner from "./loading/loading";
 interface Props {
     name: string;
     label: string;
@@ -15,21 +16,11 @@ interface Props {
 function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
     const [edit, setEdit] = useState(false);
     const [blob, setBlob] = useState<Blob>();
-    const [orgUrl, setOrgUrl] = useState(defaultValue);
-    const [imgUrl, setImgUrl] = useUploadImage(
-        "/api/v1/images",
-        name,
-        blob,
-        defaultValue as string
-    );
+    const UploadImage = useUploadImage("/api/v1/images", name);
     const { field } = useController({ control, name, defaultValue });
-    useEffect(() => {
-        if (setValue && imgUrl) setValue(imgUrl);
-    }, [imgUrl]);
-    useEffect(() => {
-        if (field.value != "") setOrgUrl(field.value);
-        else setOrgUrl(undefined);
-    }, [field.value, field.name]);
+    const orgUrl = (blob && URL.createObjectURL(blob)) || field.value;
+    const [loading, setLoading] = useState(false);
+
     return (
         <div className="group pt-5 select-none">
             {!orgUrl && (
@@ -57,11 +48,19 @@ function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
             {orgUrl && (
                 <div className="flex items-center gap-x-4 h-full">
                     <div className="bg-neutral-10 max-h-[4rem] group-hover:bg-blue-10 aspect-square h-full flex items-center justify-center overflow-hidden">
-                        <img
-                            src={orgUrl}
-                            alt="avatar img"
-                            className="max-w-full"
-                        />
+                        {!loading ? (
+                            <img
+                                src={orgUrl}
+                                alt="avatar img"
+                                className="max-w-full"
+                            />
+                        ) : (
+                            <div className="bg-gray-200 aspect-square flex items-center">
+                                <div className="scale-[0.7]">
+                                    <LoadingPanner />
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className="font-medium">
                         <button
@@ -86,9 +85,8 @@ function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
                                     )
                                 )
                                     return;
-                                setImgUrl(undefined);
                                 setValue("");
-                                setOrgUrl(undefined);
+                                setBlob(undefined);
                             }}
                             aria-label="delete"
                         >
@@ -111,7 +109,18 @@ function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
                     setValue={(blob) => {
                         setEdit(false);
                         setBlob(blob);
-                        setOrgUrl(URL.createObjectURL(blob));
+                        setLoading(true);
+                        UploadImage(blob)
+                            .then((url) => {
+                                if (url) setValue(url);
+                                else setBlob(undefined);
+                            })
+                            .catch(() => {
+                                setBlob(undefined);
+                            })
+                            .finally(() => {
+                                setLoading(false);
+                            });
                     }}
                     exit={() => setEdit(false)}
                     aspect={1}

@@ -8,6 +8,7 @@ import NormalInput from "@src/components/common/inputs/normal";
 import {
     CreateListItem as CreateImageItem,
     InputData as ImageInputData,
+    InitData as ImageInitData,
 } from "../Projects/images";
 import InfoGetter from "@src/components/main/sections/InsertCommonData/input";
 
@@ -56,11 +57,7 @@ export function CreateElem(Name: NameRules) {
                         formRegister={form as any}
                         addButtonLabel="Add one more image"
                         Elem={ImageInputItem}
-                        initData={{
-                            heightRation: 1,
-                            widthRation: 1,
-                            image: "",
-                        }}
+                        initData={ImageInitData}
                         name={ImagePath}
                         label={"Images"}
                     />

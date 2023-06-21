@@ -42,13 +42,13 @@ export function useSyncRefs<TType>(
 }
 export function useNotInitEffect(
     effect: React.EffectCallback,
-    deps?: React.DependencyList | undefined
+    deps: [string | number | boolean]
 ) {
     const [state, setState] = useState(false);
+    const cur = useRef(deps);
     return useEffect(() => {
-        if (!state) setState(true);
-
-        return effect();
+        const state = cur.current!.some((val, i) => val != deps[i]);
+        if (state) return effect();
     }, deps);
 }
 
@@ -95,14 +95,8 @@ export const useDebounceInitialEffect = (
 };
 export function useUploadImage(
     url: string,
-    key: string,
-    blob?: Blob,
-    defaultValue?: string
-): [
-    string | undefined,
-    React.Dispatch<React.SetStateAction<string | undefined>>
-] {
-    const [imgURl, setImgUrl] = useState<string | undefined>(defaultValue);
+    key: string
+): (blob: Blob) => Promise<string> {
     const dispatch = useAppDispatch();
     const isSignedIn = useAppSelector((state) => state.user.isSingIn);
     const userId = useAppSelector((state) => {
@@ -111,14 +105,10 @@ export function useUploadImage(
         }
         return false;
     });
-
-    useEffect(() => {
-        if (!isSignedIn && blob) dispatch(LoginModelActions.open());
-    }, [blob]);
-    useEffect(() => {
+    async function Update(blob: Blob) {
+        if (!isSignedIn) dispatch(LoginModelActions.open());
         const token = Cookies.get("token");
-        if (!blob || !token) return;
-
+        if (!token) return;
         const ext = mime.getExtension(blob.type);
         if (!ext || !["png", "jpg", "jpeg"].includes(ext))
             throw new Error(`un recognized type ${blob.type}`);
@@ -127,25 +117,19 @@ export function useUploadImage(
             .update(userId + key)
             .digest()
             .toString("base64")
-            .replaceAll(/[?&#\\%<>+/]/g, "");
+            .replaceAll(/[?&#\\%<>+=/]/g, "");
 
         const formData = new FormData();
         formData.append("name", hash);
         formData.append("img", blob, `image.${ext}`);
 
-        axios
-            .post(url, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            .then((res) => {
-                setImgUrl(res.data.data.url);
-            })
-            .catch((err) => {
-                setImgUrl(undefined);
-            });
-    }, [blob]);
-    return [imgURl, setImgUrl];
+        const res = await axios.post(url, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data.data.url;
+    }
+    return Update;
 }

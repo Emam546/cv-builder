@@ -50,13 +50,16 @@ export function CreateListItem(Name: NameRules) {
                                 label="Title"
                                 {...register(`${Name}.${i}.title`)}
                             />
-                            <LabelElem label="Desc">
-                                <FinalEditor
-                                    control={control as any}
-                                    name={`${Name}.${i}.desc`}
-                                />
-                            </LabelElem>
                         </Grid2Container>
+                        <LabelElem
+                            label="Desc"
+                            className="my-2"
+                        >
+                            <FinalEditor
+                                control={control as any}
+                                name={`${Name}.${i}.desc`}
+                            />
+                        </LabelElem>
                     </div>
                 </Elem>
             );

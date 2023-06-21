@@ -2,19 +2,20 @@ import { faImage, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageCropper from "@src/components/common/Img_cropper";
 import classNames from "classnames";
-import React, { useState, Dispatch, useEffect } from "react";
+import React, { useState, Dispatch, useEffect, useRef } from "react";
 
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { Control, useController, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
-import { useUploadImage } from "@src/utils/hooks";
-
+import { useNotInitEffect, useUploadImage } from "@src/utils/hooks";
+import LoadingPanner from "../../../common/loading/loading";
+import loadash from "lodash";
 export type NameType = "images";
 export const Name: NameType = "images";
 export type NameRules = string;
-export interface InputData extends FieldsType {
+export interface InputData {
     widthRation: number;
     heightRation: number;
     image: string;
@@ -76,6 +77,12 @@ export function CreateListItem(Name: NameRules) {
                             aspect={widthRation / (heightRation || 1)}
                             {...register(`${Name}.${i}.image`)}
                             control={control as any}
+                            defaultValue={
+                                loadash.get(
+                                    control._defaultValues,
+                                    `${Name}.${i}.image`
+                                ) as any
+                            }
                         />
                     </div>
                 </Elem>
@@ -93,26 +100,20 @@ interface Props {
 }
 export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
     ({ defaultValue, label, setValue, name, control, aspect }, ref) => {
-        const [orgImg, setOrgImg] = useState(defaultValue);
         const [edit, setEdit] = useState(false);
-        const [blob, setBlob] = useState<Blob>();
+        const [blob, setBlob] = useState<Blob | undefined>();
         const { field } = useController({ name, control, defaultValue });
-        const [imgUrl, setImgUrl] = useUploadImage(
-            "/api/v1/images",
-            name,
-            blob,
-            defaultValue as string
-        );
-        useEffect(() => {
-            if (imgUrl && setValue) setValue(imgUrl);
-        }, [imgUrl]);
-        useEffect(() => {
-            if (field.value != "") setOrgImg(field.value);
-            else setOrgImg(undefined);
-        }, [field.value, field.name]);
+        const UploadImage = useUploadImage("/api/v1/images", name);
+        const [loading, setLoading] = useState(false);
+        const orgImg = (blob && URL.createObjectURL(blob)) || field.value;
+        useNotInitEffect(() => {
+            setValue("");
+            setBlob(undefined);
+            setLoading(false);
+        }, [aspect]);
         return (
             <div className="group pt-5 select-none">
-                {!orgImg && (
+                {!orgImg && !loading && (
                     <div
                         onClick={() => {
                             setEdit(true);
@@ -138,7 +139,7 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                         </div>
                     </div>
                 )}
-                {orgImg && (
+                {orgImg && !loading && (
                     <>
                         <div
                             onClick={() => {
@@ -149,9 +150,7 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                             <div
                                 style={{
                                     aspectRatio: aspect,
-                                    backgroundImage: `url('${
-                                        orgImg || imgUrl
-                                    }')`,
+                                    backgroundImage: `url('${orgImg}')`,
                                 }}
                                 className={classNames(
                                     "mx-auto bg-cover bg-center bg-neutral-10 max-w-full max-h-[20rem] group-hover:bg-blue-10  flex items-center justify-center",
@@ -184,9 +183,8 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                                     )
                                                 )
                                                     return;
-                                                setImgUrl(undefined);
-                                                setOrgImg(undefined);
                                                 setValue("");
+                                                setBlob(undefined);
                                             }}
                                             aria-label="delete"
                                         >
@@ -202,6 +200,33 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                         </div>
                     </>
                 )}
+                {loading && (
+                    <>
+                        <div
+                            onClick={() => {
+                                setEdit(true);
+                            }}
+                            className="cursor-pointer"
+                        >
+                            <div
+                                style={{
+                                    aspectRatio: aspect,
+                                    backgroundImage: `url('${orgImg}')`,
+                                }}
+                                className={classNames(
+                                    "mx-auto bg-cover bg-center bg-neutral-10 max-w-full max-h-[20rem] group-hover:bg-blue-10  flex items-center justify-center",
+                                    "group relative after:content-[''] after:w-full after:h-full after:absolute after:opacity-60 after:bg-neutral-100 after:top-0 after:left-0 after:transition-all after:duration-400"
+                                )}
+                            >
+                                <div className="text-center relative z-10">
+                                    <div className="font-medium">
+                                        <LoadingPanner />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
                 <div
                     className={classNames({
                         hidden: !edit,
@@ -209,12 +234,24 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                 >
                     <ImageCropper
                         setValue={(val) => {
+                            console.log("set blob");
                             setEdit(false);
                             setBlob(val);
-                            setOrgImg(URL.createObjectURL(val));
+                            setLoading(true);
+                            UploadImage(val)
+                                .then((url) => {
+                                    if (url) setValue(url);
+                                    else setBlob(undefined);
+                                })
+                                .catch(() => {
+                                    setBlob(undefined);
+                                })
+                                .finally(() => {
+                                    setLoading(false);
+                                });
                         }}
                         exit={() => setEdit(false)}
-                        aspect={aspect}
+                        aspect={aspect || 1}
                     />
                 </div>
             </div>

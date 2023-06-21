@@ -1,22 +1,15 @@
 import {
-    faArrowRotateLeft,
-    faArrowRotateRight,
     faArrowUpFromBracket,
     faImage,
     faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
-import React, {
-    Dispatch,
-    MouseEventHandler,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
-import { PixelCrop, centerCrop, makeAspectCrop } from "react-image-crop";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
+import { PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { canvasPreview } from "./canvasPreview";
+const MaxSize = 2 * 1024 * 1024;
 function toBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
     return new Promise((resolve) => {
         canvas.toBlob(resolve);
@@ -37,30 +30,12 @@ export async function imgPreview(
     return blob;
     // return URL.createObjectURL(blob);
 }
-interface Props {
+export interface Props {
     aspect?: number;
     setValue: Dispatch<Blob>;
     exit: Function;
 }
-function centerAspectCrop(
-    mediaWidth: number,
-    mediaHeight: number,
-    aspect: number
-) {
-    return centerCrop(
-        makeAspectCrop(
-            {
-                unit: "%",
-                width: 90,
-            },
-            aspect,
-            mediaWidth,
-            mediaHeight
-        ),
-        mediaWidth,
-        mediaHeight
-    );
-}
+
 interface Crop {
     x: number;
     y: number;
@@ -109,28 +84,30 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
     const [loading, setLoading] = useState(false);
     const [imgSrc, setImgSrc] = useState<string>();
     const [maxWidth, setWidth] = useState<number>();
-    const [spos, setSpos] = useState<{ x: number; y: number } | false>(false);
-    const [sCrop, setSCrop] = useState<Crop>({
+    const [spos, setStartpos] = useState<{ x: number; y: number } | false>(
+        false
+    );
+    const [error, setError] = useState<string | undefined>();
+    const [sCrop, setStartCrop] = useState<Crop>({
         width: 0,
         height: 0,
         x: 0,
         y: 0,
     });
     function onImageLoad() {
-        if (imgRef.current && maxWidth) {
-            const { width, height } = imgRef.current;
-            const defaultWidth = Math.min(width, maxWidth);
-            const defaultHeight = defaultWidth / aspect;
-            setCrop({
-                width: defaultWidth,
-                height: defaultHeight,
-                x: width / 2 - defaultWidth / 2,
-                y: height / 2 - defaultHeight / 2,
-            });
-        }
+        if (!imgRef.current || !maxWidth) return;
+        const { width, height } = imgRef.current;
+        const defaultWidth = Math.min(width, maxWidth);
+        const defaultHeight = defaultWidth / aspect;
+        setCrop({
+            width: defaultWidth,
+            height: defaultHeight,
+            x: width / 2 - defaultWidth / 2,
+            y: height / 2 - defaultHeight / 2,
+        });
     }
     useEffect(() => {
-        onImageLoad();
+        setImgSrc(undefined);
     }, [aspect]);
     function Move(ev: MouseEvent) {
         if (!imgRef.current || !spos) return;
@@ -151,7 +128,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
     }
     useEffect(() => {
         window.addEventListener("mouseup", () => {
-            setSpos(false);
+            setStartpos(false);
         });
     }, []);
     useEffect(() => {
@@ -159,8 +136,9 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
         return () => {
             window.removeEventListener("mousemove", Move);
         };
-    }, [spos]);
+    }, [spos, scale]);
     const realRotate = completeRotate + rotate;
+
     async function onDownloadCropClick() {
         if (imgRef.current)
             setValue(
@@ -174,6 +152,19 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                     realRotate
                 )
             );
+    }
+    function checkFile(e: React.ChangeEvent<HTMLInputElement>) {
+        if (!e.target.files || e.target.files.length != 1) return;
+        const file = e.target.files[0];
+        if (file.size > MaxSize)
+            return setError("File size limit exceeded: 2MB maximum.");
+
+        const reader = new FileReader();
+        reader.addEventListener("load", () =>
+            setImgSrc(reader.result?.toString() || "")
+        );
+        reader.readAsDataURL(file);
+        setError(undefined);
     }
     if (!imgSrc)
         return (
@@ -191,6 +182,10 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                                     Drag &amp; drop or select a photo from your
                                     computer.
                                 </p>
+                                {error && (
+                                    <p className="text-red-60 my-5">{error}</p>
+                                )}
+
                                 <button
                                     type="button"
                                     className="bg-blue-50 text-white py-2 px-3 text font-bold rounded"
@@ -205,20 +200,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                         <input
                             type="file"
                             className="w-full h-full opacity-0 absolute top-0 cursor-pointer left-0 z-10"
-                            onChange={(e) => {
-                                if (
-                                    e.target.files &&
-                                    e.target.files.length > 0
-                                ) {
-                                    const reader = new FileReader();
-                                    reader.addEventListener("load", () =>
-                                        setImgSrc(
-                                            reader.result?.toString() || ""
-                                        )
-                                    );
-                                    reader.readAsDataURL(e.target.files[0]);
-                                }
-                            }}
+                            onChange={checkFile}
                             accept="image/*"
                         />
                     </div>
@@ -241,16 +223,17 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                                     if (cur) setWidth(cur.offsetWidth);
                                 }}
                                 onMouseDown={(ev) => {
-                                    setSpos({
+                                    setStartpos({
                                         x: ev.pageX,
                                         y: ev.pageY,
                                     });
-                                    setSCrop({ ...crop });
+
+                                    setStartCrop({ ...crop });
                                 }}
                                 onMouseUp={() => {
-                                    setSpos(false);
+                                    setStartpos(false);
                                 }}
-                                className="overflow-hidden w-[15rem] relative "
+                                className="overflow-hidden w-[15rem] relative"
                                 style={{
                                     aspectRatio: aspect,
                                     MozWindowDragging: "no-drag",
@@ -261,9 +244,12 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                                         transform: `scale(${scale}) rotate(${realRotate}deg)`,
                                         top: `-${crop.y}px`,
                                         left: `-${crop.x}px`,
-                                        backgroundImage: `url(${imgSrc})`,
                                         width: imgRef.current?.width,
                                         height: imgRef.current?.height,
+                                    }}
+                                    ref={(e) => {
+                                        if (e)
+                                            e.style.backgroundImage = `url(${imgSrc})`;
                                     }}
                                     className="absolute max-w-[17rem] bg-contain origin-top-left"
                                 ></div>
@@ -304,9 +290,24 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                                     max="3"
                                     step="0.1"
                                     onChange={(e) => {
-                                        setCrop({
-                                            ...crop,
-                                        });
+                                        if (!imgRef.current) return;
+                                        const { width, height } =
+                                            imgRef.current.getBoundingClientRect();
+                                        const x = Math.max(
+                                            0,
+                                            Math.min(
+                                                width - sCrop.width,
+                                                crop.x
+                                            )
+                                        );
+                                        const y = Math.max(
+                                            0,
+                                            Math.min(
+                                                height - sCrop.height,
+                                                crop.y
+                                            )
+                                        );
+                                        setCrop({ ...crop, x, y });
                                         setScale(+e.currentTarget.value);
                                     }}
                                     defaultValue={0}
@@ -316,6 +317,12 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                         </div>
                     </div>
                 </div>
+                {error && (
+                    <p className="text-red-60 my-5 text-center text-lg w-11/12 mx-auto">
+                        {error}
+                    </p>
+                )}
+
                 {/* <div className="flex justify-between items-center px-10 text-neutral-50 mt-5">
                     <button
                         type="button"
@@ -383,15 +390,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                     type="file"
                     className="hidden"
                     id="image-uploader"
-                    onChange={(e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                            const reader = new FileReader();
-                            reader.addEventListener("load", () =>
-                                setImgSrc(reader.result?.toString() || "")
-                            );
-                            reader.readAsDataURL(e.target.files[0]);
-                        }
-                    }}
+                    onChange={checkFile}
                     accept="image/*"
                 />
                 <button
