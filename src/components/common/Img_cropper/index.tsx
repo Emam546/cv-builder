@@ -156,8 +156,8 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
     function checkFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files || e.target.files.length != 1) return;
         const file = e.target.files[0];
-        if (file.size > MaxSize)
-            return setError("File size limit exceeded: 2MB maximum.");
+        // if (file.size > MaxSize)
+        //     return setError("File size limit exceeded: 2MB maximum.");
 
         const reader = new FileReader();
         reader.addEventListener("load", () =>
@@ -251,7 +251,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                                         if (e)
                                             e.style.backgroundImage = `url(${imgSrc})`;
                                     }}
-                                    className="absolute max-w-[17rem] bg-contain origin-top-left"
+                                    className="absolute max-w-[15rem] bg-contain origin-top-left"
                                 ></div>
                             </div>
                             <div
@@ -269,7 +269,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                                         top: `-${crop.y}px`,
                                         left: `-${crop.x}px`,
                                     }}
-                                    className="absolute max-w-[17rem] -z-10 origin-top-left"
+                                    className="absolute max-w-[15rem] -z-10 origin-top-left"
                                     onLoad={onImageLoad}
                                 />
                             </div>
