@@ -24,14 +24,15 @@ export default {
         exp: process.env.COOKIE_EXP ?? "", // exp at the same time as the cookie
     },
     MONGODB_URL: process.env.MONGODB_URL ?? "",
-    facebook:{
+    facebook: {
         APP_ID: process.env.FaceBook_APP_ID ?? "",
         APP_SECRET: process.env.FaceBook_APP_SECRET ?? "",
     },
-    google:{
+    google: {
         APP_ID: process.env.GOOGLE_APP_ID ?? "",
         APP_SECRET: process.env.GOOGLE_APP_SECRET ?? "",
     },
+    APPLY_LOCAL: process.env.APPLY_LOCAL,
     cloudinary: {
         cloud_name: process.env.cloudinary_cloud_name ?? "",
         api_key: process.env.cloudinary_api_key ?? "",
