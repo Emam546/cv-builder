@@ -12,7 +12,7 @@ router.use(cache(5 * 60 * 60 * 1000));
 router.use(
     rateLimiter({
         windowMs: 60 * 1000, // 1 minute
-        max: 10, // limit each IP to 10 requests per windowMs
+        max: 100, // limit each IP to 10 requests per windowMs
     })
 );
 router.get("/", async (req, res) => {
