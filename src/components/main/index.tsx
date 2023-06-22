@@ -189,6 +189,12 @@ export default function Main({ values }: { values?: Data }) {
                 order={sectionHiddenState[LinkName].order}
             >
                 <InfoGetter
+                    setDelete={() =>
+                        dispatchSection({
+                            name: LinkName,
+                            type: "HIDE",
+                        })
+                    }
                     formRegister={
                         form as unknown as UseFormReturn<
                             GeneratorData<LinkDataType, LinkNameType>
@@ -209,6 +215,12 @@ export default function Main({ values }: { values?: Data }) {
                 order={sectionHiddenState[TestimonialsName].order}
             >
                 <InfoGetter
+                    setDelete={() =>
+                        dispatchSection({
+                            name: TestimonialsName,
+                            type: "HIDE",
+                        })
+                    }
                     formRegister={
                         form as unknown as UseFormReturn<
                             GeneratorData<
