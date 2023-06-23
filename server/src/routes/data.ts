@@ -9,12 +9,12 @@ const router = Router();
 router.use(cors({ origin: "*" }));
 const cache = apicache.middleware;
 router.use(cache(5 * 60 * 60 * 1000));
-router.use(
-    rateLimiter({
-        windowMs: 60 * 1000, // 1 minute
-        max: 100, // limit each IP to 10 requests per windowMs
-    })
-);
+// router.use(
+//     rateLimiter({
+//         windowMs: 60 * 1000, // 1 minute
+//         max: 100, // limit each IP to 10 requests per windowMs
+//     })
+// );
 router.get("/", async (req, res) => {
     if (!req.query.apikey && typeof req.query.apikey == "string") {
         return res
