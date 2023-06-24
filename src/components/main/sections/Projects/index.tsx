@@ -137,6 +137,9 @@ const CreateListItem = function (EleName: EleNameType) {
                     <NormalInput
                         label="Kind"
                         options={kinds}
+                        setValue={(val) =>
+                            setValue(`${EleName}.${i}.kind`, val)
+                        }
                         {...register(`${EleName}.${i}.kind`)}
                     />
                     <DatePicker
@@ -198,7 +201,7 @@ const CreateListItem = function (EleName: EleNameType) {
                                 )
                             )}
                             name={`${EleName}.${i}.technologies`}
-                            control={control as any}
+                            control={control}
                         />
                     </LabelElem>
 
@@ -241,7 +244,7 @@ const CreateListItem = function (EleName: EleNameType) {
                         name={LessonPath}
                         label={"Lessons"}
                     />
-                
+
                     <LabelElem label={"Description"}>
                         <FinalEditor
                             control={control as any}
@@ -270,7 +273,7 @@ export const InitData: InputData = {
     data: [],
 };
 type PathType = `${NameType}.data.${number}.data`;
-const ProjectElem: ElemType<InputData> = React.forwardRef( 
+const ProjectElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
         const { control, register } = form;
         const { label } = useWatch({
