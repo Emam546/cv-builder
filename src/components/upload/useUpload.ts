@@ -2,7 +2,7 @@ import { useAppSelector } from "@src/store";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { UserData } from "@serv/models/user";
-import { useDebounceInitialEffect } from "../../utils/hooks";
+import { useDebounceInitialEffect } from "@src/utils/hooks";
 
 export function useUploadData() {
     const data: UserData = useAppSelector((state) => ({

@@ -1,21 +1,16 @@
 import classNames from "classnames";
-import React, { useEffect, useState } from "react";
-import { v4 as uuid } from "uuid";
+import React from "react";
 import style from "./checkbox.module.css";
 export default function CheckBox({
     label,
     ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
-    const [id, setId] = useState("");
-    useEffect(() => {
-        setId(uuid());
-    }, []);
     return (
         <div className="flex items-center gap-1">
             <input
                 {...props}
                 type="checkbox"
-                id={id}
+                id={props.name}
                 className={classNames(
                     style["input_checkbox"],
                     "appearance-none",
@@ -23,7 +18,7 @@ export default function CheckBox({
                 )}
             />
             <label
-                htmlFor={id}
+                htmlFor={props.name}
                 className={classNames(
                     "inline-block w-12 p-[2px] bg-neutral-30 hover:bg-neutral-50 rounded-xl  cursor-pointer transition",
                     "after:content-[''] after:w-5 after:h-5 after:rounded-[50%] after:block after:bg-white after:z-10 after:transition"

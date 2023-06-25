@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { EditorProps } from "react-draft-wysiwyg";
 import { ContentState, EditorState, convertFromHTML } from "draft-js";
@@ -29,47 +29,30 @@ function checkIfValueIsConvertible(val: unknown): val is string {
 
 const FinalEditor = React.forwardRef<HTMLInputElement, Props>(
     ({ defaultValue, name, control, placeholder }, ref) => {
-        const [editorState, setEditorState] = React.useState(() => {
-            if (checkIfValueIsConvertible(defaultValue)) {
-                return EditorState.createWithContent(
-                    ContentState.createFromBlockArray(
-                        convertFromHTML(defaultValue).contentBlocks
-                    )
-                );
-            }
-            return EditorState.createEmpty();
-        });
         const { field } = useController({
             name,
             control,
             defaultValue,
         });
-        const lastState = useRef(field.value);
-        useEffect(() => {
-            const v = lastState.current;
-            if (v != field.value) {
-                setEditorState(
-                    EditorState.createWithContent(
-                        ContentState.createFromBlockArray(
-                            convertFromHTML(field.value).contentBlocks
-                        )
-                    )
-                );
-                lastState.current = field.value;
-            }
-        }, [field.name, field.value]);
 
         return (
             <BottomLine>
                 <div className="bg-neutral-10 relative">
                     <Editor
                         editorClassName="min-h-[10rem] px-3"
-                        editorState={editorState}
                         onContentStateChange={(content) => {
                             field.onChange(draftToHtml(content));
-                            lastState.current = draftToHtml(content);
                         }}
-                        onEditorStateChange={(state) => setEditorState(state)}
+                        defaultEditorState={
+                            typeof window == "undefined"
+                                ? EditorState.createEmpty()
+                                : EditorState.createWithContent(
+                                      ContentState.createFromBlockArray(
+                                          convertFromHTML(field.value)
+                                              .contentBlocks
+                                      )
+                                  )
+                        }
                         placeholder={placeholder}
                     />
                 </div>

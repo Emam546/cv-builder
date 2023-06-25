@@ -1,18 +1,20 @@
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, useState } from "react";
 import { FieldValues, UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import HeadSection from "@src/components/common/head";
-import ElemGenerator, { ElemType as OrgElemType } from "./EleGen";
-import lodash from "lodash";
+import ElemGenerator, { ElemType as OrgElemType, PSchema } from "./EleGen";
+import { copyObject } from "@src/utils";
+import { Duplicate } from "./utils";
 type NameRules = string;
-export interface ElemProps<T extends FieldsType> {
+export interface ElemProps<T> extends PSchema {
     index: number;
     form: UseFormReturn<GeneratorData<T, NameRules>>;
+    name: string;
 }
 export type ElemType<T extends FieldValues> = OrgElemType<ElemProps<T>>;
 
-export default function InfoGetter<T extends FieldsType>({
+export default function InfoGetter<T extends PSchema>({
     name,
     initData,
     addButtonLabel = "Add",
@@ -23,14 +25,13 @@ export default function InfoGetter<T extends FieldsType>({
 }: {
     name: NameRules;
     formRegister: UseFormReturn<GeneratorData<T, NameRules>>;
-    initData: T;
+    initData: () => T;
     addButtonLabel: string;
     Elem: ElemType<T>;
     desc?: string;
     setDelete?: Function;
 }) {
-    const { register, resetField, control, setValue, getValues, watch } =
-        formRegister;
+    const { register, resetField, control, setValue, getValues } = formRegister;
     const keys = {
         head: `${name}.head`,
         data: `${name}.data`,
@@ -41,7 +42,9 @@ export default function InfoGetter<T extends FieldsType>({
             return `${this.data_i(i)}.${key}`;
         },
     };
-    const EmploymentsData = watch(`${name}.data`);
+    const [ElementsData, setElementsData] = useState<T[]>(
+        getValues(`${name}.data`)
+    );
 
     return (
         <section className="my-5">
@@ -53,9 +56,7 @@ export default function InfoGetter<T extends FieldsType>({
                         }
                     },
                 })}
-                defaultValue={
-                    lodash.get(control._defaultValues, keys.head) as string
-                }
+                control={control}
                 reset={() => resetField(keys.head)}
                 placeholder="Untitled"
                 desc={desc}
@@ -64,39 +65,47 @@ export default function InfoGetter<T extends FieldsType>({
             <div className="space-y-4 transition-all duration-700">
                 <ElemGenerator
                     Elem={Elem}
-                    data={EmploymentsData.map((_, i) => ({
+                    data={ElementsData.map((val, i) => ({
                         form: formRegister,
                         index: i,
+                        name: `${name}`,
+                        id: val.id,
                     }))}
-                    deleteSelf={(i) => {
-                        setValue(
-                            keys.data,
-                            getValues(`${name}.data`).filter(
-                                (_, ix) => ix != i
-                            ) as any
+                    deleteSelf={(xid) => {
+                        const data = getValues(`${name}.data`).filter(
+                            ({ id }) => xid != id
                         );
+                        setValue(keys.data, data as any);
+                        setElementsData(data);
+                    }}
+                    duplicate={(xid) => {
+                        const allData = getValues(`${name}`).data;
+                        const val = allData.find(({ id }) => xid == id);
+                        if (!val) throw new Error("undefined instance");
+                        const data = Duplicate(val);
+                        setValue(`${name}.data`, [...allData, data] as any);
+                        setElementsData([...allData, data]);
                     }}
                     resort={(indexes) => {
-                        const data = indexes.map(
-                            (i) => getValues(`${name}.data.${i}`) as T
-                        );
+                        const allData = getValues(`${name}.data`);
+                        const data = indexes.map((i) => allData[i]);
                         setValue(`${name}.data`, data as any);
+                        setElementsData(data);
                     }}
                 />
             </div>
             <button
                 className="text-blue-60 font-bold hover:bg-blue-10 transition-all block w-full mt-5 py-3 text-start px-4 space-x-2"
                 onClick={() => {
-                    const data = { ...initData };
-                    setValue(keys.data_i(EmploymentsData.length), data as any);
+                    const data = initData();
+                    const preData = getValues(`${name}`).data;
+                    setValue(keys.data, [...preData, data] as any);
+                    setElementsData([...preData, data]);
                 }}
                 type="button"
                 aria-label="add"
             >
-                <FontAwesomeIcon
-                    fontSize={"1em"}
-                    icon={faAdd}
-                />
+                <FontAwesomeIcon icon={faAdd} />
                 <span>{addButtonLabel}</span>
             </button>
         </section>

@@ -6,49 +6,62 @@ import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import FinalEditor from "@src/components/common/inputs/Editor";
 import UploadButton from "@src/components/common/uploadAvatar";
-import { CreateListItem } from "../links";
+import {
+    ListItem as LinkListItem,
+    InputData as LinkInputData,
+    InitData as LinkInitData,
+} from "../links";
 import InfoGetter from "@src/components/main/sections/InsertCommonData/input";
 import { LabelElem } from "@src/components/common/inputs/styles";
 import lodash from "lodash";
+import { uuid } from "@src/utils";
 export type NameType = "team";
 export const Name: NameType = "team";
-export interface InputData extends FieldsType {
+export interface InputData {
+    id: string;
     name: string;
     jobTitle: string;
     email: string;
     avatar: string;
-    links: {
-        label: string;
-        link: string;
-    }[];
+    links: LinkInputData[];
     desc: string;
 }
 type LinkPath = `${NameType}.data.${number}.links`;
-
+export const InitData = () => ({
+    id: uuid(),
+    name: "",
+    jobTitle: "",
+    email: "",
+    avatar: "",
+    links: [],
+    desc: "<p></p>\n",
+});
 const TeamElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
         const { register, control, setValue } = form;
-        const { name, jobTitle } = useWatch({
-            name: `${Name}.data.${i}`,
-            control,
-        });
+
         const LinkPath: LinkPath = `${Name}.data.${i}.links`;
-        const LinkEle = useMemo(() => CreateListItem(LinkPath), [i]);
 
         return (
             <Elem
-                headLabel={() => (
-                    <div className="font-bold group-hover:text-blue-60">
-                        <>
-                            <p className="font-bold group-hover:text-blue-60">
-                                {name || "(Not Specified)"}
-                            </p>
-                            <p className="text-sm text-neutral-50">
-                                {jobTitle}
-                            </p>
-                        </>
-                    </div>
-                )}
+                headLabel={function G() {
+                    const { name, jobTitle } = useWatch({
+                        name: `${Name}.data.${i}`,
+                        control,
+                    });
+                    return (
+                        <div className="font-bold group-hover:text-blue-60">
+                            <>
+                                <p className="font-bold group-hover:text-blue-60">
+                                    {name || "(Not Specified)"}
+                                </p>
+                                <p className="text-sm text-neutral-50">
+                                    {jobTitle}
+                                </p>
+                            </>
+                        </div>
+                    );
+                }}
                 {...props}
                 ref={ref}
             >
@@ -69,7 +82,7 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                                 `${Name}.data.${i}.avatar`
                             ) as string
                         }
-                        control={control as any}
+                        control={control}
                     />
                     <NormalInput
                         label="Job Title"
@@ -84,8 +97,8 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                     <InfoGetter
                         formRegister={form as any}
                         addButtonLabel="Add one more Link"
-                        Elem={LinkEle}
-                        initData={{ label: "", link: "" }}
+                        Elem={LinkListItem}
+                        initData={LinkInitData}
                         name={LinkPath}
                         label={"Links"}
                     />
@@ -95,10 +108,7 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                     className="my-4"
                 >
                     <FinalEditor
-                        control={control as any}
-                        defaultValue={
-                            form.control._defaultValues[Name]?.data?.[i]?.desc
-                        }
+                        control={control}
                         {...register(`${Name}.data.${i}.desc`)}
                         placeholder="Description about team mate and his role"
                     />

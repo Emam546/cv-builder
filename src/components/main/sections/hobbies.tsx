@@ -7,6 +7,7 @@ export const Name: NameType = "hobbies";
 export interface InputData {
     [Name]: { head: string; data: string };
 }
+export const InitData = () => "";
 export default function Hobbies({
     form: { resetField, register, control },
     setDelete,
@@ -28,6 +29,7 @@ export default function Hobbies({
                 reset={() => resetField(`${Name}.head`)}
                 desc="What do you like?"
                 setDelete={setDelete}
+                control={control as any}
             />
             <BottomLine>
                 <textarea

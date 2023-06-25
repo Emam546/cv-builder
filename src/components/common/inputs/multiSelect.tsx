@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import CreatableSelect from "react-select/creatable";
 import { SelectInstance } from "react-select";
 import makeAnimated from "react-select/animated";
@@ -16,27 +16,20 @@ const MultiSelectInput = React.forwardRef<SelectInstance, Props>(
         const value = options.filter((v) =>
             (field.value as string[]).includes(v.value)
         );
-        const [state, setState] = useState<Props["options"]>(
-            defaultValue || []
+
+        return (
+            <CreatableSelect
+                ref={ref}
+                onChange={(newValue: any, e) => {
+                    field.onChange(newValue.map((val: any) => val.value));
+                }}
+                closeMenuOnSelect={true}
+                components={animatedComponents}
+                isMulti
+                defaultValue={value}
+                options={options as any}
+            />
         );
-        const child = useMemo(() => {
-            return () => (
-                <CreatableSelect
-                    ref={ref}
-                    onChange={(newValue: any, e) => {
-                        field.onChange(newValue.map((val: any) => val.value));
-                        setState(newValue);
-                    }}
-                    closeMenuOnSelect={true}
-                    components={animatedComponents}
-                    isMulti
-                    defaultValue={state}
-                    value={state}
-                    options={options as any}
-                />
-            );
-        }, [state]);
-        return <>{child()}</>;
     }
 );
 export default MultiSelectInput;

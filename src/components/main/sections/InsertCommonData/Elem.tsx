@@ -7,9 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useForceUpdate, useSyncRefs } from "@src/utils/hooks";
 import classNames from "classnames";
 import { useState, useEffect, useRef } from "react";
-import DraggableComp from "../../../common/drag";
+import DraggableComp from "@src/components/common/drag";
 import React from "react";
 import { PrimaryProps } from "./EleGen";
+import { faClone } from "@fortawesome/free-regular-svg-icons";
 
 export interface DraggableItem extends PrimaryProps {
     children: React.ReactNode;
@@ -25,13 +26,14 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
             headLabel,
             children,
             noDragging,
+            duplicate,
         },
         ref
     ) => {
         const [expand, setExpand] = useState(false);
         const [drag, setDrag] = useState(false);
-        const parentDiv = useRef<HTMLDivElement>(null);
-        const allRefs = useSyncRefs(parentDiv, ref);
+        const [parentDiv, setParentDiv] = useState<HTMLDivElement | null>(null);
+        const allRefs = useSyncRefs(setParentDiv, ref);
         return (
             <div
                 ref={allRefs}
@@ -48,19 +50,19 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                         <DraggableComp
                             onDragStart={() => {
                                 setDrag(true);
-                                if (onDragStart && parentDiv.current)
-                                    onDragStart(parentDiv.current);
+                                if (onDragStart && parentDiv)
+                                    onDragStart(parentDiv);
                             }}
                             onDragOver={() => {
                                 setDrag(false);
-                                if (onDragOver && parentDiv.current)
-                                    onDragOver(parentDiv.current);
+                                if (onDragOver && parentDiv)
+                                    onDragOver(parentDiv);
                             }}
                             onDrag={function (ev) {
-                                if (onDrag && parentDiv.current)
-                                    onDrag.call(parentDiv.current, ev);
+                                if (onDrag && parentDiv)
+                                    onDrag.call(parentDiv, ev);
                             }}
-                            parentDiv={parentDiv.current}
+                            parentDiv={parentDiv}
                         />
                     )}
 
@@ -71,20 +73,32 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                         <div>{headLabel()}</div>
                     </div>
                     <div className="space-x-3">
-                        <button
-                            type="button"
-                            className="group-hover:text-blue-60"
-                            onClick={() => {
-                                if (parentDiv.current)
-                                    deleteSelf.call(parentDiv.current);
-                            }}
-                            aria-label="delete"
-                        >
-                            <FontAwesomeIcon
-                                fontSize={"1em"}
-                                icon={faTrashCan}
-                            />
-                        </button>
+                        {duplicate && (
+                            <button
+                                type="button"
+                                className="group-hover:text-blue-60"
+                                onClick={() => {
+                                    if (parentDiv) duplicate.call(parentDiv);
+                                }}
+                                aria-label="delete"
+                            >
+                                <FontAwesomeIcon icon={faClone} />
+                            </button>
+                        )}
+
+                        {deleteSelf && (
+                            <button
+                                type="button"
+                                className="group-hover:text-blue-60"
+                                onClick={() => {
+                                    if (parentDiv) deleteSelf.call(parentDiv);
+                                }}
+                                aria-label="delete"
+                            >
+                                <FontAwesomeIcon icon={faTrashCan} />
+                            </button>
+                        )}
+
                         <button
                             type="button"
                             className="group-hover:text-blue-60"
@@ -92,7 +106,6 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                             aria-label={expand ? "expand" : "close"}
                         >
                             <FontAwesomeIcon
-                                fontSize={"1em"}
                                 icon={expand ? faChevronUp : faChevronDown}
                             />
                         </button>

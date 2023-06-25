@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect } from "react";
 import InfoGetter, {
     ElemType,
 } from "@src/components/main/sections/InsertCommonData";
@@ -18,30 +18,33 @@ import {
     InputData,
     Name as CustomName,
     SectionInputData,
+    InitData,
+    SectionInitData as MainSectionInitData,
 } from "./types";
-import lodash from "lodash";
+import { uuid } from "@src/utils";
 
 type SectionTypeName = `${CustomNameType}.${number}`;
-type NameRules = string;
-function CreateElem(Name: NameRules) {
-    return React.forwardRef(
-        (
-            {
-                index: i,
-                props: {
-                    form: { register, control, setValue },
-                },
-                ...props
+
+const ListElem = React.forwardRef(
+    (
+        {
+            index: i,
+            props: {
+                form: { register, control, getValues },
+                name: Name,
             },
-            ref
-        ) => {
-            const { title, city, date } = useWatch({
-                name: `${Name}.data.${i}`,
-                control,
-            });
-            return (
-                <Elem
-                    headLabel={() => (
+            ...props
+        },
+        ref
+    ) => {
+        return (
+            <Elem
+                headLabel={function G() {
+                    const { title, city, date }: any = useWatch({
+                        name: `${Name}.data.${i}`,
+                        control,
+                    });
+                    return (
                         <>
                             <p className="font-bold group-hover:text-blue-60">
                                 {`${
@@ -60,55 +63,50 @@ function CreateElem(Name: NameRules) {
                                 ""
                             } ${date.end}`}</p>
                         </>
-                    )}
-                    {...props}
-                    ref={ref}
+                    );
+                }}
+                {...props}
+                ref={ref}
+            >
+                <Grid2Container>
+                    <NormalInput
+                        label="Activity name ,Job title,book title etc"
+                        {...register(`${Name}.data.${i}.title`)}
+                    />
+                    <NormalInput
+                        label="City"
+                        {...register(`${Name}.data.${i}.city`)}
+                    />
+                    <DatePicker
+                        applyPresent
+                        label="Start &End Time"
+                        startData={{
+                            ...register(`${Name}.data.${i}.date.start`),
+                            placeholder: "MM / YYYY",
+                        }}
+                        endData={{
+                            ...register(`${Name}.data.${i}.date.end`),
+                            placeholder: "MM / YYYY",
+                        }}
+                        control={control}
+                        labelEnd="Currently Work here."
+                    />
+                </Grid2Container>
+                <LabelElem
+                    label={"Description"}
+                    className="mt-5 pb-5"
                 >
-                    <Grid2Container>
-                        <NormalInput
-                            label="Activity name ,Job title,book title etc"
-                            {...register(`${Name}.data.${i}.title`)}
-                        />
-                        <NormalInput
-                            label="City"
-                            {...register(`${Name}.data.${i}.city`)}
-                        />
-                        <DatePicker
-                            applyPresent
-                            label="Start &End Time"
-                            startData={{
-                                ...register(`${Name}.data.${i}.date.start`),
-                                placeholder: "MM / YYYY",
-                            }}
-                            endData={{
-                                ...register(`${Name}.data.${i}.date.end`),
-                                placeholder: "MM / YYYY",
-                            }}
-                            control={control as any}
-                            labelEnd="Currently Work here."
-                        />
-                    </Grid2Container>
-                    <LabelElem
-                        label={"Description"}
-                        className="mt-5 pb-5"
-                    >
-                        <FinalEditor
-                            control={control as any}
-                            defaultValue={
-                                lodash.get(
-                                    control._defaultValues,
-                                    `${Name}.data.${i}.desc`
-                                ) as any
-                            }
-                            name={`${Name}.data.${i}.desc`}
-                            placeholder="e.g. Created and implemented lesson plans based on child-led interests and curiosities"
-                        />
-                    </LabelElem>
-                </Elem>
-            );
-        }
-    ) as ElemType<SectionInputData>;
-}
+                    <FinalEditor
+                        control={control}
+                        {...register(`${Name}.data.${i}.desc`)}
+                        placeholder="e.g. Created and implemented lesson plans based on child-led interests and curiosities"
+                    />
+                </LabelElem>
+            </Elem>
+        );
+    }
+) as ElemType<SectionInputData>;
+
 function CreateEle({
     order,
     i,
@@ -120,7 +118,6 @@ function CreateEle({
 }) {
     const path: SectionTypeName = `${CustomName}.${i}`;
     const dispatch = useDispatch();
-    const Elem = useMemo(() => CreateElem(path), [i]);
     return (
         <Container
             hiddenState={false}
@@ -128,17 +125,9 @@ function CreateEle({
         >
             <InfoGetter
                 addButtonLabel="Add one more item"
-                initData={{
-                    city: "",
-                    date: {
-                        start: "",
-                        end: "",
-                    },
-                    desc: "",
-                    title: "",
-                }}
+                initData={InitData}
                 formRegister={form as any}
-                Elem={Elem}
+                Elem={ListElem}
                 name={path}
                 setDelete={() => {
                     dispatch(
@@ -170,10 +159,7 @@ export default function CustomSection({
             dispatch(StateActions.setSectionState({ type: "ADD" }));
             form.setValue(CustomName, [
                 ...form.getValues(CustomName),
-                {
-                    head: "Untitled",
-                    data: [],
-                },
+                MainSectionInitData(),
             ]);
         }
     }, [sectionNum]);
@@ -183,9 +169,9 @@ export default function CustomSection({
             {orders.map(({ order }, i) => {
                 return (
                     <CreateEle
+                        key={uuid()}
                         order={order}
                         i={i}
-                        key={i}
                         form={form}
                     />
                 );

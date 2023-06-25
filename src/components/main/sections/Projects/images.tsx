@@ -10,8 +10,9 @@ import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
 import { useNotInitEffect, useUploadImage } from "@src/utils/hooks";
-import LoadingPanner from "../../../common/loading/loading";
+import LoadingPanner from "@src/components/common/loading/loading";
 import loadash from "lodash";
+import { uuid } from "@src/utils";
 export type NameType = "images";
 export const Name: NameType = "images";
 export type NameRules = string;
@@ -19,77 +20,77 @@ export interface InputData {
     widthRation: number;
     heightRation: number;
     image: string;
+    id: string;
 }
-export const InitData: InputData = {
+export const InitData: () => InputData = () => ({
+    id: uuid(),
     widthRation: 1,
     heightRation: 1,
     image: "",
-};
-export function CreateListItem(Name: NameRules) {
-    return forwardRef<InputData>(
-        (
-            {
-                index: i,
-                props: {
-                    form: { register, control, setValue, getValues },
-                },
-                ...props
+});
+export const ListItem = forwardRef<InputData>(
+    (
+        {
+            index: i,
+            props: {
+                form: { register, control, setValue, getValues },
+                name: Name,
             },
-            ref
-        ) => {
-            const { widthRation, heightRation } = useWatch({
-                name: `${Name}.${i}`,
-                control,
-            });
+            ...props
+        },
+        ref
+    ) => {
+        const { widthRation, heightRation } = useWatch({
+            name: `${Name}.${i}`,
+            control,
+        });
 
-            return (
-                <Elem
-                    headLabel={() => (
-                        <>
-                            <p className="font-bold group-hover:text-blue-60">
-                                {widthRation} / {heightRation}
-                            </p>
-                        </>
-                    )}
-                    {...props}
-                    ref={ref}
-                >
-                    <div className="mb-2">
-                        <Grid2Container>
-                            <NormalInput
-                                label="Width ratio"
-                                {...register(`${Name}.${i}.widthRation`, {
-                                    valueAsNumber: true,
-                                })}
-                            />
-                            <NormalInput
-                                label="Height ration"
-                                {...register(`${Name}.${i}.heightRation`, {
-                                    valueAsNumber: true,
-                                })}
-                            />
-                        </Grid2Container>
-                        <UploadButton
-                            label="Upload Image"
-                            setValue={(val) =>
-                                setValue(`${Name}.${i}.image`, val)
-                            }
-                            aspect={widthRation / (heightRation || 1)}
-                            {...register(`${Name}.${i}.image`)}
-                            control={control as any}
-                            defaultValue={
-                                loadash.get(
-                                    control._defaultValues,
-                                    `${Name}.${i}.image`
-                                ) as any
-                            }
+        return (
+            <Elem
+                headLabel={() => (
+                    <>
+                        <p className="font-bold group-hover:text-blue-60">
+                            {widthRation} / {heightRation}
+                        </p>
+                    </>
+                )}
+                {...props}
+                ref={ref}
+            >
+                <div className="mb-2">
+                    <Grid2Container>
+                        <NormalInput
+                            label="Width ratio"
+                            {...register(`${Name}.${i}.widthRation`, {
+                                valueAsNumber: true,
+                            })}
                         />
-                    </div>
-                </Elem>
-            );
-        }
-    );
-}
+                        <NormalInput
+                            label="Height ration"
+                            {...register(`${Name}.${i}.heightRation`, {
+                                valueAsNumber: true,
+                            })}
+                        />
+                    </Grid2Container>
+                    <UploadButton
+                        label="Upload Image"
+                        setValue={(val) => setValue(`${Name}.${i}.image`, val)}
+                        aspect={widthRation / (heightRation || 1)}
+                        {...register(`${Name}.${i}.image`)}
+                        control={control}
+                        defaultValue={
+                            loadash.get(
+                                control._defaultValues,
+                                `${Name}.${i}.image`
+                            ) as any
+                        }
+                    />
+                </div>
+            </Elem>
+        );
+    }
+);
+
 interface Props {
     label: string;
     setValue: Dispatch<string>;
@@ -129,7 +130,6 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                             <div className="text-center">
                                 <FontAwesomeIcon
                                     icon={faImage}
-                                    fontSize={"3.75rem"}
                                     className="text-neutral-50 group-hover:text-blue-50 text-6xl"
                                 />
                                 <span className="block mt-3 text-blue-50 group-hover:text-neutral-50">
@@ -165,10 +165,7 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                             onClick={(e) => setEdit(true)}
                                             aria-label="edit"
                                         >
-                                            <FontAwesomeIcon
-                                                fontSize={"1em"}
-                                                icon={faPen}
-                                            />
+                                            <FontAwesomeIcon icon={faPen} />
                                             <span className="px-3">
                                                 Edit photo
                                             </span>
@@ -188,10 +185,7 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                             }}
                                             aria-label="delete"
                                         >
-                                            <FontAwesomeIcon
-                                                fontSize={"1em"}
-                                                icon={faTrash}
-                                            />
+                                            <FontAwesomeIcon icon={faTrash} />
                                             <span className="px-3">Delete</span>
                                         </button>
                                     </div>

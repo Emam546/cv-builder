@@ -49,13 +49,13 @@ export default function BasicInfo({
     return (
         <section className="my-4">
             <Header
+                control={control as any}
                 reset={() => resetField("info.head")}
                 {...register("info.head", {
                     onBlur(e: SyntheticEvent<HTMLInputElement>) {
                         if (!e.currentTarget.value) resetField("info.head");
                     },
                 })}
-                defaultValue={control._defaultValues.info?.head}
             />
             <Grid2Container ref={ref}>
                 <NormalInput
@@ -69,10 +69,6 @@ export default function BasicInfo({
                     label="Upload photo"
                     setValue={(val) => setValue("info.data.imgUrl", val)}
                     name="info.data.imgUrl"
-                    defaultValue={lodash.get(
-                        control._defaultValues,
-                        "info.data.imgUrl"
-                    )}
                     control={control as any}
                 />
                 <NormalInput
@@ -106,9 +102,6 @@ export default function BasicInfo({
                     label="availability"
                     control={control as any}
                     {...register(`info.data.availability`)}
-                    defaultValue={
-                        control._defaultValues["info"]?.data?.availability
-                    }
                 />
             </Grid2Container>
             <div
@@ -123,7 +116,7 @@ export default function BasicInfo({
                     <Grid2Container>
                         <NormalInput
                             label="City"
-                            options={CITIES.get(country)}
+                            options={CITIES.get(country) || []}
                             setValue={(val) => setValue("info.data.city", val)}
                             {...register("info.data.city")}
                         />
@@ -150,10 +143,7 @@ export default function BasicInfo({
             >
                 {eddData && <span>Hide additional details</span>}
                 {!eddData && <span>Edit additional details</span>}
-                <FontAwesomeIcon
-                    fontSize={"1em"}
-                    icon={eddData ? faChevronDown : faChevronUp}
-                />
+                <FontAwesomeIcon icon={eddData ? faChevronDown : faChevronUp} />
             </button>
         </section>
     );

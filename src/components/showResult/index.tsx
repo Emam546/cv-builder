@@ -40,10 +40,7 @@ export default function ShowResult() {
                     >
                         {!copied && (
                             <>
-                                <FontAwesomeIcon
-                                    fontSize={"1em"}
-                                    icon={faClipboard}
-                                />
+                                <FontAwesomeIcon icon={faClipboard} />
                                 <span className="ml-2">Copy</span>
                             </>
                         )}
@@ -51,7 +48,6 @@ export default function ShowResult() {
                             <>
                                 <FontAwesomeIcon
                                     icon={faCheck}
-                                    fontSize={"1em"}
                                     className="font-bold"
                                 />
                                 <span className="ml-2">Copied</span>

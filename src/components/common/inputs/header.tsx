@@ -7,9 +7,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
 import React from "react";
-import { useSyncRefs } from "@src/utils/hooks";
+import { useForceUpdate, useSyncRefs } from "@src/utils/hooks";
 import { assertIsNode } from "@src/utils";
 import { GeneralInputProps } from "./styles";
+import { Control, useController } from "react-hook-form";
 
 function CustomButton({
     editable,
@@ -33,16 +34,21 @@ function CustomButton({
 }
 export interface Props extends GeneralInputProps<string> {
     reset: Function;
-    defaultValue?: string;
+    control: Control;
     setDelete?: Function;
 }
 
 const Header = React.forwardRef<HTMLInputElement, Props>(
-    ({ defaultValue, reset, setDelete, ...props }, ref) => {
+    ({ defaultValue, reset, setDelete, control, ...props }, ref) => {
         const [editable, setEditable] = useState(false);
         const input = useRef<HTMLInputElement>(null);
-        const textValue = input.current?.value || defaultValue;
         const containerDiv = useRef<HTMLDivElement>(null);
+
+        const { field } = useController({
+            name: props.name || "",
+            control: control,
+        });
+        const textValue = field.value || "";
         useEffect(() => {
             if (!input.current) return;
             function Listener(e: MouseEvent) {
@@ -58,7 +64,7 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                 window.removeEventListener("click", Listener);
             };
         }, [input]);
-
+        const forceUpdate = useForceUpdate();
         const allRef = useSyncRefs<HTMLInputElement>(input, ref);
 
         return (
@@ -94,11 +100,16 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                             placeholder="Untitled"
                             type="text"
                             {...props}
+                            value={textValue}
                             ref={allRef}
                             className={classNames(
                                 "focus:outline-none p-0 top-0 left-0 absolute font-bold border-b-2 border-blue-50 border-solid w-full max-w-full",
                                 props.className
                             )}
+                            onChange={(e) => {
+                                if (props.onChange) props.onChange(e);
+                                field.onChange(e.currentTarget.value);
+                            }}
                         />
                     </div>
                 </div>
@@ -112,46 +123,38 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                     }}
                     aria-label="edit header"
                 >
-                    <FontAwesomeIcon
-                        fontSize={"1em"}
-                        icon={faPen}
-                    />
+                    <FontAwesomeIcon icon={faPen} />
                 </CustomButton>
-                {(!textValue?.length ||
-                    (defaultValue && textValue != defaultValue)) && (
+                {!textValue?.length && (
                     <CustomButton
                         editable={editable}
                         type="button"
-                        onClick={() => {
-                            reset();
-                        }}
+                        onClick={() => reset()}
                         className="font-bold"
                         aria-label="reset header"
                     >
-                        <FontAwesomeIcon
-                            fontSize={"1em"}
-                            icon={faRotateRight}
-                        />
+                        <FontAwesomeIcon icon={faRotateRight} />
                     </CustomButton>
                 )}
                 {setDelete && (
                     <CustomButton
                         editable={false}
                         type="button"
-                        onClick={() => {
-                            setDelete();
-                        }}
+                        onClick={() => setDelete()}
                         className="font-bold"
                         aria-label="delete section"
                     >
-                        <FontAwesomeIcon
-                            fontSize={"1em"}
-                            icon={faTrash}
-                        />
+                        <FontAwesomeIcon icon={faTrash} />
                     </CustomButton>
                 )}
             </div>
         );
     }
 );
-export default Header;
+const HeaderWrapper = React.forwardRef<HTMLInputElement, Props>(
+    (props, ref) => {
+        if (!props.control) return null;
+        return <Header {...props} />;
+    }
+);
+export default HeaderWrapper;

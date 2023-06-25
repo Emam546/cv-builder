@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { ListElemType } from "@src/components/main/sections/InsertCommonData/input";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
-import { Path, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import DatePicker from "@src/components/common/inputs/datePicker";
@@ -10,15 +10,17 @@ import FinalEditor from "@src/components/common/inputs/Editor";
 import { LabelElem } from "@src/components/common/inputs/styles";
 import {
     InputData as ImageInputData,
-    CreateElem as CreateImageItem,
+    ListElem as ImageListItem,
     InitData as ImageInitData,
 } from "@src/components/main/sections/photos";
 import InfoGetter from "./InsertCommonData/input";
 import lodash from "lodash";
+import { uuid } from "@src/utils";
 export const Name = "education";
 export type NameType = typeof Name;
 export type NameRules = string;
 export interface InputData {
+    id: string;
     degree: string;
     institution: string;
     date: {
@@ -32,26 +34,29 @@ export interface InputData {
 export function CreateItem(Name: NameRules) {
     return React.forwardRef(({ index: i, props: { form }, ...props }, ref) => {
         const { register, control } = form;
-        const { degree, institution } = useWatch({
-            name: `${Name}.${i}`,
-            control,
-        });
+
         const ImagePath = `${Name}.${i}.images`;
-        const ImageItem = useMemo(() => CreateImageItem(ImagePath), [i]);
         return (
             <Elem
-                headLabel={() => (
-                    <p className="font-bold group-hover:text-blue-60">
-                        {`${
-                            (degree == "" &&
-                                institution == "" &&
-                                "(Not specified)") ||
-                            ""
-                        } ${degree} ${
-                            (degree != "" && institution != "" && "at") || ""
-                        } ${institution}`}
-                    </p>
-                )}
+                headLabel={function G() {
+                    const { degree, institution } = useWatch({
+                        name: `${Name}.${i}`,
+                        control,
+                    });
+                    return (
+                        <p className="font-bold group-hover:text-blue-60">
+                            {`${
+                                (degree == "" &&
+                                    institution == "" &&
+                                    "(Not specified)") ||
+                                ""
+                            } ${degree} ${
+                                (degree != "" && institution != "" && "at") ||
+                                ""
+                            } ${institution}`}
+                        </p>
+                    );
+                }}
                 {...props}
                 ref={ref}
             >
@@ -75,7 +80,7 @@ export function CreateItem(Name: NameRules) {
                             ...register(`${Name}.${i}.date.end`),
                             placeholder: "MM / YYYY",
                         }}
-                        control={control as any}
+                        control={control}
                         labelEnd="Currently Work here."
                     />
                 </Grid2Container>
@@ -86,7 +91,7 @@ export function CreateItem(Name: NameRules) {
                     <InfoGetter
                         formRegister={form as any}
                         name={ImagePath}
-                        Elem={ImageItem}
+                        Elem={ImageListItem}
                         addButtonLabel="add one more Image"
                         initData={ImageInitData}
                     />
@@ -96,13 +101,7 @@ export function CreateItem(Name: NameRules) {
                     className="my-4"
                 >
                     <FinalEditor
-                        control={control as any}
-                        defaultValue={
-                            lodash.get(
-                                control._defaultValues,
-                                `${Name}.${i}.desc`
-                            ) as any
-                        }
+                        control={control}
                         {...register(`${Name}.${i}.desc`)}
                         placeholder="e.g. Created and implemented lesson plans based on child-led interests and curiosities"
                     />
@@ -111,14 +110,15 @@ export function CreateItem(Name: NameRules) {
         );
     }) as ListElemType<InputData>;
 }
-export const InitData: InputData = {
+export const InitData: () => InputData = () => ({
+    id: uuid(),
     degree: "",
     institution: "",
     date: {
         start: "",
         end: "",
     },
-    desc: "",
+    desc: "<p></p>\n",
     images: [],
-};
+});
 export default CreateItem(`${Name}.data`) as unknown as ElemType<InputData>;

@@ -61,7 +61,6 @@ function Container({
                     >
                         <FontAwesomeIcon
                             icon={faXmark}
-                            fontSize={"1.875rem"}
                             className="text-3xl transition-all duration-300 text-neutral-70 hover:text-neutral-50"
                         />
                     </button>
@@ -175,7 +174,6 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                             <div className="max-w-[15rem] text-center">
                                 <FontAwesomeIcon
                                     icon={faImage}
-                                    fontSize={"3rem"}
                                     className="text-neutral-30 block m-auto text-5xl"
                                 />
                                 <p className="text-neutral-60 group-hover:text-neutral-50 my-5">
@@ -335,7 +333,6 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                         <FontAwesomeIcon
                             icon={faArrowRotateLeft}
                             className="text-2xl py-1"
-                            fontSize={"1.5rem"}
                         />
                     </button>
                     <div className="relative text-center pt-1 z-10">
@@ -370,7 +367,6 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                         <FontAwesomeIcon
                             icon={faArrowRotateRight}
                             className="text-2xl py-1"
-                            fontSize={"1.5rem"}
                         />
                     </button>
                 </div> */}
@@ -381,7 +377,6 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                     className="text-neutral-60 cursor-pointer hover:text-neutral-30 transition-all duration-400 text-xl"
                 >
                     <FontAwesomeIcon
-                        fontSize={"1.25rem"}
                         icon={faArrowUpFromBracket}
                     />
                     <span className="px-3 font-semibold">Upload New</span>

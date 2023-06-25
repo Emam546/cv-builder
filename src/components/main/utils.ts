@@ -1,5 +1,4 @@
 import { Name as CustomName } from "./sections/CustomSection/types";
-
 export function convertSection2Data(
     data: Data,
     sectionState: SectionStateType
@@ -15,3 +14,4 @@ export function convertSection2Data(
     });
     return Sections;
 }
+

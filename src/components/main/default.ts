@@ -36,7 +36,7 @@ export const defaultData: Data = {
     },
     professional: {
         head: "Profession Details",
-        data: "",
+        data: "<p></p>\n",
     },
     [EmployName]: {
         head: "Employment History",

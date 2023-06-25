@@ -33,7 +33,6 @@ function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
                     <div className="bg-neutral-10 min-h-[4rem] group-hover:bg-blue-10 aspect-square h-full flex items-center justify-center">
                         <FontAwesomeIcon
                             icon={faUser}
-                            fontSize={"1em"}
                             className="text-neutral-50 group-hover:text-blue-50 text-4xl"
                         />
                     </div>
@@ -69,10 +68,7 @@ function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
                             onClick={() => setEdit(true)}
                             aria-label="edit"
                         >
-                            <FontAwesomeIcon
-                                fontSize={"1em"}
-                                icon={faPen}
-                            />
+                            <FontAwesomeIcon icon={faPen} />
                             <span className="px-3">Edit photo</span>
                         </button>
                         <button
@@ -91,7 +87,6 @@ function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
                             aria-label="delete"
                         >
                             <FontAwesomeIcon
-                                fontSize={"1em"}
                                 icon={faTrash}
                                 aria-label="delete"
                             />

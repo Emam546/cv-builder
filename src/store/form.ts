@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { defaultData } from "@src/components/main/default";
+import { SectionInitData } from "@src/components/main/sections/CustomSection/types";
 const initialState = { ...defaultData };
 export const FormSlice = createSlice({
     name: "form",
@@ -10,10 +11,7 @@ export const FormSlice = createSlice({
             // return { ...state, sections: action.payload };
         },
         addSection(state, action: { payload: undefined }) {
-            state.custom.push({
-                data: [],
-                head: "Untitled",
-            });
+            state.custom.push(SectionInitData());
         },
         setAllData(state, action: { payload: Data }) {
             return { ...action.payload };

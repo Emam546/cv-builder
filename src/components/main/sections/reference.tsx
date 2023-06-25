@@ -4,14 +4,23 @@ import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
+import { uuid } from "@src/utils";
 export type NameType = "references";
 export const Name: NameType = "references";
-export interface InputData extends FieldsType {
+export interface InputData {
+    id: string;
     name: string;
     company: string;
     phone: string;
     email: string;
 }
+export const InitData = () => ({
+    id: uuid(),
+    name: "string",
+    company: "string",
+    phone: "string",
+    email: "string",
+});
 const ReferenceElem: ElemType<InputData> = React.forwardRef(
     (
         {
@@ -23,20 +32,22 @@ const ReferenceElem: ElemType<InputData> = React.forwardRef(
         },
         ref
     ) => {
-        const { name, company } = useWatch({
-            name: `${Name}.data.${i}`,
-            control,
-        });
         return (
             <Elem
-                headLabel={() => (
-                    <>
-                        <p className="font-bold group-hover:text-blue-60">
-                            {name || "(Not Specified)"}
-                        </p>
-                        <p className="text-sm text-neutral-50">{company}</p>
-                    </>
-                )}
+                headLabel={function G() {
+                    const { name, company } = useWatch({
+                        name: `${Name}.data.${i}`,
+                        control,
+                    });
+                    return (
+                        <>
+                            <p className="font-bold group-hover:text-blue-60">
+                                {name || "(Not Specified)"}
+                            </p>
+                            <p className="text-sm text-neutral-50">{company}</p>
+                        </>
+                    );
+                }}
                 {...props}
                 ref={ref}
             >

@@ -69,7 +69,6 @@ function DatePic({
                     aria-label="left"
                 >
                     <FontAwesomeIcon
-                        fontSize={"1.125rem"}
                         icon={faChevronLeft}
                     />
                 </button>
@@ -97,10 +96,7 @@ function DatePic({
                         setDate([date[0], date[1] + 1]);
                     }}
                 >
-                    <FontAwesomeIcon
-                        fontSize={"1em"}
-                        icon={faChevronRight}
-                    />
+                    <FontAwesomeIcon icon={faChevronRight} />
                 </button>
             </div>
             <div className="grid grid-cols-4 py-4 gap-x-1 gap-y-2 items-stretch">

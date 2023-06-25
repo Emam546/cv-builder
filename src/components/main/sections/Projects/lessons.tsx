@@ -7,64 +7,73 @@ import { forwardRef } from "@src/components/main/sections/InsertCommonData/input
 import FElem from "../links";
 import FinalEditor from "@src/components/common/inputs/Editor";
 import { LabelElem } from "@src/components/common/inputs/styles";
+import { uuid } from "@src/utils";
 export type NameType = "links";
 export const Name: NameType = "links";
 export type NameRules = string;
-export interface InputData extends FieldsType {
+export interface InputData {
+    id: string;
     title: string;
     desc: string;
 }
+export const InitData: () => InputData = () => {
+    return {
+        id: uuid(),
+        title: "",
+        desc: "<p></p>\n",
+    };
+};
 
-export function CreateListItem(Name: NameRules) {
-    return forwardRef<InputData>(
-        (
-            {
-                index: i,
-                props: {
-                    form: { register, control, setValue },
-                },
-                ...props
+export const ListItem = forwardRef<InputData>(
+    (
+        {
+            index: i,
+            props: {
+                form: { register, control, setValue },
+                name: Name,
             },
-            ref
-        ) => {
-            const { title, desc } = useWatch({
-                name: `${Name}.${i}`,
-                control,
-            });
-
-            return (
-                <Elem
-                    headLabel={() => (
+            ...props
+        },
+        ref
+    ) => {
+        return (
+            <Elem
+                headLabel={function G() {
+                    const { title } = useWatch({
+                        name: `${Name}.${i}`,
+                        control,
+                    });
+                    return (
                         <>
                             <p className="font-bold group-hover:text-blue-60">
                                 {title || "(Not Specified)"}
                             </p>
                         </>
-                    )}
-                    {...props}
-                    ref={ref}
-                >
-                    <div className="mb-2">
-                        <Grid2Container>
-                            <NormalInput
-                                label="Title"
-                                {...register(`${Name}.${i}.title`)}
-                            />
-                        </Grid2Container>
-                        <LabelElem
-                            label="Desc"
-                            className="my-2"
-                        >
-                            <FinalEditor
-                                control={control as any}
-                                name={`${Name}.${i}.desc`}
-                            />
-                        </LabelElem>
-                    </div>
-                </Elem>
-            );
-        }
-    );
-}
+                    );
+                }}
+                {...props}
+                ref={ref}
+            >
+                <div className="mb-2">
+                    <Grid2Container>
+                        <NormalInput
+                            label="Title"
+                            {...register(`${Name}.${i}.title`)}
+                        />
+                    </Grid2Container>
+                    <LabelElem
+                        label="Desc"
+                        className="my-2"
+                    >
+                        <FinalEditor
+                            control={control}
+                            name={`${Name}.${i}.desc`}
+                        />
+                    </LabelElem>
+                </div>
+            </Elem>
+        );
+    }
+);
 
 export default FElem;

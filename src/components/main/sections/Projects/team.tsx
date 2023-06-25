@@ -11,86 +11,95 @@ import {
 
 import FElem from "../links";
 import { ElemType } from "../InsertCommonData/EleGen";
+import { uuid } from "@src/utils";
 export const Name = "links";
 export type NameType = typeof Name;
 export type NameRules = string;
 export interface InputData extends FieldsType {
     index?: number;
     role: string;
+    id: string;
 }
+export const InitData = (): InputData => ({
+    role: "",
+    index: 0,
+    id: uuid(),
+});
 function assertISValidData(data: unknown): InputData {
     return data as InputData;
 }
-export function CreateListItem(Name: NameRules) {
-    return React.forwardRef(
-        (
-            {
-                index: i,
-                props: {
-                    form: { register, control, setValue },
-                },
-                ...props
+export const ListElem = React.forwardRef(
+    (
+        {
+            index: i,
+            props: {
+                form: { register, control, setValue },
+                name: Name,
             },
-            ref
-        ) => {
-            const { index: mateI = -1, role } = assertISValidData(
-                useWatch({
-                    name: `${Name}.${i}`,
-                    control,
-                })
-            );
-            const AllTEamMates = useWatch({
-                name: `${TeamName}.data`,
+            ...props
+        },
+        ref
+    ) => {
+        const { index: mateI = -1, role } = assertISValidData(
+            useWatch({
+                name: `${Name}.${i}`,
                 control,
-            });
-            const mateName = AllTEamMates?.[mateI]?.name;
-            const mateJobTitle = AllTEamMates?.[mateI]?.jobTitle;
-            return (
-                <Elem
-                    headLabel={() => (
+            })
+        );
+        const AllTEamMates = useWatch({
+            name: `${TeamName}.data`,
+            control,
+        });
+        const mateName = AllTEamMates?.[mateI]?.name;
+        const mateJobTitle = AllTEamMates?.[mateI]?.jobTitle;
+        return (
+            <Elem
+                headLabel={function G() {
+                    return (
                         <>
                             <p className="font-bold group-hover:text-blue-60">
                                 {mateName || "(Not Specified)"}
                             </p>
                             <p className="text-sm text-neutral-50">{role}</p>
                         </>
-                    )}
-                    {...props}
-                    ref={ref}
-                >
-                    <div className="mb-2">
-                        <Grid2Container>
-                            <NormalInput
-                                label="Index"
-                                {...register(`${Name}.${i}.index`, {
-                                    valueAsNumber: true,
-                                })}
-                            />
-                            <NormalInput
-                                options={[mateJobTitle]}
-                                label="Role"
-                                setValue={(val) =>
-                                    setValue(`${Name}.${i}.role`, val)
-                                }
-                                {...register(`${Name}.${i}.role`)}
-                            />
-                        </Grid2Container>
-                    </div>
-                </Elem>
-            );
+                    );
+                }}
+                {...props}
+                ref={ref}
+            >
+                <div className="mb-2">
+                    <Grid2Container>
+                        <NormalInput
+                            label="Index"
+                            {...register(`${Name}.${i}.index`, {
+                                valueAsNumber: true,
+                            })}
+                        />
+                        <NormalInput
+                            options={[mateJobTitle]}
+                            label="Role"
+                            setValue={(val) =>
+                                setValue(`${Name}.${i}.role`, val)
+                            }
+                            {...register(`${Name}.${i}.role`)}
+                        />
+                    </Grid2Container>
+                </div>
+            </Elem>
+        );
+    }
+) as ElemType<{
+    index: number;
+    form: UseFormReturn<
+        {
+            [f: NameRules]: InputData[];
+        } & {
+            [TeamName]: {
+                data: TeamInputData[];
+            };
         }
-    ) as ElemType<{
-        index: number;
-        form: UseFormReturn<
-            {
-                [f: NameRules]: InputData[];
-            } & {
-                [TeamName]: {
-                    data: TeamInputData[];
-                };
-            }
-        >;
-    }>;
-}
+    >;
+    name: string;
+}>;
 
 export default FElem;

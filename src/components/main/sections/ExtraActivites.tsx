@@ -7,9 +7,11 @@ import NormalInput from "@src/components/common/inputs/normal";
 import DatePicker from "@src/components/common/inputs/datePicker";
 import FinalEditor from "@src/components/common/inputs/Editor";
 import { LabelElem } from "@src/components/common/inputs/styles";
+import { uuid } from "@src/utils";
 export type NameType = "extraActivites";
 export const Name: NameType = "extraActivites";
-export interface InputData extends FieldsType {
+export interface InputData {
+    id: string;
     title: string;
     employer: string;
     date: {
@@ -19,6 +21,17 @@ export interface InputData extends FieldsType {
     city: string;
     desc: string;
 }
+export const InitData: () => InputData = () => ({
+    id: uuid(),
+    city: "",
+    employer: "",
+    date: {
+        end: "",
+        start: "",
+    },
+    desc: "<p></p>\n",
+    title: "",
+});
 const ExtraActivites: ElemType<InputData> = React.forwardRef(
     (
         {
@@ -30,24 +43,26 @@ const ExtraActivites: ElemType<InputData> = React.forwardRef(
         },
         ref
     ) => {
-        const { title, employer } = useWatch({
-            name: `${Name}.data.${i}`,
-            control,
-        });
         return (
             <Elem
-                headLabel={() => (
-                    <p className="font-bold group-hover:text-blue-60">
-                        {`${
-                            (title == "" &&
-                                employer == "" &&
-                                "(Not specified)") ||
-                            ""
-                        } ${title} ${
-                            (title != "" && employer != "" && "at") || ""
-                        } ${employer}`}
-                    </p>
-                )}
+                headLabel={function G() {
+                    const { title, employer } = useWatch({
+                        name: `${Name}.data.${i}`,
+                        control,
+                    });
+                    return (
+                        <p className="font-bold group-hover:text-blue-60">
+                            {`${
+                                (title == "" &&
+                                    employer == "" &&
+                                    "(Not specified)") ||
+                                ""
+                            } ${title} ${
+                                (title != "" && employer != "" && "at") || ""
+                            } ${employer}`}
+                        </p>
+                    );
+                }}
                 {...props}
                 ref={ref}
             >
@@ -71,7 +86,7 @@ const ExtraActivites: ElemType<InputData> = React.forwardRef(
                             ...register(`${Name}.data.${i}.date.end`),
                             placeholder: "MM / YYYY",
                         }}
-                        control={control as any}
+                        control={control}
                         labelEnd="Currently Work here."
                     />
                     <NormalInput
@@ -84,10 +99,7 @@ const ExtraActivites: ElemType<InputData> = React.forwardRef(
                     className="mt-5 pb-5"
                 >
                     <FinalEditor
-                        control={control as any}
-                        defaultValue={
-                            control._defaultValues[Name]?.data?.[i]?.desc
-                        }
+                        control={control}
                         {...register(`${Name}.data.${i}.desc`)}
                     />
                 </LabelElem>

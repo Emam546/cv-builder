@@ -27,11 +27,11 @@ export default function Professional({
                 desc="Write 2-4 short & energetic sentences to interest the reader!
                 Mention your role, experience & most importantly - your biggest
                 achievements, best qualities and skills."
+                control={control as any}
             />
             <FinalEditor
                 control={control as any}
                 {...register("professional.data")}
-                defaultValue={control._defaultValues.professional?.data}
                 placeholder="e.g. passionate science teacher with 8+ years of experience and track record of ..."
             />
         </section>

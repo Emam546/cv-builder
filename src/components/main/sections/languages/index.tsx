@@ -8,12 +8,23 @@ import SelectInput, {
     OptionType,
 } from "@src/components/common/inputs/selectOption";
 import data from "./data.json";
+import { uuid } from "@src/utils";
 export type NameType = "languages";
 export const Name: NameType = "languages";
-export interface InputData extends FieldsType {
+export interface InputData {
+    id: string;
     language: string;
     level: string;
 }
+export const InitData: () => InputData = () => ({
+    id: uuid(),
+    language: "",
+    level: "",
+});
+export const DuplicateData: (val: InputData) => InputData = (val) => ({
+    ...val,
+    id: uuid(),
+});
 const LANG = data.map(({ name }) => name);
 const Options: OptionType[] = [
     { val: "", label: "Select Option" },
@@ -44,22 +55,24 @@ const FElem: ElemType<InputData> = React.forwardRef(
         },
         ref
     ) => {
-        const { language, level } = useWatch({
-            name: `${Name}.data.${i}`,
-            control,
-        });
         return (
             <Elem
-                headLabel={() => (
-                    <>
-                        <p className="font-bold group-hover:text-blue-60">
-                            {language || "(Not Specified)"}
-                        </p>
-                        <p className="text-sm text-neutral-50">
-                            {OptionsMap.get(level)?.label}
-                        </p>
-                    </>
-                )}
+                headLabel={function G() {
+                    const { language, level } = useWatch({
+                        name: `${Name}.data.${i}`,
+                        control,
+                    });
+                    return (
+                        <>
+                            <p className="font-bold group-hover:text-blue-60">
+                                {language || "(Not Specified)"}
+                            </p>
+                            <p className="text-sm text-neutral-50">
+                                {OptionsMap.get(level)?.label}
+                            </p>
+                        </>
+                    );
+                }}
                 {...props}
                 ref={ref}
             >
@@ -74,7 +87,7 @@ const FElem: ElemType<InputData> = React.forwardRef(
                             {...register(`${Name}.data.${i}.language`)}
                         />
                         <SelectInput
-                            control={control as any}
+                            control={control}
                             options={Options}
                             label="link"
                             setValue={(val) =>

@@ -8,21 +8,30 @@ import NormalInput from "@src/components/common/inputs/normal";
 import data from "./data.json";
 import LevelInput, { LevelType } from "@src/components/common/inputs/level";
 import { LabelElem } from "@src/components/common/inputs/styles";
+import { uuid } from "@src/utils";
 const programmingLangs = data.programming_technologies;
 export type NameType = "skills";
 export const Name: NameType = "skills";
-export interface ElemInputData extends FieldsType {
+export interface ElemInputData {
+    id: string;
     label: string;
     level: LevelType;
 }
-export interface InputData extends FieldsType {
+export interface InputData {
+    id: string;
     label: string;
     skills: ElemInputData[];
 }
-export const InitData: InputData = {
+export const EleInitData: () => ElemInputData = () => ({
+    id: uuid(),
+    label: "",
+    level: 0,
+});
+export const InitData: () => InputData = () => ({
+    id: uuid(),
     label: "",
     skills: [],
-};
+});
 const Levels: Record<LevelType, string> = {
     "0": "Novice",
     "1": "Beginner",
@@ -30,27 +39,26 @@ const Levels: Record<LevelType, string> = {
     "3": "Experienced",
     "4": "Expert",
 };
-type NameRules = string;
-export function CreateElem(Name: NameRules) {
-    return React.forwardRef(
-        (
-            {
-                index: i,
-                props: {
-                    form: { register, control, setValue },
-                },
-                ...props
+export const ListElem = React.forwardRef(
+    (
+        {
+            index: i,
+            props: {
+                form: { register, control, setValue },
+                name: Name,
             },
-            ref
-        ) => {
-            const { label, level } = useWatch({
-                name: `${Name}.${i}`,
-                control,
-            });
-
-            return (
-                <Elem
-                    headLabel={() => (
+            ...props
+        },
+        ref
+    ) => {
+        return (
+            <Elem
+                headLabel={function Skill() {
+                    const { label, level } = useWatch({
+                        name: `${Name}.${i}`,
+                        control,
+                    });
+                    return (
                         <>
                             <p className="font-bold group-hover:text-blue-60">
                                 {label || "(Not Specified)"}
@@ -59,67 +67,67 @@ export function CreateElem(Name: NameRules) {
                                 {Levels[+level as LevelType]}
                             </p>
                         </>
-                    )}
-                    {...props}
-                    ref={ref}
-                >
-                    <div className="mb-4">
-                        <Grid2Container>
-                            <NormalInput
-                                label="Skill"
-                                setValue={(val) =>
-                                    setValue(`${Name}.${i}.label`, val)
-                                }
-                                options={programmingLangs}
-                                {...register(`${Name}.${i}.label`)}
-                            />
+                    );
+                }}
+                {...props}
+                ref={ref}
+            >
+                <div className="mb-4">
+                    <Grid2Container>
+                        <NormalInput
+                            label="Skill"
+                            setValue={(val) =>
+                                setValue(`${Name}.${i}.label`, val)
+                            }
+                            options={programmingLangs}
+                            {...register(`${Name}.${i}.label`)}
+                        />
 
-                            <LevelInput
-                                label="link"
-                                Levels={Levels}
-                                setValue={(val) =>
-                                    setValue(`${Name}.${i}.level`, val)
-                                }
-                                {...register(`${Name}.${i}.level`, {
-                                    valueAsNumber: true,
-                                })}
-                            />
-                        </Grid2Container>
-                    </div>
-                </Elem>
-            );
-        }
-    ) as ListElemType<ElemInputData>;
-}
+                        <LevelInput
+                            label="link"
+                            Levels={Levels}
+                            setValue={(val) =>
+                                setValue(`${Name}.${i}.level`, val)
+                            }
+                            {...register(`${Name}.${i}.level`, {
+                                valueAsNumber: true,
+                            })}
+                        />
+                    </Grid2Container>
+                </div>
+            </Elem>
+        );
+    }
+) as ListElemType<ElemInputData>;
+
 type SkillsPath = `${NameType}.data.${number}.skills`;
 
 export const FElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
         const { register, control, setValue } = form;
-        const { label } = useWatch({
-            name: `${Name}.data.${i}`,
-            control,
-        });
+
         const skillPath: SkillsPath = `${Name}.data.${i}.skills`;
-        const SkillElem = useMemo(() => CreateElem(skillPath), [i]);
         return (
             <Elem
-                headLabel={() => (
-                    <>
-                        <p className="font-bold group-hover:text-blue-60">
-                            {label || "(Not Specified)"}
-                        </p>
-                    </>
-                )}
+                headLabel={function G() {
+                    const { label } = useWatch({
+                        name: `${Name}.data.${i}`,
+                        control,
+                    });
+                    return (
+                        <>
+                            <p className="font-bold group-hover:text-blue-60">
+                                {label || "(Not Specified)"}
+                            </p>
+                        </>
+                    );
+                }}
                 {...props}
                 ref={ref}
             >
                 <Grid2Container>
                     <NormalInput
                         label="Label"
-                        setValue={(val) =>
-                            setValue(`skills.data.${i}.label`, val)
-                        }
                         {...register(`${Name}.data.${i}.label`)}
                     />
                 </Grid2Container>
@@ -130,11 +138,8 @@ export const FElem: ElemType<InputData> = React.forwardRef(
                     <InfoGetter
                         formRegister={form as any}
                         name={skillPath}
-                        Elem={SkillElem as any}
-                        initData={{
-                            label: "",
-                            level: 0,
-                        }}
+                        Elem={ListElem}
+                        initData={EleInitData}
                         addButtonLabel={"Add one more skill"}
                     />
                 </LabelElem>

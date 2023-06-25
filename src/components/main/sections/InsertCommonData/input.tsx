@@ -1,23 +1,31 @@
-import React, { ForwardRefRenderFunction } from "react";
-import { FieldValues, Path, PathValue, UseFormReturn } from "react-hook-form";
+import React, { ForwardRefRenderFunction, useState } from "react";
+import { FieldValues, UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { LabelElem } from "@src/components/common/inputs/styles";
 import classNames from "classnames";
-import ElemGenerator, { ElemType, ListProps as OrgListProps } from "./EleGen";
+import ElemGenerator, {
+    ElemType,
+    ListProps as OrgListProps,
+    PSchema,
+} from "./EleGen";
+import { copyObject } from "@src/utils";
+import { Duplicate } from "./utils";
 export type NameRules = string;
-export interface ListProps<T extends FieldValues> {
+export interface ListProps<T> extends PSchema {
     index: number;
     form: UseFormReturn<ListData<T, NameRules>>;
+    name: string;
+    id: string;
 }
 
-export type ListElemType<T extends FieldValues> = ElemType<ListProps<T>>;
-export function forwardRef<T extends FieldValues>(
+export type ListElemType<T> = ElemType<ListProps<T>>;
+export function forwardRef<T extends PSchema>(
     render: ForwardRefRenderFunction<HTMLDivElement, OrgListProps<ListProps<T>>>
 ): ListElemType<T> {
     return React.forwardRef(render);
 }
-export default function InfoGetter<T extends FieldsType>({
+export default function InfoGetter<T extends PSchema>({
     name,
     initData,
     addButtonLabel = "Add",
@@ -28,13 +36,13 @@ export default function InfoGetter<T extends FieldsType>({
 }: {
     name: NameRules;
     formRegister: UseFormReturn<ListData<T, NameRules>>;
-    initData: T;
+    initData: () => T;
     addButtonLabel: string;
     Elem: ListElemType<T>;
     label?: string;
     noDragging?: boolean;
 }) {
-    const { setValue, getValues, watch } = formRegister;
+    const { setValue, getValues } = formRegister;
     const keys = {
         root: `${name}`,
         data_i(i: number) {
@@ -44,7 +52,7 @@ export default function InfoGetter<T extends FieldsType>({
             return `${this.data_i(i)}.${key}`;
         },
     };
-    const EleData = watch(name);
+    const [EleData, setEleData] = useState(getValues(name));
     return (
         <LabelElem label={label}>
             <div>
@@ -57,26 +65,34 @@ export default function InfoGetter<T extends FieldsType>({
                         <ElemGenerator
                             noDragging={noDragging}
                             Elem={Elem}
-                            data={EleData.map((_, i) => ({
+                            data={EleData.map((val, i) => ({
                                 index: i,
                                 form: formRegister,
+                                name,
+                                id: val.id,
                             }))}
                             resort={(indexes) => {
-                                const data = indexes.map((i) =>
-                                    getValues(`${name}.${i}`)
-                                ) as PathValue<
-                                    ListData<T, NameRules>,
-                                    Path<ListData<T, NameRules>>
-                                >;
+                                const allData = getValues(`${name}`);
+                                const data = indexes
+                                    .map((i) => allData[i])
+                                    .filter((val) => val);
                                 setValue(keys.root, data);
+                                setEleData(data);
                             }}
-                            deleteSelf={(i) => {
-                                setValue(
-                                    keys.root,
-                                    (getValues(keys.root) as T[]).filter(
-                                        (val, ix) => i != ix
-                                    ) as any
+                            duplicate={(xid) => {
+                                const allData = getValues(`${name}`);
+                                const val = allData.find(({ id }) => xid == id);
+                                if (!val) throw new Error("undefined instance");
+                                const data = Duplicate(val);
+                                setValue(keys.root, [...allData, data]);
+                                setEleData([...allData, data]);
+                            }}
+                            deleteSelf={(xid) => {
+                                const data = getValues(keys.root).filter(
+                                    ({ id }) => id != xid
                                 );
+                                setValue(keys.root, data);
+                                setEleData(data);
                             }}
                         />
                     </div>
@@ -84,19 +100,15 @@ export default function InfoGetter<T extends FieldsType>({
                 <button
                     className="text-blue-60 font-bold hover:bg-blue-10 transition-all block w-full py-3 text-start px-4 space-x-2"
                     onClick={() => {
-                        const data = { ...initData };
-                        setValue(
-                            keys.data_i((getValues(keys.root) as T[]).length),
-                            data as any
-                        );
+                        const data = initData();
+                        const preData = getValues(keys.root);
+                        setValue(name, [...preData, data]);
+                        setEleData([...preData, data]);
                     }}
                     type="button"
                     aria-label="add"
                 >
-                    <FontAwesomeIcon
-                        fontSize={"1em"}
-                        icon={faAdd}
-                    />
+                    <FontAwesomeIcon icon={faAdd} />
                     <span>{addButtonLabel}</span>
                 </button>
             </div>

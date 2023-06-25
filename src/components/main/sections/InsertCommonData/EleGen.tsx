@@ -1,13 +1,14 @@
+import { uuid } from "@src/utils";
 import React, {
     ForwardRefExoticComponent,
     PropsWithoutRef,
     RefAttributes,
-    useEffect,
-    useState,
+    useRef,
 } from "react";
 
 export interface PrimaryProps {
-    deleteSelf: (this: HTMLDivElement) => any;
+    deleteSelf?: (this: HTMLDivElement) => any;
+    duplicate?: (this: HTMLDivElement) => any;
     onDragOver?: (ele: HTMLDivElement) => any;
     onDrag?: (this: HTMLDivElement, ev: MouseEvent) => any;
     onDragStart?: (ele: HTMLDivElement) => any;
@@ -20,32 +21,40 @@ export interface ListProps<P = {}> extends PrimaryProps {
 export type ElemType<P = {}> = ForwardRefExoticComponent<
     PropsWithoutRef<ListProps<P>> & RefAttributes<HTMLDivElement>
 >;
-export default function ElemGenerator<P = {}>({
+export interface PSchema {
+    id: string;
+}
+export default function ElemGenerator<P extends PSchema>({
     Elem,
     noDragging,
     resort,
     deleteSelf,
     data,
+    duplicate,
 }: {
     Elem: ElemType<P>;
     data: P[];
-    deleteSelf?: (i: number) => any;
+    deleteSelf?: (id: string) => any;
+    duplicate?: (id: string) => any;
     resort?: (indexes: number[]) => void;
     noDragging?: boolean;
 }) {
-    const [allEle, setAllEle] = useState<HTMLDivElement[]>([]);
+    // const [allEle, setAllEle] = useState<HTMLDivElement[]>([]);
+    const allEle: HTMLDivElement[] = [];
     return (
         <div className="flex flex-col items-stretch space-y-4 transition-all duration-700 mb-1">
             {data.map((props, i) => {
                 return (
                     <Elem
+                        duplicate={() => {
+                            duplicate && duplicate(props.id);
+                        }}
                         noDragging={noDragging}
                         index={i}
-                        key={i}
                         deleteSelf={() => {
-                            setAllEle((pre) => pre.filter((_, ix) => ix != i));
-                            deleteSelf && deleteSelf(i);
+                            deleteSelf && deleteSelf(props.id);
                         }}
+                        key={uuid()}
                         onDragOver={(ele) => {
                             const indexes = allEle
                                 .map<[number, number]>((ele, i) => {
@@ -58,12 +67,13 @@ export default function ElemGenerator<P = {}>({
                                     ];
                                 })
                                 .sort((a, b) => a[0] - b[0])
-                                .map(([_, i]) => i);
+                                .map(([, i]) => i);
+
                             if (resort) resort(indexes);
                         }}
                         ref={(ele) => {
                             if (!ele) return;
-                            setAllEle((pre) => [...pre, ele]);
+                            allEle.push(ele);
                         }}
                         props={props}
                     />

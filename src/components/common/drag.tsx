@@ -76,10 +76,7 @@ export default function DraggableComp({
                 setDrag(true);
             }}
         >
-            <FontAwesomeIcon
-                fontSize={"1em"}
-                icon={faGripLinesVertical}
-            />
+            <FontAwesomeIcon icon={faGripLinesVertical} />
         </div>
     );
 }

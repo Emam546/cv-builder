@@ -22,10 +22,6 @@ const newArr: LevelType[] = Array(5)
     .map((_, index) => index as LevelType);
 const LevelInput = React.forwardRef<HTMLInputElement, Props>(
     ({ label, Levels, defaultValue, setValue, ...props }, ref) => {
-        const [id, setId] = useState("");
-        useEffect(() => {
-            setId(uuid());
-        }, []);
         const containerDiv = useRef<HTMLDivElement>(null);
         const [val, setVal] = useState<LevelType>(defaultValue || 0);
         const inputRef = useRef<HTMLInputElement>(null);
@@ -39,7 +35,7 @@ const LevelInput = React.forwardRef<HTMLInputElement, Props>(
         }, [inputRef.current?.value]);
         return (
             <LabelElem
-                id={id}
+                id={props.name}
                 label={
                     <>
                         Level-
@@ -91,7 +87,7 @@ const LevelInput = React.forwardRef<HTMLInputElement, Props>(
                         type="hidden"
                         ref={allRef}
                         autoComplete="off"
-                        id={id}
+                        id={props.name}
                     />
                 </div>
             </LabelElem>

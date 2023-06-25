@@ -8,7 +8,6 @@ import {
     GeneralInputProps,
 } from "@src/components/common/inputs/styles";
 import currencies from "./options.json";
-import { Control } from "react-hook-form";
 
 const options: OptionType[] = currencies.map((val) => ({
     label: `${val.name} (${val.code})`,

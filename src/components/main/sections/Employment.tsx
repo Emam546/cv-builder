@@ -10,13 +10,15 @@ import { LabelElem } from "@src/components/common/inputs/styles";
 import MultiSelectInput from "@src/components/common/inputs/multiSelect";
 import data from "@src/components/main/sections/Skills/data.json";
 import lodash from "lodash";
+import { uuid } from "@src/utils";
 const Technologies = data.programming_technologies.map((value) => ({
     value,
     label: value,
 }));
 export type NameType = "employ";
 export const Name: NameType = "employ";
-export interface InputData extends FieldsType {
+export interface InputData {
+    id: string;
     jobTitle: string;
     employer: string;
     date: {
@@ -28,7 +30,8 @@ export interface InputData extends FieldsType {
     teamSize: number;
     technologies: string[];
 }
-export const IniData: InputData = {
+export const IniData: () => InputData = () => ({
+    id: uuid(),
     jobTitle: "",
     employer: "",
     date: {
@@ -36,10 +39,10 @@ export const IniData: InputData = {
         end: "",
     },
     city: "",
-    desc: "",
+    desc: "<p></p>\n",
     teamSize: 0,
     technologies: [],
-};
+});
 function ConvValToOptions(vals?: string[]) {
     if (!vals) return [];
     return vals.reduce((acc, str) => {
@@ -61,32 +64,37 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
         },
         ref
     ) => {
-        const { jobTitle, employer, date } = useWatch({
-            name: `${Name}.data.${i}`,
-            control,
-        });
-
         return (
             <Elem
-                headLabel={() => (
-                    <>
-                        <p className="font-bold group-hover:text-blue-60">
-                            {`${
-                                (jobTitle == "" &&
-                                    employer == "" &&
-                                    "(Not specified)") ||
+                headLabel={function G() {
+                    const { jobTitle, employer, date } = useWatch({
+                        name: `${Name}.data.${i}`,
+                        control,
+                    });
+                    return (
+                        <>
+                            <p className="font-bold group-hover:text-blue-60">
+                                {`${
+                                    (jobTitle == "" &&
+                                        employer == "" &&
+                                        "(Not specified)") ||
+                                    ""
+                                } ${jobTitle} ${
+                                    (jobTitle != "" &&
+                                        employer != "" &&
+                                        "at") ||
+                                    ""
+                                } ${employer}`}
+                            </p>
+                            <p className="text-sm text-neutral-50">{`${
+                                date.start
+                            } ${
+                                (date.start != "" && date.end != "" && "-") ||
                                 ""
-                            } ${jobTitle} ${
-                                (jobTitle != "" && employer != "" && "at") || ""
-                            } ${employer}`}
-                        </p>
-                        <p className="text-sm text-neutral-50">{`${
-                            date.start
-                        } ${
-                            (date.start != "" && date.end != "" && "-") || ""
-                        } ${date.end}`}</p>
-                    </>
-                )}
+                            } ${date.end}`}</p>
+                        </>
+                    );
+                }}
                 {...props}
                 ref={ref}
             >
@@ -110,7 +118,7 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                             ...register(`${Name}.data.${i}.date.end`),
                             placeholder: "MM / YYYY",
                         }}
-                        control={control as any}
+                        control={control}
                         labelEnd="Currently Work here."
                     />
                     <NormalInput
@@ -136,7 +144,7 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                                 `${Name}.data.${i}.technologies`
                             ) as string[]
                         )}
-                        control={control as any}
+                        control={control}
                         name={`${Name}.data.${i}.technologies`}
                     />
                 </LabelElem>
@@ -145,10 +153,7 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                     className="my-4"
                 >
                     <FinalEditor
-                        control={control as any}
-                        defaultValue={
-                            control._defaultValues[Name]?.data?.[i]?.desc
-                        }
+                        control={control}
                         {...register(`${Name}.data.${i}.desc`)}
                         placeholder="e.g. Created and implemented lesson plans based on child-led interests and curiosities"
                     />

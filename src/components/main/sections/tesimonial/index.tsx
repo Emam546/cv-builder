@@ -7,7 +7,7 @@ import NormalInput from "@src/components/common/inputs/normal";
 import FinalEditor from "@src/components/common/inputs/Editor";
 import UploadButton from "@src/components/common/uploadAvatar";
 import {
-    CreateListItem,
+    ListItem as LinkListItem,
     InputData as LinkInputData,
     InitData as LinkInitData,
 } from "../links";
@@ -15,14 +15,16 @@ import InfoGetter from "@src/components/main/sections/InsertCommonData/input";
 import { LabelElem } from "@src/components/common/inputs/styles";
 import {
     InputData as ImageInputData,
-    CreateListItem as CreateImageListItem,
-    InitData as ProjectInitData,
+    ListItem as ImageListItem,
+    InitData as ImageInitData,
 } from "../Projects/images";
 import lodash from "lodash";
 import RatingInput from "./rating";
+import { uuid } from "@src/utils";
 export type NameType = "testimonials";
 export const Name: NameType = "testimonials";
 export interface InputData {
+    id: string;
     name: string;
     role: string;
     company: string;
@@ -35,7 +37,8 @@ export interface InputData {
     links: LinkInputData[];
     desc: string;
 }
-export const InitData: InputData = {
+export const InitData: () => InputData = () => ({
+    id: uuid(),
     name: "",
     role: "",
     company: "",
@@ -46,38 +49,37 @@ export const InitData: InputData = {
     projectUrl: "",
     rating: 0,
     links: [],
-    desc: "",
-};
+    desc: "<p></p>\n",
+});
 type LinkPath = `${NameType}.data.${number}.links`;
 type ProjectPath = `${NameType}.data.${number}.projectImages`;
 
 const TeamElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
         const { register, control, setValue } = form;
-        const { name, company } = useWatch({
-            name: `${Name}.data.${i}`,
-            control,
-        });
-        const LinkPath: LinkPath = `${Name}.data.${i}.links`;
-        const ProjectPath: ProjectPath = `${Name}.data.${i}.projectImages`;
-        const LinkEle = useMemo(() => CreateListItem(LinkPath), [i]);
-        const ProjectImageEle = useMemo(
-            () => CreateImageListItem(ProjectPath),
-            [i]
-        );
 
+        const LinkPath: LinkPath = `${Name}.data.${i}.links`;
+        const ImagesPath: ProjectPath = `${Name}.data.${i}.projectImages`;
         return (
             <Elem
-                headLabel={() => (
-                    <div className="font-bold group-hover:text-blue-60">
-                        <>
-                            <p className="font-bold group-hover:text-blue-60">
-                                {name || "(Not Specified)"}
-                            </p>
-                            <p className="text-sm text-neutral-50">{company}</p>
-                        </>
-                    </div>
-                )}
+                headLabel={function G() {
+                    const { name, company } = useWatch({
+                        name: `${Name}.data.${i}`,
+                        control,
+                    });
+                    return (
+                        <div className="font-bold group-hover:text-blue-60">
+                            <>
+                                <p className="font-bold group-hover:text-blue-60">
+                                    {name || "(Not Specified)"}
+                                </p>
+                                <p className="text-sm text-neutral-50">
+                                    {company}
+                                </p>
+                            </>
+                        </div>
+                    );
+                }}
                 {...props}
                 ref={ref}
             >
@@ -106,7 +108,7 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                                 `${Name}.data.${i}.avatar`
                             ) as string
                         }
-                        control={control as any}
+                        control={control}
                     />
                     <NormalInput
                         label="Your Role or Job Title"
@@ -128,9 +130,9 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                     <InfoGetter
                         formRegister={form as any}
                         addButtonLabel="Add one more Project"
-                        Elem={ProjectImageEle}
-                        initData={ProjectInitData}
-                        name={ProjectPath}
+                        Elem={ImageListItem}
+                        initData={ImageInitData}
+                        name={ImagesPath}
                         label={"Project Images"}
                     />
                 </div>
@@ -138,7 +140,7 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                     <InfoGetter
                         formRegister={form as any}
                         addButtonLabel="Add one more Link"
-                        Elem={LinkEle}
+                        Elem={LinkListItem}
                         initData={LinkInitData}
                         name={LinkPath}
                         label={"Links"}
@@ -149,10 +151,7 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                     className="my-4"
                 >
                     <FinalEditor
-                        control={control as any}
-                        defaultValue={
-                            form.control._defaultValues[Name]?.data?.[i]?.desc
-                        }
+                        control={control}
                         {...register(`${Name}.data.${i}.desc`)}
                         placeholder="Description about testimonial opinion"
                     />

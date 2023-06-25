@@ -1,10 +1,11 @@
 import BasicInfo from "./sections/basicinf";
-import { UseFormReturn, useForm } from "react-hook-form";
+import { UseFormReturn, useForm, useWatch } from "react-hook-form";
 
 import EmployElem, {
     InputData as EmployDataType,
     NameType as EmployNameType,
     Name as EmployName,
+    IniData as EmployInitData,
 } from "./sections/Employment";
 import EducElem, {
     InputData as EducDataType,
@@ -16,11 +17,13 @@ import LinkElem, {
     InputData as LinkDataType,
     NameType as LinkNameType,
     Name as LinkName,
+    InitData as LinkInitData,
 } from "./sections/links";
 import LangElem, {
     InputData as LangDataType,
     NameType as LangNameType,
     Name as LangName,
+    InitData as LangInitData,
 } from "./sections/languages";
 import SkillElem, {
     Name as SkillName,
@@ -30,26 +33,31 @@ import CourseElem, {
     InputData as CourseDataType,
     NameType as CourseNameType,
     Name as CourseName,
+    InitData as CourseInitData,
 } from "./sections/courses";
 import InternShipElem, {
     InputData as InternShipDataType,
     NameType as InternShipNameType,
     Name as InternShipName,
+    InitData as InternInitData,
 } from "./sections/internships";
 import ReferenceElem, {
     InputData as ReferenceDataType,
     NameType as ReferenceNameType,
     Name as ReferenceName,
+    InitData as ReferenceInitData,
 } from "./sections/reference";
 import ExtraActivitesElem, {
     InputData as ExtraActivitesDataType,
     NameType as ExtraActivitesNameType,
     Name as ExtraActivitesName,
+    InitData as ExtraActivitesInitData,
 } from "./sections/ExtraActivites";
 import TeamElem, {
     InputData as TeamDataType,
     NameType as TeamNameType,
     Name as TeamName,
+    InitData as TeamInitData,
 } from "./sections/Team";
 import ProjectsElem, {
     InputData as ProjectsDataType,
@@ -57,7 +65,7 @@ import ProjectsElem, {
     Name as ProjectsName,
     InitData as ProjectInitData,
 } from "./sections/Projects";
-import ImagesElem, {
+import ImageElem, {
     InputData as ImagesDataType,
     NameType as ImagesNameType,
     Name as ImagesName,
@@ -82,27 +90,42 @@ import { useAppSelector } from "@src/store";
 import { ActionType, StateActions } from "@src/store/state";
 import { copyObject } from "@src/utils";
 import loadash from "lodash";
+function Uploader({
+    form,
+}: {
+    form: UseFormReturn<Data, any>;
+    defaultData: Data;
+}) {
+    const dispatch = useDispatch();
 
+    const res: any = useWatch({ control: form.control });
+    useEffect(() => {
+        dispatch(FormAction.setData(copyObject(res)));
+    });
+    return <></>;
+}
 export default function Main({ values }: { values?: Data }) {
     const dispatch = useDispatch();
     const form = useForm<Data>({
         defaultValues: values || defaultData,
+        values: values || defaultData,
     });
     form.resetField = (path) => {
         form.setValue(path, loadash.get(defaultData, path));
     };
     const State = useAppSelector((state) => state.state);
-    const res = form.watch();
+
     function dispatchSection(val: ActionType) {
         dispatch(StateActions.setSectionState(val));
     }
-    useEffect(() => {
-        dispatch(FormAction.setData(copyObject(res)));
-    });
 
     const sectionHiddenState = State.data.sections;
     return (
         <main className="flex flex-col items-stretch">
+            <Uploader
+                form={form}
+                defaultData={defaultData}
+            />
             <BasicInfo {...(form as any)} />
             <InfoGetter
                 formRegister={
@@ -113,7 +136,7 @@ export default function Main({ values }: { values?: Data }) {
                 addButtonLabel="Add one more Picture group"
                 name={ImagesName}
                 initData={ImageInitData}
-                Elem={ImagesElem}
+                Elem={ImageElem}
                 desc="Show your relevant Images (last 10 years)"
             />
             <Professional {...(form as any)} />
@@ -125,18 +148,7 @@ export default function Main({ values }: { values?: Data }) {
                 }
                 addButtonLabel="Add Employment"
                 name={EmployName}
-                initData={{
-                    jobTitle: "",
-                    employer: "",
-                    date: {
-                        start: "",
-                        end: "",
-                    },
-                    city: "",
-                    desc: "",
-                    teamSize: 0,
-                    technologies: [],
-                }}
+                initData={EmployInitData}
                 Elem={EmployElem}
                 desc="Show your relevant experience (last 10 years). Use bullet points to note your achievements, if possible - use numbers/fact (Achieved X, measured by Y, by doing Z)."
             />
@@ -172,14 +184,7 @@ export default function Main({ values }: { values?: Data }) {
                 }
                 addButtonLabel="Add one more teammate"
                 name={TeamName}
-                initData={{
-                    avatar: "",
-                    email: "",
-                    links: [],
-                    name: "",
-                    desc: "",
-                    jobTitle: "",
-                }}
+                initData={TeamInitData}
                 Elem={TeamElem}
                 desc="Show your relevant teammates ."
             />
@@ -202,10 +207,7 @@ export default function Main({ values }: { values?: Data }) {
                     }
                     addButtonLabel="Add one more link"
                     name={LinkName}
-                    initData={{
-                        label: "",
-                        link: "",
-                    }}
+                    initData={LinkInitData}
                     Elem={LinkElem}
                     desc="You can add links to websites you want hiring managers to see! Perhaps It will be  a link to your portfolio, LinkedIn profile, or personal website"
                 />
@@ -254,10 +256,7 @@ export default function Main({ values }: { values?: Data }) {
                     }
                     addButtonLabel="Add one more language"
                     name={LangName}
-                    initData={{
-                        language: "",
-                        level: "",
-                    }}
+                    initData={LangInitData}
                     Elem={LangElem}
                 />
             </Container>
@@ -293,16 +292,7 @@ export default function Main({ values }: { values?: Data }) {
                     }
                     addButtonLabel="Add one more Course"
                     name={CourseName}
-                    initData={{
-                        label: "",
-                        date: {
-                            start: "",
-                            end: "",
-                        },
-                        desc: "",
-                        institution: "",
-                        images: [],
-                    }}
+                    initData={CourseInitData}
                     Elem={CourseElem}
                 />
             </Container>
@@ -327,16 +317,7 @@ export default function Main({ values }: { values?: Data }) {
                     }
                     addButtonLabel="Add one more internship"
                     name={InternShipName}
-                    initData={{
-                        jobTitle: "",
-                        employer: "",
-                        date: {
-                            start: "",
-                            end: "",
-                        },
-                        city: "",
-                        desc: "",
-                    }}
+                    initData={InternInitData}
                     Elem={InternShipElem}
                 />
             </Container>
@@ -361,16 +342,7 @@ export default function Main({ values }: { values?: Data }) {
                     }
                     addButtonLabel="Add one more activity"
                     name={ExtraActivitesName}
-                    initData={{
-                        title: "",
-                        employer: "",
-                        date: {
-                            start: "",
-                            end: "",
-                        },
-                        city: "",
-                        desc: "",
-                    }}
+                    initData={ExtraActivitesInitData}
                     Elem={ExtraActivitesElem}
                 />
             </Container>
@@ -406,12 +378,7 @@ export default function Main({ values }: { values?: Data }) {
                     }
                     addButtonLabel="Add one more reference"
                     name={ReferenceName}
-                    initData={{
-                        company: "",
-                        email: "",
-                        name: "",
-                        phone: "",
-                    }}
+                    initData={ReferenceInitData}
                     Elem={ReferenceElem}
                 />
             </Container>

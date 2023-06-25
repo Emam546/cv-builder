@@ -1,9 +1,7 @@
-import React, { InputHTMLAttributes, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BottomLine, GeneralInputProps, LabelElem } from "./styles";
-import { v4 as uuid } from "uuid";
 import classNames from "classnames";
 import { assertIsNode } from "@src/utils";
-import { useSyncRefs } from "@src/utils/hooks";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Control, useController } from "react-hook-form";
@@ -43,15 +41,14 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
             label,
             control,
             name,
-            defaultValue,
             ...props
         },
         ref
     ) => {
-        const [id, setId] = useState("");
+        
         const [expand, setExpand] = useState(false);
         const containerDiv = useRef<HTMLDivElement>(null);
-        const { field } = useController({ defaultValue, name, control });
+        const { field } = useController({ name, control });
         const inpVal = options.findIndex((val) => val.val == field.value);
         const val = (inpVal > -1 && inpVal) || 0;
         useEffect(() => {
@@ -63,14 +60,12 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
                 if (!state) setExpand(false);
             }
             window.addEventListener("click", handelClick);
-            setId(uuid());
             return () => window.removeEventListener("click", handelClick);
         }, []);
         const [focus, setFocus] = useState(false);
         return (
             <LabelElem
                 label={label}
-                id={id}
                 ref={containerDiv}
             >
                 <div className="relative">
@@ -87,7 +82,6 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
                         >
                             <span>{options[val].label}</span>
                             <FontAwesomeIcon
-                                fontSize={"1em"}
                                 icon={faChevronDown}
                                 className={classNames(
                                     "text-blue-60 transition duration-200",
@@ -121,24 +115,23 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
                             );
                         })}
                     </div>
-                    <input
-                        {...props}
-                        ref={field.ref}
-                        name={name}
-                        defaultValue={defaultValue}
-                        type="hidden"
-                        autoComplete="off"
-                        id={id}
-                        onFocusCapture={(ev) => {
-                            if (props.onFocusCapture) props.onFocusCapture(ev);
-                            setFocus(true);
-                        }}
-                        onBlurCapture={(ev) => {
-                            if (props.onBlurCapture) props.onBlurCapture(ev);
-                            setFocus(false);
-                        }}
-                    />
                 </div>
+                <input
+                    {...props}
+                    ref={field.ref}
+                    name={name}
+                    type="hidden"
+                    autoComplete="off"
+                    id={name}
+                    onFocusCapture={(ev) => {
+                        if (props.onFocusCapture) props.onFocusCapture(ev);
+                        setFocus(true);
+                    }}
+                    onBlurCapture={(ev) => {
+                        if (props.onBlurCapture) props.onBlurCapture(ev);
+                        setFocus(false);
+                    }}
+                />
             </LabelElem>
         );
     }

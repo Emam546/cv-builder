@@ -110,37 +110,34 @@ function DropDownComp({
     );
 }
 function isHasProps(val: unknown): val is PropsWithOptions {
-    return (
-        hasOwnProperty(val, "options") &&
-        Array.isArray(val.options) &&
-        val.options.length != 0
-    );
+    return hasOwnProperty(val, "options") && Array.isArray(val.options);
 }
 const NormalInput = React.forwardRef<HTMLInputElement, Props>(
-    (allprops, ref) => {
-        const { label, ...props } = allprops;
+    ({ label, ...props }, ref) => {
         const inputRef = useRef<HTMLInputElement>(null);
         const [focus, setFocus] = useState(false);
         const [open, setIsOpen] = useState(false);
         const allRef = useSyncRefs(ref, inputRef);
         const containerRef = useRef<HTMLDivElement>(null);
-        const [id, setId] = useState("");
         const value = inputRef.current?.value;
         const forceUpdate = useForceUpdate();
-        useEffect(() => {
-            setId(uuid());
-        }, []);
+        let control: Control,
+            options: string[] | undefined,
+            setValue: Dispatch<string>;
+        if (isHasProps(props))
+            ({ setValue, control, options, ...props } = props);
+
         return (
             <LabelElem
                 ref={containerRef}
                 label={label}
-                id={id}
+                id={props.name}
             >
                 <div className="relative">
                     <BottomLine>
                         <StyledInput
                             {...props}
-                            id={id}
+                            id={props.name}
                             autoComplete="off"
                             ref={allRef}
                             onChange={(ev) => {
@@ -165,14 +162,13 @@ const NormalInput = React.forwardRef<HTMLInputElement, Props>(
                             }}
                         />
                     </BottomLine>
-                    {isHasProps(allprops) && focus && value && (
+                    {options && focus && value && (
                         <DropDownComp
                             value={value}
-                            options={allprops.options}
+                            options={options}
                             containerRef={containerRef}
                             selectOption={(val) => {
-                                if (isHasProps(allprops))
-                                    allprops.setValue(val);
+                                if (setValue) setValue(val);
                                 inputRef.current!.value = val;
                                 setFocus(false);
                             }}
