@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { FieldValues, UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
@@ -6,6 +6,9 @@ import HeadSection from "@src/components/common/head";
 import ElemGenerator, { ElemType as OrgElemType, PSchema } from "./EleGen";
 import { copyObject } from "@src/utils";
 import { Duplicate } from "./utils";
+import Alert from "@mui/material/Alert";
+import { Button, Snackbar } from "@mui/material";
+import DeleteAlert from "./deleteAlert";
 type NameRules = string;
 export interface ElemProps<T> extends PSchema {
     index: number;
@@ -42,10 +45,34 @@ export default function InfoGetter<T extends PSchema>({
             return `${this.data_i(i)}.${key}`;
         },
     };
+
     const [ElementsData, setElementsData] = useState<T[]>(
         getValues(`${name}.data`)
     );
-
+    const [open, setOpen] = useState(false);
+    const lastData = useRef<[T, number]>();
+    function undo() {
+        if (!lastData.current) return;
+        const allData = getValues(`${name}.data`);
+        const newArr = [
+            ...allData.slice(0, lastData.current[1]),
+            lastData.current[0],
+            ...allData.slice(lastData.current[1], allData.length),
+        ];
+        lastData.current = undefined;
+        setElementsData(newArr);
+        setValue(`${name}.data`, newArr as any);
+        setOpen(false);
+    }
+    function onClose() {
+        lastData.current = undefined;
+        setOpen(false);
+    }
+    useEffect(() => {
+        window.addEventListener("close", () => {
+            if (open) onClose();
+        });
+    }, []);
     return (
         <section className="my-5">
             <HeadSection
@@ -72,11 +99,15 @@ export default function InfoGetter<T extends PSchema>({
                         id: val.id,
                     }))}
                     deleteSelf={(xid) => {
-                        const data = getValues(`${name}.data`).filter(
-                            ({ id }) => xid != id
-                        );
-                        setValue(keys.data, data as any);
-                        setElementsData(data);
+                        const allData = getValues(`${name}.data`);
+                        lastData.current = [
+                            allData.find(({ id }) => id == xid) as T,
+                            allData.findIndex(({ id }) => id == xid),
+                        ];
+                        const newdata = allData.filter(({ id }) => id != xid);
+                        setValue(`${name}.data`, newdata as any);
+                        setElementsData([...newdata]);
+                        setOpen(true);
                     }}
                     duplicate={(xid) => {
                         const allData = getValues(`${name}`).data;
@@ -89,8 +120,8 @@ export default function InfoGetter<T extends PSchema>({
                     resort={(indexes) => {
                         const allData = getValues(`${name}.data`);
                         const data = indexes.map((i) => allData[i]);
-                        setValue(`${name}.data`, data as any);
                         setElementsData(data);
+                        setValue(`${name}.data`, data as any);
                     }}
                 />
             </div>
@@ -99,8 +130,8 @@ export default function InfoGetter<T extends PSchema>({
                 onClick={() => {
                     const data = initData();
                     const preData = getValues(`${name}`).data;
-                    setValue(keys.data, [...preData, data] as any);
                     setElementsData([...preData, data]);
+                    setValue(keys.data, [...preData, data] as any);
                 }}
                 type="button"
                 aria-label="add"
@@ -108,6 +139,12 @@ export default function InfoGetter<T extends PSchema>({
                 <FontAwesomeIcon icon={faAdd} />
                 <span>{addButtonLabel}</span>
             </button>
+            <DeleteAlert
+                deps={[lastData.current]}
+                open={open}
+                setClose={onClose}
+                undo={undo}
+            />
         </section>
     );
 }

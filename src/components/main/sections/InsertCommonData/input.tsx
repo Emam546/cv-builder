@@ -1,4 +1,4 @@
-import React, { ForwardRefRenderFunction, useState } from "react";
+import React, { ForwardRefRenderFunction, useRef, useState } from "react";
 import { FieldValues, UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
@@ -11,6 +11,7 @@ import ElemGenerator, {
 } from "./EleGen";
 import { copyObject } from "@src/utils";
 import { Duplicate } from "./utils";
+import DeleteAlert from "./deleteAlert";
 export type NameRules = string;
 export interface ListProps<T> extends PSchema {
     index: number;
@@ -53,6 +54,26 @@ export default function InfoGetter<T extends PSchema>({
         },
     };
     const [EleData, setEleData] = useState(getValues(name));
+    const [open, setOpen] = useState(false);
+    const lastData = useRef<[T, number]>();
+
+    function undo() {
+        if (!lastData.current) return;
+        const allData = getValues(`${name}`);
+        const newArr = [
+            ...allData.slice(0, lastData.current[1]),
+            lastData.current[0],
+            ...allData.slice(lastData.current[1], allData.length),
+        ];
+        lastData.current = undefined;
+        setEleData(newArr);
+        setValue(`${name}`, newArr as any);
+        setOpen(false);
+    }
+    function onClose() {
+        lastData.current = undefined;
+        setOpen(false);
+    }
     return (
         <LabelElem label={label}>
             <div>
@@ -88,11 +109,17 @@ export default function InfoGetter<T extends PSchema>({
                                 setEleData([...allData, data]);
                             }}
                             deleteSelf={(xid) => {
-                                const data = getValues(keys.root).filter(
+                                const allData = getValues(`${name}`);
+                                const data = allData.filter(
                                     ({ id }) => id != xid
                                 );
-                                setValue(keys.root, data);
+                                lastData.current = [
+                                    allData.find(({ id }) => id == xid) as T,
+                                    allData.findIndex(({ id }) => id == xid),
+                                ];
                                 setEleData(data);
+                                setValue(keys.root, data);
+                                setOpen(true);
                             }}
                         />
                     </div>
@@ -112,6 +139,12 @@ export default function InfoGetter<T extends PSchema>({
                     <span>{addButtonLabel}</span>
                 </button>
             </div>
+            <DeleteAlert
+                deps={[lastData.current]}
+                open={open}
+                setClose={onClose}
+                undo={undo}
+            />
         </LabelElem>
     );
 }

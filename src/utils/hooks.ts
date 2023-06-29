@@ -83,7 +83,7 @@ export const useDebounceInitialEffect = (
     waitTime: number,
     deps?: DependencyList
 ) => {
-    useInitialEffect(() => {
+    useEffect(() => {
         const t = setTimeout(() => {
             fn.call(undefined, deps);
         }, waitTime);
