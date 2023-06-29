@@ -13,6 +13,8 @@ import { useNotInitEffect, useUploadImage } from "@src/utils/hooks";
 import LoadingPanner from "@src/components/common/loading/loading";
 import loadash from "lodash";
 import { uuid } from "@src/utils";
+import { PSchema } from "../InsertCommonData/EleGen";
+import { getPath } from "../InsertCommonData/utils";
 export type NameType = "images";
 export const Name: NameType = "images";
 export type NameRules = string;
@@ -22,89 +24,24 @@ export interface InputData {
     image: string;
     id: string;
 }
-export const InitData: () => InputData = () => ({
-    id: uuid(),
-    widthRation: 1,
-    heightRation: 1,
-    image: "",
-});
-export const ListItem = forwardRef<InputData>(
-    (
-        {
-            index: i,
-            props: {
-                form: { register, control, setValue, getValues },
-                name: Name,
-            },
-            ...props
-        },
-        ref
-    ) => {
-        const { widthRation, heightRation } = useWatch({
-            name: `${Name}.${i}`,
-            control,
-        });
-
-        return (
-            <Elem
-                headLabel={() => (
-                    <>
-                        <p className="font-bold group-hover:text-blue-60">
-                            {widthRation} / {heightRation}
-                        </p>
-                    </>
-                )}
-                {...props}
-                ref={ref}
-            >
-                <div className="mb-2">
-                    <Grid2Container>
-                        <NormalInput
-                            label="Width ratio"
-                            {...register(`${Name}.${i}.widthRation`, {
-                                valueAsNumber: true,
-                            })}
-                        />
-                        <NormalInput
-                            label="Height ration"
-                            {...register(`${Name}.${i}.heightRation`, {
-                                valueAsNumber: true,
-                            })}
-                        />
-                    </Grid2Container>
-                    <UploadButton
-                        label="Upload Image"
-                        setValue={(val) => setValue(`${Name}.${i}.image`, val)}
-                        aspect={widthRation / (heightRation || 1)}
-                        {...register(`${Name}.${i}.image`)}
-                        control={control}
-                        defaultValue={
-                            loadash.get(
-                                control._defaultValues,
-                                `${Name}.${i}.image`
-                            ) as any
-                        }
-                    />
-                </div>
-            </Elem>
-        );
-    }
-);
-
 interface Props {
     label: string;
     setValue: Dispatch<string>;
     aspect: number;
     name: string;
+    imageId: string;
     control: Control;
     defaultValue?: string;
 }
 export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
-    ({ defaultValue, label, setValue, name, control, aspect }, ref) => {
+    (
+        { defaultValue, label, setValue, name, control, aspect, imageId },
+        ref
+    ) => {
         const [edit, setEdit] = useState(false);
         const [blob, setBlob] = useState<Blob | undefined>();
         const { field } = useController({ name, control, defaultValue });
-        const UploadImage = useUploadImage("/api/v1/images", name);
+        const UploadImage = useUploadImage("/api/v1/images", imageId);
         const [loading, setLoading] = useState(false);
         const orgImg = (blob && URL.createObjectURL(blob)) || field.value;
         useNotInitEffect(() => {
@@ -248,6 +185,76 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                     />
                 </div>
             </div>
+        );
+    }
+);
+export const InitData: () => InputData = () => ({
+    id: uuid(),
+    widthRation: 1,
+    heightRation: 1,
+    image: "",
+});
+
+export const ListItem = forwardRef<InputData>(
+    (
+        {
+            index: i,
+            props: {
+                form: { register, control, setValue, getValues },
+                name: Name,
+            },
+            ...props
+        },
+        ref
+    ) => {
+        const { widthRation, heightRation } = useWatch({
+            name: `${Name}.${i}`,
+            control,
+        });
+
+        return (
+            <Elem
+                headLabel={() => (
+                    <>
+                        <p className="font-bold group-hover:text-blue-60">
+                            {widthRation} / {heightRation}
+                        </p>
+                    </>
+                )}
+                {...props}
+                ref={ref}
+            >
+                <div className="mb-2">
+                    <Grid2Container>
+                        <NormalInput
+                            label="Width ratio"
+                            {...register(`${Name}.${i}.widthRation`, {
+                                valueAsNumber: true,
+                            })}
+                        />
+                        <NormalInput
+                            label="Height ration"
+                            {...register(`${Name}.${i}.heightRation`, {
+                                valueAsNumber: true,
+                            })}
+                        />
+                    </Grid2Container>
+                    <UploadButton
+                        label="Upload Image"
+                        imageId={getPath(getValues(), `${Name}.${i}.image`)}
+                        setValue={(val) => setValue(`${Name}.${i}.image`, val)}
+                        aspect={widthRation / (heightRation || 1)}
+                        {...register(`${Name}.${i}.image`)}
+                        control={control}
+                        defaultValue={
+                            loadash.get(
+                                control._defaultValues,
+                                `${Name}.${i}.image`
+                            ) as any
+                        }
+                    />
+                </div>
+            </Elem>
         );
     }
 );
