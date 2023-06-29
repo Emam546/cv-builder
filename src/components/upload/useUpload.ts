@@ -2,17 +2,25 @@ import { useAppSelector } from "@src/store";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { UserData } from "@serv/models/user";
-import { useDebounceInitialEffect } from "@src/utils/hooks";
+import { Dispatch, useEffect, useRef, useState } from "react";
+import { useInitialEffect } from "@src/utils/hooks";
 
 export function useUploadData() {
+    const time = +(process.env.NEXT_PUBLIC_UPLOADING_TIME || "3000");
     const data: UserData = useAppSelector((state) => ({
         sections: state.form,
         sectionState: state.state.data,
     }));
     const isSingIn = useAppSelector((state) => state.user.isSingIn);
-    useDebounceInitialEffect(
-        () => {
+    const [state, setState] = useState<boolean>(false);
+    const lastData = useRef(JSON.stringify(data));
+    const [err, setErr] = useState<string>();
+    const str = JSON.stringify(data);
+    useInitialEffect(() => {
+        const t = setTimeout(() => {
             if (!isSingIn) return;
+            if (lastData.current == str) return;
+            lastData.current = str;
             const source = axios.CancelToken.source();
             const token = Cookies.get("token");
             axios
@@ -23,12 +31,22 @@ export function useUploadData() {
                     cancelToken: source.token,
                 })
                 .then(() => {
-                    // eslint-disable-next-line no-console
-                    console.log("uploaded");
+                    setErr(undefined);
+                })
+                .catch((err) => {
+                    setErr(err.message);
+                })
+                .finally(() => {
+                    setState(true);
                 });
-            return () => {};
-        },
-        +(process.env.NEXT_PUBLIC_UPLOADING_TIME || "3000"),
-        [data]
-    );
+        }, time);
+        setState(false);
+        return () => clearTimeout(t);
+    }, [str]);
+
+    return [state, setState, err] as [
+        boolean,
+        Dispatch<boolean>,
+        string | undefined
+    ];
 }
