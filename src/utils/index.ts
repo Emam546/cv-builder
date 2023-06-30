@@ -1,4 +1,6 @@
+import { AxiosRequestConfig } from "axios";
 import { v4 as _uuid } from "uuid";
+import Cookies from "js-cookie";
 
 export function assertIsNode(e: EventTarget | null): asserts e is Node {
     if (!e || !("nodeType" in e)) {
@@ -19,4 +21,11 @@ export function MakeItSerializable<T>(val: T): T {
 }
 export function uuid() {
     return _uuid();
+}
+export function getHeaders<T>(){
+    const token = Cookies.get("token");
+    return {
+        Authorization: `Bearer ${token}`,
+    } as AxiosRequestConfig<T>["headers"];
+
 }

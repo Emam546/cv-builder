@@ -2,6 +2,7 @@ import React, { SyntheticEvent } from "react";
 import { UseFormReturn } from "react-hook-form";
 import HeadSection from "@src/components/common/head";
 import { BottomLine } from "@src/components/common/inputs/styles";
+import TextArea from "@src/components/common/textArea";
 export type NameType = "hobbies";
 export const Name: NameType = "hobbies";
 export interface InputData {
@@ -31,13 +32,10 @@ export default function Hobbies({
                 setDelete={setDelete}
                 control={control as any}
             />
-            <BottomLine>
-                <textarea
-                    {...register(`${Name}.data`)}
-                    className="w-full min-h-[10rem] m-0 resize-none bg-neutral-10 p-3 py-4 text-2xl focus:outline-none"
-                    placeholder="e.g Skiing Skydiving Painting"
-                />
-            </BottomLine>
+            <TextArea
+                {...register(`${Name}.data`)}
+                placeholder="e.g Skiing Skydiving Painting"
+            />
         </section>
     );
 }

@@ -29,20 +29,19 @@ export interface Props
 }
 
 export const LabelElem = React.forwardRef<HTMLDivElement, Props>(
-    ({ label, id, children, ...props }, ref) => {
+    ({ label, children, ...props }, ref) => {
         if (!label) return <>{children}</>;
         return (
             <div
                 ref={ref}
                 {...props}
             >
-                <label
-                    htmlFor={id}
-                    className="py-2 block text-neutral-40 leading-6"
-                >
-                    {label}
+                <label className="block">
+                    <span className="py-2 block text-neutral-40 leading-6">
+                        {label}
+                    </span>
+                    {children}
                 </label>
-                {children}
             </div>
         );
     }

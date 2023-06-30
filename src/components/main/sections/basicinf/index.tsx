@@ -1,6 +1,6 @@
 import { SyntheticEvent, useRef, useState } from "react";
 import Header from "@src/components/common/inputs/header";
-import { FieldValues, UseFormReturn } from "react-hook-form";
+import { Control, FieldValues, UseFormReturn, useWatch } from "react-hook-form";
 import NormalInput from "@src/components/common/inputs/normal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
@@ -15,6 +15,7 @@ import SelectInput, {
 const COUNTRIES = Object.keys(data.countries).map((name) => name);
 const CITIES: Map<string, string[]> = new Map(Object.entries(data.countries));
 const JOP_TITLES = data.jobs;
+
 export interface InputData {
     info: {
         head: string;
@@ -32,10 +33,22 @@ export interface InputData {
             nationality?: string;
             placeOfBirth?: string;
             availability?: string;
+            militaryState?: string;
+            maritalState?: string;
         };
     };
 }
 const AvailabilityOptions: OptionType[] = data.availabilityOptions;
+type CityInputProps = Parameters<typeof NormalInput>[0] & { control: Control };
+function CityInput({ control, ...props }: CityInputProps) {
+    const country = useWatch({ control, name: "info.data.country" });
+    return (
+        <NormalInput
+            options={CITIES.get(country) || []}
+            {...props}
+        />
+    );
+}
 export default function BasicInfo({
     register,
     resetField,
@@ -44,7 +57,6 @@ export default function BasicInfo({
 }: UseFormReturn<InputData>) {
     const [eddData, setEddData] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
-    const [country, setCountry] = useState<string>("");
 
     return (
         <section className="my-4">
@@ -92,9 +104,6 @@ export default function BasicInfo({
                     label="Country"
                     options={COUNTRIES}
                     setValue={(val) => setValue("info.data.country", val)}
-                    onBlurCapture={(ev) => {
-                        setCountry(ev.currentTarget.value);
-                    }}
                     {...register("info.data.country")}
                 />
                 <SelectInput
@@ -114,10 +123,12 @@ export default function BasicInfo({
             >
                 <div className="overflow-hidden">
                     <Grid2Container>
-                        <NormalInput
+                        <CityInput
                             label="City"
-                            options={CITIES.get(country) || []}
-                            setValue={(val) => setValue("info.data.city", val)}
+                            control={control as any}
+                            setValue={(val: string) =>
+                                setValue("info.data.city", val)
+                            }
                             {...register("info.data.city")}
                         />
                         <NormalInput

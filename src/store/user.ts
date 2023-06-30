@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { User } from "@serv/models/user";
-import { HYDRATE } from "next-redux-wrapper";
 type InitialData =
     | {
           isSingIn: false;

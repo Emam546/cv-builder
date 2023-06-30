@@ -76,9 +76,9 @@ export default function UserComponent() {
                     )}
                 >
                     <ul className={classNames("w-52  p-4 px-5")}>
-                        <li className="py-1">Account Settings</li>
-                        <li className="py-1">Updates</li>
-                        <li className="py-1">FAQ</li>
+                        <li className="py-1">
+                            <Link href="/account">Account Settings</Link>
+                        </li>
                         <li className="py-1">
                             <Link href="/login">Log Out</Link>
                         </li>

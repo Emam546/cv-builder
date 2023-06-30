@@ -5,7 +5,7 @@ import { assertIsAuth } from "@serv/util/utils";
 import { sign } from "@serv/util/jwt";
 const router = Router();
 
-router.get("/", passport.authenticate("google", { scope: ["profile"] }));
+router.get("/", passport.authenticate("google", { scope: ["profile","email"] }));
 
 router.get(
     "/callback",

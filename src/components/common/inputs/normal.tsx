@@ -131,13 +131,11 @@ const NormalInput = React.forwardRef<HTMLInputElement, Props>(
             <LabelElem
                 ref={containerRef}
                 label={label}
-                id={props.name}
             >
                 <div className="relative">
                     <BottomLine>
                         <StyledInput
                             {...props}
-                            id={props.name}
                             autoComplete="off"
                             ref={allRef}
                             onChange={(ev) => {

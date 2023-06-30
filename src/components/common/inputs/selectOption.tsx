@@ -122,7 +122,6 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
                     name={name}
                     type="hidden"
                     autoComplete="off"
-                    id={name}
                     onFocusCapture={(ev) => {
                         if (props.onFocusCapture) props.onFocusCapture(ev);
                         setFocus(true);

@@ -1,16 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import passport from "passport";
 import passportFacebook from "passport-facebook";
 import passportGoogle from "passport-google-oauth";
-import EnvVars from "./declarations/major/EnvVars";
+import EnvVars from "@serv/declarations/major/EnvVars";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import Users, { UserProvider } from "@serv/models/user";
-import { createUser } from "./util/user";
+import { createUser } from "@serv/util/user";
 const FacebookStrategy = passportFacebook.Strategy;
-const GoogleStrategy: typeof FacebookStrategy =
-    passportGoogle.OAuth2Strategy as unknown as never;
+const GoogleStrategy = passportGoogle.OAuth2Strategy;
 
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -26,7 +22,7 @@ passport.use(
             clientID: EnvVars.facebook.APP_ID,
             clientSecret: EnvVars.facebook.APP_SECRET,
             callbackURL: `${EnvVars.DOMAIN_URL}/api/v1/auth/facebook/callback`,
-            profileFields: ["id", "first_name", "last_name"],
+            profileFields: ["id", "first_name", "last_name", "emails"],
             display: "popup",
         },
         // authenticate user
@@ -38,8 +34,9 @@ passport.use(
             if (result) return done(null, result.toObject());
 
             const newUser = await createUser({
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                name: `${profile.name?.givenName} ${profile.name?.familyName}`,
+                firstName: profile.name?.givenName || "",
+                lastName: profile.name?.familyName || "",
+                email: profile.emails?.[0]?.value,
                 provider_id: profile.id,
                 provider_type: "facebook",
             });
@@ -55,6 +52,7 @@ passport.use(
             callbackURL: `${EnvVars.DOMAIN_URL}/api/v1/auth/google/callback`,
         },
         async (accessToken, refreshToken, profile, done) => {
+            console.log(profile);
             // You can save the user profile or perform other actions here
             const result = await Users.findOne({
                 provider_id: profile.id,
@@ -63,8 +61,9 @@ passport.use(
             if (result) return done(null, result.toObject());
 
             const newUser = await createUser({
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                name: `${profile.displayName}`,
+                firstName: profile.name?.givenName || "",
+                lastName: profile.name?.familyName || "",
+                email: profile.emails?.[0]?.value,
                 provider_id: profile.id,
                 provider_type: "google",
             });
@@ -79,6 +78,7 @@ passport.use(
             secretOrKey: EnvVars.jwt.secret,
         },
         function (jwt_payload, done) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             return done(null, jwt_payload);
         }
     )

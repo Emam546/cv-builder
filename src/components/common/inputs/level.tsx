@@ -35,7 +35,6 @@ const LevelInput = React.forwardRef<HTMLInputElement, Props>(
         }, [inputRef.current?.value]);
         return (
             <LabelElem
-                id={props.name}
                 label={
                     <>
                         Level-
@@ -87,7 +86,6 @@ const LevelInput = React.forwardRef<HTMLInputElement, Props>(
                         type="hidden"
                         ref={allRef}
                         autoComplete="off"
-                        id={props.name}
                     />
                 </div>
             </LabelElem>

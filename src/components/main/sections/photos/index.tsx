@@ -30,7 +30,6 @@ type ImagesPathType = `${NameRules}.${number}.images`;
 export const ListElem = React.forwardRef(
     ({ index: i, props: { form, name: Name }, ...props }, ref) => {
         const { register, control } = form;
-
         const ImagePath: ImagesPathType = `${Name}.${i}.images`;
         return (
             <Elem

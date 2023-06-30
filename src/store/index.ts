@@ -1,8 +1,6 @@
 import {
-    AnyAction,
     combineReducers,
-    configureStore,
-    createSlice,
+    configureStore
 } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";

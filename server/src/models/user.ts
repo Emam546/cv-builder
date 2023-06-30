@@ -5,7 +5,9 @@ export interface UserData {
 }
 export interface User {
     _id: string;
-    name: string;
+    firstName: string;
+    lastName: string;
+    email?: string;
     data?: UserData;
     apiKey: string;
 }
@@ -14,10 +16,19 @@ export interface UserProvider extends User {
     provider_type?: "facebook" | "google" | "linkedin";
 }
 const schema = new mongoose.Schema<User | UserProvider>({
-    name: {
+    firstName: {
         type: String,
         min: 2,
         required: true,
+    },
+    lastName: {
+        type: String,
+        min: 2,
+        required: true,
+    },
+    email: {
+        type: String,
+        min: 2,
     },
     provider_id: {
         type: String,
