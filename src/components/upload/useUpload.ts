@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { UserData } from "@serv/models/user";
 import { Dispatch, useEffect, useRef, useState } from "react";
 import { useInitialEffect } from "@src/utils/hooks";
-import { getHeaders } from "@src/utils";
+import { getAuthHeaders } from "@src/utils";
 export function useUploadData() {
     const time = +(process.env.NEXT_PUBLIC_UPLOADING_TIME || "3000");
     const data: UserData = useAppSelector((state) => ({
@@ -24,7 +24,7 @@ export function useUploadData() {
             const source = axios.CancelToken.source();
             axios
                 .post("/api/v1/user/data", data, {
-                    headers: getHeaders(),
+                    headers: getAuthHeaders(),
                     cancelToken: source.token,
                 })
                 .then(() => {

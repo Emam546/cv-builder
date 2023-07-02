@@ -6,7 +6,7 @@ import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import DatePicker from "@src/components/common/inputs/datePicker";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import { LabelElem } from "@src/components/common/inputs/styles";
+import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import { uuid } from "@src/utils";
 export type NameType = "internships";
 export const Name: NameType = "internships";
@@ -94,7 +94,7 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                         {...register(`${Name}.data.${i}.city`)}
                     />
                 </Grid2Container>
-                <LabelElem
+                <WrapElem
                     label={"Description"}
                     className="mt-5"
                 >
@@ -103,7 +103,7 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                         {...register(`${Name}.data.${i}.desc`)}
                         placeholder="e.g. Created and implemented lesson plans based on child-led interests and curiosities"
                     />
-                </LabelElem>
+                </WrapElem>
             </Elem>
         );
     }

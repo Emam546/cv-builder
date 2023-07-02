@@ -7,11 +7,11 @@ import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import data from "./data.json";
 import UploadButton from "@src/components/common/uploadAvatar";
-import lodash from "lodash";
 import classNames from "classnames";
 import SelectInput, {
     OptionType,
 } from "@src/components/common/inputs/selectOption";
+import UploadPDF from "./uploadPdf";
 const COUNTRIES = Object.keys(data.countries).map((name) => name);
 const CITIES: Map<string, string[]> = new Map(Object.entries(data.countries));
 const JOP_TITLES = data.jobs;
@@ -35,6 +35,7 @@ export interface InputData {
             availability?: string;
             militaryState?: string;
             maritalState?: string;
+            cv?: string;
         };
     };
 }
@@ -79,8 +80,8 @@ export default function BasicInfo({
                 />
                 <UploadButton
                     label="Upload photo"
-                    setValue={(val) => setValue("info.data.imgUrl", val)}
                     name="info.data.imgUrl"
+                    imageId="info.data.imgUrl"
                     control={control as any}
                 />
                 <NormalInput
@@ -142,6 +143,12 @@ export default function BasicInfo({
                         <NormalInput
                             label="Nationality"
                             {...register("info.data.nationality")}
+                        />
+                        <UploadPDF
+                            pdfId="info.data.cv"
+                            label="Upload you Cv"
+                            control={control as any}
+                            {...register("info.data.cv")}
                         />
                     </Grid2Container>
                 </div>

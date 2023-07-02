@@ -58,26 +58,33 @@ import TeamElem, {
     NameType as TeamNameType,
     Name as TeamName,
     InitData as TeamInitData,
+    onDelete as TeamOnDelete,
 } from "./sections/Team";
 import ProjectsElem, {
     InputData as ProjectsDataType,
     NameType as ProjectsNameType,
     Name as ProjectsName,
     InitData as ProjectInitData,
+    onDelete as ProjectOnDelete,
 } from "./sections/Projects";
 import ImageElem, {
     InputData as ImagesDataType,
     NameType as ImagesNameType,
     Name as ImagesName,
     InitData as ImageInitData,
+    onDelete as ImageOnDelete,
 } from "./sections/photos";
 import TestimonialsElem, {
     InputData as TestimonialsDataType,
     NameType as TestimonialsNameType,
     Name as TestimonialsName,
     InitData as TestimonialsInitData,
+    onDelete as TestimonialsOnDelete,
 } from "./sections/tesimonial";
-import Professional from "./sections/professional";
+import Professional, {
+    InitData as ParagraphInitData,
+    Name as ParagraphName,
+} from "./sections/paragraphs";
 import Hobbies, { Name as HobbiesName } from "./sections/hobbies";
 import CustomSection from "./sections/CustomSection";
 import InfoGetter from "@src/components/main/sections/InsertCommonData/index";
@@ -136,10 +143,20 @@ export default function Main({ values }: { values?: Data }) {
                 addButtonLabel="Add one more Picture group"
                 name={ImagesName}
                 initData={ImageInitData}
+                onDeleteElem={ImageOnDelete}
                 Elem={ImageElem}
                 desc="Show your relevant Images (last 10 years)"
             />
-            <Professional {...(form as any)} />
+            <InfoGetter
+                formRegister={form as any}
+                desc="Write 2-4 short & energetic sentences to interest the reader!
+                Mention your role, experience & most importantly - your biggest
+                achievements, best qualities and skills."
+                name={ParagraphName}
+                initData={ParagraphInitData}
+                Elem={Professional}
+                addButtonLabel="Add more paragraph section"
+            />
             <InfoGetter
                 formRegister={
                     form as unknown as UseFormReturn<
@@ -172,6 +189,7 @@ export default function Main({ values }: { values?: Data }) {
                 }
                 addButtonLabel="Add one more group"
                 name={ProjectsName}
+                onDeleteElem={ProjectOnDelete}
                 Elem={ProjectsElem}
                 initData={ProjectInitData}
                 desc="Show your relevant Projects"
@@ -184,6 +202,7 @@ export default function Main({ values }: { values?: Data }) {
                 }
                 addButtonLabel="Add one more teammate"
                 name={TeamName}
+                onDeleteElem={TeamOnDelete}
                 initData={TeamInitData}
                 Elem={TeamElem}
                 desc="Show your relevant teammates ."
@@ -233,6 +252,7 @@ export default function Main({ values }: { values?: Data }) {
                     }
                     addButtonLabel="Add one more link"
                     name={TestimonialsName}
+                    onDeleteElem={TestimonialsOnDelete}
                     initData={TestimonialsInitData}
                     Elem={TestimonialsElem}
                     desc="Highlight the positive experiences of your clients by collecting their testimonials and ratings. Their valuable feedback will showcase their satisfaction with your services. Use this section to demonstrate the high quality of your work and build trust with potential clients"

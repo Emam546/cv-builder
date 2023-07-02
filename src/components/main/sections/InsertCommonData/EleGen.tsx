@@ -7,8 +7,8 @@ import React, {
 } from "react";
 
 export interface PrimaryProps {
-    deleteSelf?: (this: HTMLDivElement) => any;
-    duplicate?: (this: HTMLDivElement) => any;
+    onDelete?: (this: HTMLDivElement) => any;
+    onDuplicate?: (this: HTMLDivElement) => any;
     onDragOver?: (ele: HTMLDivElement) => any;
     onDrag?: (this: HTMLDivElement, ev: MouseEvent) => any;
     onDragStart?: (ele: HTMLDivElement) => any;
@@ -28,32 +28,27 @@ export default function ElemGenerator<P extends PSchema>({
     Elem,
     noDragging,
     resort,
-    deleteSelf,
+    onDelete: deleteSelf,
     data,
-    duplicate,
+    onDuplicate: duplicate,
 }: {
     Elem: ElemType<P>;
     data: P[];
-    deleteSelf?: (id: string) => any;
-    duplicate?: (id: string) => any;
+    onDelete?: (id: string) => any;
+    onDuplicate?: (id: string) => any;
     resort?: (indexes: number[]) => void;
     noDragging?: boolean;
 }) {
-    // const [allEle, setAllEle] = useState<HTMLDivElement[]>([]);
     const allEle: HTMLDivElement[] = [];
     return (
         <div className="flex flex-col items-stretch space-y-4 transition-all duration-700 mb-1">
             {data.map((props, i) => {
                 return (
                     <Elem
-                        duplicate={() => {
-                            duplicate && duplicate(props.id);
-                        }}
+                        onDuplicate={duplicate && (() => duplicate(props.id))}
                         noDragging={noDragging}
                         index={i}
-                        deleteSelf={() => {
-                            deleteSelf && deleteSelf(props.id);
-                        }}
+                        onDelete={deleteSelf && (() => deleteSelf(props.id))}
                         key={uuid()}
                         onDragOver={(ele) => {
                             const indexes = allEle

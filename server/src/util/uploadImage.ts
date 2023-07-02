@@ -7,7 +7,7 @@ import {
 import stream from "stream";
 import fs from "fs";
 import path from "path";
-export function UploadCloudinary(img: UploadedFile, opt?: UploadApiOptions) {
+export function UploadCloudinary(file: UploadedFile, opt?: UploadApiOptions) {
     return new Promise<UploadApiResponse | undefined>((res, rej) => {
         const uploadStream = cloudinary.uploader.upload_stream(
             {
@@ -26,18 +26,26 @@ export function UploadCloudinary(img: UploadedFile, opt?: UploadApiOptions) {
             }
         );
         const readableStream = new stream.Readable();
-        readableStream.push(img.data);
+        readableStream.push(file.data);
         readableStream.push(null);
         readableStream.pipe(uploadStream);
     });
 }
+export async function DeleteCloudinary(public_id: string) {
+    await cloudinary.uploader.destroy(public_id, {});
+}
 export function UploadLocalImage(
-    img: UploadedFile,
+    file: UploadedFile,
     folder: string,
     name: string
 ) {
     const p = path.join("./public/users", folder);
-    if (!fs.existsSync(p)) fs.mkdirSync(p);
-    fs.writeFileSync(path.join(p, name), img.data);
+    if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
+    fs.writeFileSync(path.join(p, name), file.data);
     return path.join("/users", folder, name).replaceAll("\\", "/");
+}
+export function DeleteLocalImage(name: string) {
+    const p = path.join("./public", name);
+    if (fs.existsSync(p)) fs.unlinkSync(p);
+    return name;
 }

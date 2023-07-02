@@ -3,6 +3,7 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 import { transports, format, createLogger, Logger } from "winston";
 // eslint-disable-next-line node/no-extraneous-import
 import "winston-mongodb";
+const colorizer = format.colorize();
 let logger: Logger = createLogger({
     transports: [
         new transports.Console({
@@ -10,8 +11,18 @@ let logger: Logger = createLogger({
         }),
     ],
     format: format.combine(
-        format.colorize(),
-        format.simple(),
+        format.printf((info) => {
+            const level = colorizer.colorize(
+                info.level,
+                info.level.toUpperCase()
+            );
+            const message = colorizer.colorize(
+                info.level,
+                info.message as string
+            );
+            return `${level}: ${message}`;
+        }),
+
         format.errors({ stack: true })
     ),
 });

@@ -6,7 +6,7 @@ import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import DatePicker from "@src/components/common/inputs/datePicker";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import { LabelElem } from "@src/components/common/inputs/styles";
+import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import { uuid } from "@src/utils";
 export type NameType = "extraActivites";
 export const Name: NameType = "extraActivites";
@@ -32,6 +32,7 @@ export const InitData: () => InputData = () => ({
     desc: "<p></p>\n",
     title: "",
 });
+
 const ExtraActivites: ElemType<InputData> = React.forwardRef(
     (
         {
@@ -94,7 +95,7 @@ const ExtraActivites: ElemType<InputData> = React.forwardRef(
                         {...register(`${Name}.data.${i}.city`)}
                     />
                 </Grid2Container>
-                <LabelElem
+                <WrapElem
                     label={"Description"}
                     className="mt-5 pb-5"
                 >
@@ -102,7 +103,7 @@ const ExtraActivites: ElemType<InputData> = React.forwardRef(
                         control={control}
                         {...register(`${Name}.data.${i}.desc`)}
                     />
-                </LabelElem>
+                </WrapElem>
             </Elem>
         );
     }

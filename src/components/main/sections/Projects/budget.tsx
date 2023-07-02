@@ -6,6 +6,7 @@ import {
     StyledInput,
     LabelElem,
     GeneralInputProps,
+    WrapElem,
 } from "@src/components/common/inputs/styles";
 import currencies from "./options.json";
 
@@ -21,7 +22,7 @@ type Props = {
 
 export default function BudgetInput({ label, price, unit }: Props) {
     return (
-        <LabelElem label={label}>
+        <WrapElem label={label}>
             <div className="flex flex-wrap gap-x-3 gap-y-4">
                 <div className="flex-1">
                     <StyledInput {...price} />
@@ -30,6 +31,6 @@ export default function BudgetInput({ label, price, unit }: Props) {
                     <SelectInput {...{ ...unit, options: options }} />
                 </div>
             </div>
-        </LabelElem>
+        </WrapElem>
     );
 }

@@ -6,7 +6,7 @@ import NormalInput from "@src/components/common/inputs/normal";
 import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
 import FElem from "../links";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import { LabelElem } from "@src/components/common/inputs/styles";
+import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import { uuid } from "@src/utils";
 export type NameType = "links";
 export const Name: NameType = "links";
@@ -61,7 +61,7 @@ export const ListItem = forwardRef<InputData>(
                             {...register(`${Name}.${i}.title`)}
                         />
                     </Grid2Container>
-                    <LabelElem
+                    <WrapElem
                         label="Desc"
                         className="my-2"
                     >
@@ -69,7 +69,7 @@ export const ListItem = forwardRef<InputData>(
                             control={control}
                             name={`${Name}.${i}.desc`}
                         />
-                    </LabelElem>
+                    </WrapElem>
                 </div>
             </Elem>
         );

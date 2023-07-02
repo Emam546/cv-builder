@@ -7,7 +7,7 @@ import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import data from "./data.json";
 import LevelInput, { LevelType } from "@src/components/common/inputs/level";
-import { LabelElem } from "@src/components/common/inputs/styles";
+import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import { uuid } from "@src/utils";
 const programmingLangs = data.programming_technologies;
 export type NameType = "skills";
@@ -131,7 +131,7 @@ export const FElem: ElemType<InputData> = React.forwardRef(
                         {...register(`${Name}.data.${i}.label`)}
                     />
                 </Grid2Container>
-                <LabelElem
+                <WrapElem
                     label={"Skills"}
                     className="my-4"
                 >
@@ -142,7 +142,7 @@ export const FElem: ElemType<InputData> = React.forwardRef(
                         initData={EleInitData}
                         addButtonLabel={"Add one more skill"}
                     />
-                </LabelElem>
+                </WrapElem>
             </Elem>
         );
     }

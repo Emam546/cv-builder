@@ -9,6 +9,7 @@ import {
     ListItem as ImageListItem,
     InputData as ImageInputData,
     InitData as ImageInitData,
+    OnDelete as ImageOnDelete,
 } from "../Projects/images";
 import InfoGetter from "@src/components/main/sections/InsertCommonData/input";
 import { uuid } from "@src/utils";
@@ -26,6 +27,9 @@ export const InitData: () => InputData = () => ({
     label: "",
 });
 export type NameRules = string;
+export const onDelete = async (val: InputData) => {
+    await Promise.all(val.images.map(ImageOnDelete));
+};
 type ImagesPathType = `${NameRules}.${number}.images`;
 export const ListElem = React.forwardRef(
     ({ index: i, props: { form, name: Name }, ...props }, ref) => {
@@ -62,6 +66,7 @@ export const ListElem = React.forwardRef(
                         Elem={ImageListItem}
                         initData={ImageInitData}
                         name={ImagePath}
+                        onDeleteElem={ImageOnDelete}
                         label={"Images"}
                     />
                 </div>

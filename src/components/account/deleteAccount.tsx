@@ -8,7 +8,7 @@ import DialogActions from "@mui/material/DialogActions";
 import { Button } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { getHeaders } from "@src/utils";
+import { getAuthHeaders } from "@src/utils";
 function DeleteDialog() {
     const [open, setOpen] = useState(false);
     const [submitting, setSubmit] = useState(false);
@@ -19,7 +19,7 @@ function DeleteDialog() {
     const Delete = () => {
         setSubmit(true);
         axios
-            .post("/api/v1/user/delete", {}, { headers: getHeaders() })
+            .post("/api/v1/user/delete", {}, { headers: getAuthHeaders() })
             .then(() => {
                 route.push(`/login`).then(() => {
                     setSubmit(false);

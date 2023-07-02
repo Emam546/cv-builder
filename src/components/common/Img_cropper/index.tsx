@@ -9,6 +9,7 @@ import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { canvasPreview } from "./canvasPreview";
+import { checkFile } from "@src/utils";
 const MaxSize = 2 * 1024 * 1024;
 function toBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
     return new Promise((resolve) => {
@@ -152,18 +153,15 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                 )
             );
     }
-    function checkFile(e: React.ChangeEvent<HTMLInputElement>) {
-        if (!e.target.files || e.target.files.length != 1) return;
-        const file = e.target.files[0];
-        if (file.size > MaxSize)
-            return setError("File size limit exceeded: 2MB maximum.");
-
-        const reader = new FileReader();
-        reader.addEventListener("load", () =>
-            setImgSrc(reader.result?.toString() || "")
-        );
-        reader.readAsDataURL(file);
-        setError(undefined);
+    function checkUploadFile(e: React.ChangeEvent<HTMLInputElement>) {
+        checkFile(e)
+            .then((values) => {
+                setImgSrc(values[0]);
+                setError(undefined);
+            })
+            .catch((err) => {
+                setError(err);
+            });
     }
     if (!imgSrc)
         return (
@@ -198,7 +196,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                         <input
                             type="file"
                             className="w-full h-full opacity-0 absolute top-0 cursor-pointer left-0 z-10"
-                            onChange={checkFile}
+                            onChange={checkUploadFile}
                             accept="image/*"
                         />
                     </div>
@@ -376,16 +374,14 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                     htmlFor={"image-uploader"}
                     className="text-neutral-60 cursor-pointer hover:text-neutral-30 transition-all duration-400 text-xl"
                 >
-                    <FontAwesomeIcon
-                        icon={faArrowUpFromBracket}
-                    />
+                    <FontAwesomeIcon icon={faArrowUpFromBracket} />
                     <span className="px-3 font-semibold">Upload New</span>
                 </label>
                 <input
                     type="file"
                     className="hidden"
                     id="image-uploader"
-                    onChange={checkFile}
+                    onChange={checkUploadFile}
                     accept="image/*"
                 />
                 <button

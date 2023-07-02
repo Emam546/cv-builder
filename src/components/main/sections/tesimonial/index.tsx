@@ -5,14 +5,14 @@ import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import UploadButton from "@src/components/common/uploadAvatar";
+import UploadButton, { DeleteFile } from "@src/components/common/uploadAvatar";
 import {
     ListItem as LinkListItem,
     InputData as LinkInputData,
     InitData as LinkInitData,
 } from "../links";
 import InfoGetter from "@src/components/main/sections/InsertCommonData/input";
-import { LabelElem } from "@src/components/common/inputs/styles";
+import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import {
     InputData as ImageInputData,
     ListItem as ImageListItem,
@@ -21,6 +21,7 @@ import {
 import lodash from "lodash";
 import RatingInput from "./rating";
 import { uuid } from "@src/utils";
+import { getPath } from "../InsertCommonData/utils";
 export type NameType = "testimonials";
 export const Name: NameType = "testimonials";
 export interface InputData {
@@ -53,10 +54,12 @@ export const InitData: () => InputData = () => ({
 });
 type LinkPath = `${NameType}.data.${number}.links`;
 type ProjectPath = `${NameType}.data.${number}.projectImages`;
-
+export const onDelete = async (val: InputData) => {
+    return DeleteFile(val.avatar);
+};
 const TeamElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
-        const { register, control, setValue } = form;
+        const { register, control, setValue, getValues } = form;
 
         const LinkPath: LinkPath = `${Name}.data.${i}.links`;
         const ImagesPath: ProjectPath = `${Name}.data.${i}.projectImages`;
@@ -98,9 +101,10 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                     />
                     <UploadButton
                         label="Avatar"
-                        setValue={(val) =>
-                            setValue(`${Name}.data.${i}.avatar`, val)
-                        }
+                        imageId={getPath(
+                            getValues() as any,
+                            `${Name}.data.${i}.avatar`
+                        )}
                         name={`${Name}.data.${i}.avatar`}
                         defaultValue={
                             lodash.get(
@@ -118,13 +122,13 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                         label="Testimonial Email"
                         {...register(`${Name}.data.${i}.email`)}
                     />
-                    <LabelElem label="Testimonial Rate">
+                    <WrapElem label="Testimonial Rate">
                         <RatingInput
                             {...register(`${Name}.data.${i}.rate`, {
                                 valueAsNumber: true,
                             })}
                         />
-                    </LabelElem>
+                    </WrapElem>
                 </Grid2Container>
                 <div className="my-4">
                     <InfoGetter
@@ -146,7 +150,7 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                         label={"Links"}
                     />
                 </div>
-                <LabelElem
+                <WrapElem
                     label={"Description"}
                     className="my-4"
                 >
@@ -155,7 +159,7 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                         {...register(`${Name}.data.${i}.desc`)}
                         placeholder="Description about testimonial opinion"
                     />
-                </LabelElem>
+                </WrapElem>
             </Elem>
         );
     }

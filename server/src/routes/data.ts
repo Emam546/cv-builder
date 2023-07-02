@@ -5,16 +5,19 @@ import User from "@serv/models/user";
 import { convertSection2Data } from "@src/components/main/utils";
 import rateLimiter from "express-rate-limit";
 import lodash from "lodash";
+import { NodeEnvs } from "@serv/declarations/enums";
+import EnvVars from "@serv/declarations/major/EnvVars";
 const router = Router();
 router.use(cors({ origin: "*" }));
 const cache = apicache.middleware;
 router.use(cache(5 * 60 * 60 * 1000));
-// router.use(
-//     rateLimiter({
-//         windowMs: 60 * 1000, // 1 minute
-//         max: 100, // limit each IP to 10 requests per windowMs
-//     })
-// );
+if (EnvVars.nodeEnv == NodeEnvs.Production)
+    router.use(
+        rateLimiter({
+            windowMs: 60 * 1000, // 1 minute
+            max: 100, // limit each IP to 10 requests per windowMs
+        })
+    );
 router.get("/", async (req, res) => {
     if (!req.query.apikey && typeof req.query.apikey == "string") {
         return res
@@ -24,6 +27,7 @@ router.get("/", async (req, res) => {
     const result = await User.findOne({ apiKey: req.query.apikey }).hint({
         apiKey: 1,
     });
+
     if (!result)
         return res.status(401).json({ status: false, msg: "Invalid API key" });
     const data = result.data;

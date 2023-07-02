@@ -11,6 +11,7 @@ import { useForceUpdate, useSyncRefs } from "@src/utils/hooks";
 import { assertIsNode } from "@src/utils";
 import { GeneralInputProps } from "./styles";
 import { Control, useController } from "react-hook-form";
+import { CircularProgress } from "@mui/material";
 
 function CustomButton({
     editable,
@@ -36,10 +37,11 @@ export interface Props extends GeneralInputProps<string> {
     reset: Function;
     control: Control;
     setDelete?: Function;
+    loading?: boolean;
 }
 
 const Header = React.forwardRef<HTMLInputElement, Props>(
-    ({ defaultValue, reset, setDelete, control, ...props }, ref) => {
+    ({ defaultValue, reset, setDelete, control, loading, ...props }, ref) => {
         const [editable, setEditable] = useState(false);
         const input = useRef<HTMLInputElement>(null);
         const containerDiv = useRef<HTMLDivElement>(null);
@@ -146,6 +148,15 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                     >
                         <FontAwesomeIcon icon={faTrash} />
                     </CustomButton>
+                )}
+                {loading && (
+                    <span
+                        className={classNames(
+                            "hover:text-blue-50 text-neutral-30 group-hover:visible p-2 mx-1"
+                        )}
+                    >
+                        <CircularProgress className="max-w-[1.2rem] max-h-[1.2rem]" />
+                    </span>
                 )}
             </div>
         );

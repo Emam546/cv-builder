@@ -46,6 +46,24 @@ export const LabelElem = React.forwardRef<HTMLDivElement, Props>(
         );
     }
 );
+export const WrapElem = React.forwardRef<HTMLDivElement, Props>(
+    ({ label, children, ...props }, ref) => {
+        if (!label) return <>{children}</>;
+        return (
+            <div
+                ref={ref}
+                {...props}
+            >
+                <div className="block">
+                    <span className="py-2 block text-neutral-40 leading-6">
+                        {label}
+                    </span>
+                    {children}
+                </div>
+            </div>
+        );
+    }
+);
 
 export function BottomLine({
     children,

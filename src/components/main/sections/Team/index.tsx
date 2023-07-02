@@ -5,16 +5,17 @@ import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import UploadButton from "@src/components/common/uploadAvatar";
+import UploadButton, { DeleteFile } from "@src/components/common/uploadAvatar";
 import {
     ListItem as LinkListItem,
     InputData as LinkInputData,
     InitData as LinkInitData,
 } from "../links";
 import InfoGetter from "@src/components/main/sections/InsertCommonData/input";
-import { LabelElem } from "@src/components/common/inputs/styles";
+import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import lodash from "lodash";
 import { uuid } from "@src/utils";
+import { getPath } from "../InsertCommonData/utils";
 export type NameType = "team";
 export const Name: NameType = "team";
 export interface InputData {
@@ -36,9 +37,12 @@ export const InitData = () => ({
     links: [],
     desc: "<p></p>\n",
 });
+export const onDelete = async (value: InputData) => {
+    await DeleteFile(value.avatar);
+};
 const TeamElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
-        const { register, control, setValue } = form;
+        const { register, control, setValue, getValues } = form;
 
         const LinkPath: LinkPath = `${Name}.data.${i}.links`;
 
@@ -72,9 +76,6 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                     />
                     <UploadButton
                         label="Avatar"
-                        setValue={(val) =>
-                            setValue(`${Name}.data.${i}.avatar`, val)
-                        }
                         name={`${Name}.data.${i}.avatar`}
                         defaultValue={
                             lodash.get(
@@ -82,6 +83,10 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                                 `${Name}.data.${i}.avatar`
                             ) as string
                         }
+                        imageId={getPath(
+                            getValues() as any,
+                            `${Name}.data.${i}.avatar`
+                        )}
                         control={control}
                     />
                     <NormalInput
@@ -103,7 +108,7 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                         label={"Links"}
                     />
                 </div>
-                <LabelElem
+                <WrapElem
                     label={"Description"}
                     className="my-4"
                 >
@@ -112,7 +117,7 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                         {...register(`${Name}.data.${i}.desc`)}
                         placeholder="Description about team mate and his role"
                     />
-                </LabelElem>
+                </WrapElem>
             </Elem>
         );
     }

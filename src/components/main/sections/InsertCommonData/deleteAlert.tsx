@@ -1,4 +1,4 @@
-import { Snackbar, Button } from "@mui/material";
+import { Snackbar, Button, CircularProgress } from "@mui/material";
 import { Alert } from "@mui/material";
 import { useDebounceEffect } from "@src/utils/hooks";
 import React, { useEffect } from "react";
@@ -7,12 +7,16 @@ export interface Props {
     setClose: () => any;
     undo: () => any;
     deps?: any[];
+    error?: string;
+    loading: boolean;
 }
 export default function DeleteAlert({
     open,
     setClose,
     undo,
     deps = [],
+    error,
+    loading,
 }: Props) {
     useDebounceEffect(
         () => {
@@ -28,18 +32,26 @@ export default function DeleteAlert({
         >
             <Alert
                 variant="filled"
-                severity="info"
+                severity={error ? "error" : "info"}
                 action={
-                    <Button
-                        color="inherit"
-                        size="small"
-                        onClick={undo}
-                    >
-                        UNDO
-                    </Button>
+                    !error ? (
+                        <Button
+                            color="inherit"
+                            size="small"
+                            onClick={undo}
+                        >
+                            UNDO
+                        </Button>
+                    ) : undefined
                 }
+                onClose={error ? setClose : undefined}
             >
-                Element successfully deleted
+                {error
+                    ? `Error happened:${error}`
+                    : "Element successfully deleted"}
+                {loading && (
+                    <CircularProgress className="max-w-[1.2rem] max-h-[1.2rem]" />
+                )}
             </Alert>
         </Snackbar>
     );

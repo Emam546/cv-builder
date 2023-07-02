@@ -6,6 +6,7 @@ import style from "./level.module.css";
 import {
     GeneralInputProps,
     LabelElem,
+    WrapElem,
 } from "@src/components/common/inputs/styles";
 export interface OptionType {
     label: string;
@@ -34,7 +35,7 @@ const LevelInput = React.forwardRef<HTMLInputElement, Props>(
             else setVal(0);
         }, [inputRef.current?.value]);
         return (
-            <LabelElem
+            <WrapElem
                 label={
                     <>
                         Level-
@@ -88,7 +89,7 @@ const LevelInput = React.forwardRef<HTMLInputElement, Props>(
                         autoComplete="off"
                     />
                 </div>
-            </LabelElem>
+            </WrapElem>
         );
     }
 );

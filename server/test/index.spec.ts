@@ -20,7 +20,6 @@ beforeAll(async () => {
 });
 afterAll(async () => {
     await mongoose.disconnect();
-    process.exit(1);
 });
 describe("Main tests", () => {
     let token: string;
@@ -74,7 +73,9 @@ describe("Main tests", () => {
             });
         });
         describe("/images", () => {
-            it("main", async () => {
+            let url: string;
+            console.log(EnvVars.APPLY_LOCAL);
+            it("upload image", async () => {
                 const post = request
                     .post("/api/v1/images")
                     .set("Authorization", `Bearer ${token}`);
@@ -83,10 +84,27 @@ describe("Main tests", () => {
                 const res = await post.expect(200);
                 expect(res.body.status).true;
                 expect(res.body.data.url).not.undefined;
+                url = res.body.data.url;
                 if (EnvVars.APPLY_LOCAL) {
-                    expect(fs.existsSync(res.body.data.url)).true;
+                    
+                    expect(
+                        fs.existsSync(path.join("./public", res.body.data.url))
+                    ).true;
                 }
             }, 30000);
+            it("delete image", async () => {
+                const post = request
+                    .delete("/api/v1/images")
+                    .send({
+                        name: url,
+                    })
+                    .set("Authorization", `Bearer ${token}`);
+                const res = await post.expect(200);
+                expect(res.body.status).true;
+                if (EnvVars.APPLY_LOCAL) {
+                    expect(!fs.existsSync(path.join("./public", url))).true;
+                }
+            });
         });
     });
     describe("GET", () => {

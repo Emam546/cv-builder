@@ -2,18 +2,21 @@ import { faImage, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageCropper from "@src/components/common/Img_cropper";
 import classNames from "classnames";
-import React, { useState, Dispatch, useEffect, useRef } from "react";
+import React, { useState, Dispatch } from "react";
 
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { Control, useController, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
-import { useNotInitEffect, useUploadImage } from "@src/utils/hooks";
+import {
+    useDeleteFile,
+    useNotInitEffect,
+    useUploadFile,
+} from "@src/utils/hooks";
 import LoadingPanner from "@src/components/common/loading/loading";
 import loadash from "lodash";
-import { uuid } from "@src/utils";
-import { PSchema } from "../InsertCommonData/EleGen";
+import { DeleteFile, uuid } from "@src/utils";
 import { getPath } from "../InsertCommonData/utils";
 export type NameType = "images";
 export const Name: NameType = "images";
@@ -33,6 +36,8 @@ interface Props {
     control: Control;
     defaultValue?: string;
 }
+const ImageUploadUrl = "/api/v1/images";
+const ImageDeleteUrl = "/api/v1/images";
 export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
     (
         { defaultValue, label, setValue, name, control, aspect, imageId },
@@ -41,7 +46,8 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
         const [edit, setEdit] = useState(false);
         const [blob, setBlob] = useState<Blob | undefined>();
         const { field } = useController({ name, control, defaultValue });
-        const UploadImage = useUploadImage("/api/v1/images", imageId);
+        const UploadImage = useUploadFile(ImageUploadUrl, imageId);
+        const DeleteFile = useDeleteFile(ImageDeleteUrl, imageId);
         const [loading, setLoading] = useState(false);
         const orgImg = (blob && URL.createObjectURL(blob)) || field.value;
         useNotInitEffect(() => {
@@ -117,8 +123,15 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                                     )
                                                 )
                                                     return;
-                                                setValue("");
-                                                setBlob(undefined);
+                                                DeleteFile()
+                                                    .then(() => {
+                                                        setValue("");
+                                                        setBlob(undefined);
+                                                    })
+                                                    .finally(() => {
+                                                        setLoading(false);
+                                                    });
+                                                setLoading(true);
                                             }}
                                             aria-label="delete"
                                         >
@@ -194,7 +207,10 @@ export const InitData: () => InputData = () => ({
     heightRation: 1,
     image: "",
 });
-
+export const OnDelete = async (value: InputData) => {
+    if (!value.image) return;
+    return await DeleteFile(ImageDeleteUrl, value.image);
+};
 export const ListItem = forwardRef<InputData>(
     (
         {
@@ -233,7 +249,7 @@ export const ListItem = forwardRef<InputData>(
                             })}
                         />
                         <NormalInput
-                            label="Height ration"
+                            label="Height ratio"
                             {...register(`${Name}.${i}.heightRation`, {
                                 valueAsNumber: true,
                             })}

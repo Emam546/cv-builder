@@ -52,7 +52,6 @@ passport.use(
             callbackURL: `${EnvVars.DOMAIN_URL}/api/v1/auth/google/callback`,
         },
         async (accessToken, refreshToken, profile, done) => {
-            console.log(profile);
             // You can save the user profile or perform other actions here
             const result = await Users.findOne({
                 provider_id: profile.id,

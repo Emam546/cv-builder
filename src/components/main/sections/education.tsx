@@ -7,7 +7,7 @@ import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import DatePicker from "@src/components/common/inputs/datePicker";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import { LabelElem } from "@src/components/common/inputs/styles";
+import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import {
     InputData as ImageInputData,
     ListElem as ImageListItem,
@@ -84,7 +84,7 @@ export function CreateItem(Name: NameRules) {
                         labelEnd="Currently Work here."
                     />
                 </Grid2Container>
-                <LabelElem
+                <WrapElem
                     label={"Images"}
                     className="my-4"
                 >
@@ -95,8 +95,8 @@ export function CreateItem(Name: NameRules) {
                         addButtonLabel="add one more Image"
                         initData={ImageInitData}
                     />
-                </LabelElem>
-                <LabelElem
+                </WrapElem>
+                <WrapElem
                     label={"Description"}
                     className="my-4"
                 >
@@ -105,7 +105,7 @@ export function CreateItem(Name: NameRules) {
                         {...register(`${Name}.${i}.desc`)}
                         placeholder="e.g. Created and implemented lesson plans based on child-led interests and curiosities"
                     />
-                </LabelElem>
+                </WrapElem>
             </Elem>
         );
     }) as ListElemType<InputData>;

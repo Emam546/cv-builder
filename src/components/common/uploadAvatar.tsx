@@ -1,22 +1,29 @@
 import { faPen, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageCropper from "@src/components/common/Img_cropper";
-import { useNotInitEffect, useUploadImage } from "@src/utils/hooks";
+import { useDeleteFile, useUploadFile } from "@src/utils/hooks";
 import classNames from "classnames";
-import React, { useState, Dispatch, useEffect } from "react";
+import { useState } from "react";
 import { Control, useController } from "react-hook-form";
 import LoadingPanner from "./loading/loading";
+import { DeleteFile as OrgDeleteFile } from "@src/utils";
 interface Props {
     name: string;
     label: string;
-    setValue: Dispatch<string>;
+    imageId: string;
     control: Control;
     defaultValue?: string;
 }
-function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
+const DeleteFileUrl = "/api/v1/images";
+const UploadFileUrl = "/api/v1/images";
+export function DeleteFile(key: string) {
+    return OrgDeleteFile(DeleteFileUrl, key);
+}
+function UploadButton({ label, defaultValue, name, imageId, control }: Props) {
     const [edit, setEdit] = useState(false);
     const [blob, setBlob] = useState<Blob>();
-    const UploadImage = useUploadImage("/api/v1/images", name);
+    const UploadFile = useUploadFile(UploadFileUrl, imageId);
+    const DeleteFile = useDeleteFile(DeleteFileUrl, imageId);
     const { field } = useController({ control, name, defaultValue });
     const orgUrl = (blob && URL.createObjectURL(blob)) || field.value;
     const [loading, setLoading] = useState(false);
@@ -81,8 +88,15 @@ function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
                                     )
                                 )
                                     return;
-                                setValue("");
-                                setBlob(undefined);
+                                DeleteFile()
+                                    .then(() => {
+                                        field.onChange("");
+                                        setBlob(undefined);
+                                    })
+                                    .finally(() => {
+                                        setLoading(false);
+                                    });
+                                setLoading(true);
                             }}
                             aria-label="delete"
                         >
@@ -105,9 +119,9 @@ function UploadButton({ label, setValue, defaultValue, name, control }: Props) {
                         setEdit(false);
                         setBlob(blob);
                         setLoading(true);
-                        UploadImage(blob)
+                        UploadFile(blob)
                             .then((url) => {
-                                if (url) setValue(url);
+                                if (url) field.onChange(url);
                                 else setBlob(undefined);
                             })
                             .catch(() => {

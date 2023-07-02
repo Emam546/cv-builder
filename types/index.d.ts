@@ -52,7 +52,10 @@ import type {
     InputData as TestimonialData,
     NameType as TestimonialNameType,
 } from "@src/components/main/sections/tesimonial";
-import type { InputData as ProInputData } from "@src/components/main/sections/professional";
+import type {
+    InputData as ParaInputData,
+    NameType as ParaName,
+} from "@src/components/main/sections/paragraphs";
 import type { InputData as HobbiesData } from "@src/components/main/sections/hobbies";
 import type {
     InputData as CustomInputData,
@@ -75,7 +78,7 @@ declare global {
         };
     };
     type Data = BasicInputData &
-        ProInputData &
+        GeneratorData<ParaInputData, ParaName> &
         HobbiesData &
         GeneratorData<EmployDataType, EmployNameType> &
         GeneratorData<LinkDataType, LinkNameType> &

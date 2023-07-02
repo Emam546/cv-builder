@@ -26,14 +26,14 @@ router
             return res
                 .status(401)
                 .send({ status: false, msg: "you are not authorized" });
+
         res.send({ status: true, msg: "success", data: user.toObject().data });
     })
     .post(
-        router.use(
-            rateLimiter({
-                max: 20,
-            })
-        ),
+        rateLimiter({
+            max: 20,
+            windowMs: 60 * 1000,
+        }),
         async (req, res) => {
             assertIsAuth(req);
             await User.updateOne(

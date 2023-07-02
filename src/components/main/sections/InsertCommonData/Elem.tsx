@@ -11,22 +11,27 @@ import DraggableComp from "@src/components/common/drag";
 import React from "react";
 import { PrimaryProps } from "./EleGen";
 import { faClone } from "@fortawesome/free-regular-svg-icons";
+import { CircularProgress } from "@mui/material";
 
 export interface DraggableItem extends PrimaryProps {
     children: React.ReactNode;
     headLabel: () => React.ReactNode;
+    disabled?: boolean;
+    loading?: boolean;
 }
 export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
     (
         {
-            deleteSelf,
+            onDelete: deleteSelf,
             onDragOver,
             onDrag,
             onDragStart,
             headLabel,
             children,
             noDragging,
-            duplicate,
+            onDuplicate: duplicate,
+            disabled,
+            loading,
         },
         ref
     ) => {
@@ -34,6 +39,9 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
         const [drag, setDrag] = useState(false);
         const [parentDiv, setParentDiv] = useState<HTMLDivElement | null>(null);
         const allRefs = useSyncRefs(setParentDiv, ref);
+        useEffect(() => {
+            setExpand(false);
+        }, [loading]);
         return (
             <div
                 ref={allRefs}
@@ -72,15 +80,21 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                     >
                         <div>{headLabel()}</div>
                     </div>
-                    <div className="space-x-3">
+                    <div className="flex items-center gap-x-3 select-none">
+                        {loading && (
+                            <span aria-label="delete">
+                                <CircularProgress className="max-w-[1.2rem] max-h-[1.2rem]" />
+                            </span>
+                        )}
                         {duplicate && (
                             <button
                                 type="button"
-                                className="group-hover:text-blue-60"
+                                className="enabled:group-hover:text-blue-60 disabled:text-neutral-60"
                                 onClick={() => {
                                     if (parentDiv) duplicate.call(parentDiv);
                                 }}
                                 aria-label="delete"
+                                disabled={disabled}
                             >
                                 <FontAwesomeIcon icon={faClone} />
                             </button>
@@ -89,11 +103,13 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                         {deleteSelf && (
                             <button
                                 type="button"
-                                className="group-hover:text-blue-60"
+                                className="enabled:group-hover:text-blue-60 disabled:text-neutral-60"
                                 onClick={() => {
                                     if (parentDiv) deleteSelf.call(parentDiv);
+                                    setExpand(false);
                                 }}
                                 aria-label="delete"
+                                disabled={disabled}
                             >
                                 <FontAwesomeIcon icon={faTrashCan} />
                             </button>
@@ -104,6 +120,7 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                             className="group-hover:text-blue-60"
                             onClick={() => setExpand(!expand)}
                             aria-label={expand ? "expand" : "close"}
+                            disabled={disabled}
                         >
                             <FontAwesomeIcon
                                 icon={expand ? faChevronUp : faChevronDown}

@@ -1,7 +1,7 @@
 import React from "react";
 import { Dispatch, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
-import { BottomLine, StyledInput, LabelElem, InputProps } from "./styles";
+import { BottomLine, StyledInput, LabelElem, InputProps, WrapElem } from "./styles";
 import { useSyncRefs } from "@src/utils/hooks";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -247,7 +247,7 @@ export default function DatePicker({
     control,
 }: Props) {
     return (
-        <LabelElem label={label}>
+        <WrapElem label={label}>
             <div className="flex flex-wrap gap-x-3 gap-y-4">
                 <div className="flex-1">
                     <CustomInput
@@ -264,6 +264,6 @@ export default function DatePicker({
                     />
                 </div>
             </div>
-        </LabelElem>
+        </WrapElem>
     );
 }

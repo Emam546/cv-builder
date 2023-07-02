@@ -10,7 +10,7 @@ import Head from "next/head";
 import { useForm } from "react-hook-form";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import axios from "axios";
-import { getHeaders } from "@src/utils";
+import { getAuthHeaders } from "@src/utils";
 export interface Props {
     firstName: string;
     lastName: string;
@@ -25,7 +25,7 @@ export default function UploadAction({ values }: { values: Props }) {
             <form
                 onSubmit={handleSubmit(async (val) => {
                     await axios.post("/api/v1/user/info", val, {
-                        headers: getHeaders(),
+                        headers: getAuthHeaders(),
                     });
                 })}
                 action=""

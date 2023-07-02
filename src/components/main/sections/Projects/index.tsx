@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { Control, UseFormReturn, useWatch } from "react-hook-form";
@@ -15,6 +15,7 @@ import {
     ListItem as ImageListItem,
     InputData as ImageInputData,
     InitData as ImageInitData,
+    OnDelete as ImageOnDelete,
 } from "./images";
 import {
     ListItem as LessonListItem,
@@ -25,7 +26,7 @@ import InfoGetter, {
     ListElemType,
 } from "@src/components/main/sections/InsertCommonData/input";
 import DatePicker from "@src/components/common/inputs/datePicker";
-import { LabelElem } from "@src/components/common/inputs/styles";
+import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import RangeInput from "@src/components/common/inputs/rangeInput";
 import MultiSelectInput from "@src/components/common/inputs/multiSelect";
 import data from "@src/components/main/sections/Skills/data.json";
@@ -86,19 +87,9 @@ type LinkPathType = `${EleNameType}.${number}.links`;
 type TeamMemberPathType = `${EleNameType}.${number}.team`;
 type ImagesPathType = `${EleNameType}.${number}.images`;
 type LessonPathType = `${EleNameType}.${number}.lessons`;
-import lodash from "lodash";
 import BudgetInput from "./budget";
 import { uuid } from "@src/utils";
-function ConvValToOptions(vals?: string[]) {
-    if (!vals) return [];
-    return vals.reduce((acc, str) => {
-        const res = Technologies.find((val) => {
-            return val.value == str;
-        });
-        if (!res) return acc;
-        return [...acc, res];
-    }, [] as { value: string; label: string }[]) as any;
-}
+
 function KindsInput({
     EleName,
     form,
@@ -128,10 +119,12 @@ function KindsInput({
         />
     );
 }
+export const onDeleteElem = async (value: EleInputData) => {
+    await Promise.all(value.images.map(ImageOnDelete));
+};
 const MiniProjectElem = React.forwardRef(
     ({ index: i, props: { form, name: EleName }, ...props }, ref) => {
-        const { register, control } = form;
-
+        const { register, control, getValues } = form;
         const LinkPath: LinkPathType = `${EleName}.${i}.links`;
         const TeamPath: TeamMemberPathType = `${EleName}.${i}.team`;
         const ImagePath: ImagesPathType = `${EleName}.${i}.images`;
@@ -181,7 +174,7 @@ const MiniProjectElem = React.forwardRef(
                         control={control}
                         labelEnd="Currently Work here."
                     />
-                    <LabelElem label="Progress">
+                    <WrapElem label="Progress">
                         <div>
                             <RangeInput
                                 {...register(`${EleName}.${i}.progress`, {
@@ -189,7 +182,7 @@ const MiniProjectElem = React.forwardRef(
                                 })}
                             />
                         </div>
-                    </LabelElem>
+                    </WrapElem>
                     <NormalInput
                         label="Team Size"
                         {...register(`${EleName}.${i}.teamSize`, {
@@ -210,13 +203,13 @@ const MiniProjectElem = React.forwardRef(
                     />
                 </Grid2Container>
                 <div className="flex flex-col items-stretch gap-4 my-4">
-                    <LabelElem label={"Technologies"}>
+                    <WrapElem label={"Technologies"}>
                         <MultiSelectInput
                             options={Technologies}
                             name={`${EleName}.${i}.technologies`}
                             control={control}
                         />
-                    </LabelElem>
+                    </WrapElem>
 
                     <InfoGetter
                         formRegister={form as any}
@@ -241,6 +234,7 @@ const MiniProjectElem = React.forwardRef(
                         initData={ImageInitData}
                         name={ImagePath}
                         label={"Images"}
+                        onDeleteElem={ImageOnDelete}
                     />
                     <InfoGetter
                         formRegister={form as any}
@@ -251,13 +245,13 @@ const MiniProjectElem = React.forwardRef(
                         label={"Lessons"}
                     />
 
-                    <LabelElem label={"Description"}>
+                    <WrapElem label={"Description"}>
                         <FinalEditor
                             control={control}
                             {...register(`${EleName}.${i}.desc`)}
                             placeholder="Description about team mate and his role"
                         />
-                    </LabelElem>
+                    </WrapElem>
                 </div>
             </Elem>
         );
@@ -274,6 +268,9 @@ export const InitData: () => InputData = () => ({
     label: "",
     data: [],
 });
+export const onDelete = async (value: InputData) => {
+    await Promise.all(value.data.map(onDeleteElem));
+};
 type PathType = `${NameType}.data.${number}.data`;
 const ProjectElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
@@ -309,6 +306,7 @@ const ProjectElem: ElemType<InputData> = React.forwardRef(
                         initData={EleInitData}
                         name={path}
                         label="Projects"
+                        onDeleteElem={onDeleteElem}
                         formRegister={form as any}
                     />
                 </div>
@@ -316,4 +314,5 @@ const ProjectElem: ElemType<InputData> = React.forwardRef(
         );
     }
 );
+
 export default ProjectElem;

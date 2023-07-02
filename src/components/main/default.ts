@@ -1,11 +1,12 @@
 import { Name as EmployName } from "./sections/Employment";
+import { Name as ParagraphName } from "./sections/paragraphs";
 import { Name as LinkName } from "./sections/links";
 import { Name as LangName } from "./sections/languages";
 import { Name as SkillName } from "./sections/Skills";
 import { Name as CourseName } from "./sections/courses";
 import { Name as InternShipName } from "./sections/internships";
 import { Name as ReferenceName } from "./sections/reference";
-import { Name as ExtraActivitesName } from "./sections/ExtraActivites";
+import { Name as ExtraActivitiesName } from "./sections/ExtraActivites";
 import { Name as TeamName } from "./sections/Team";
 import { Name as ProjectsName } from "./sections/Projects";
 import { Name as PhotosName } from "./sections/photos";
@@ -34,9 +35,9 @@ export const defaultData: Data = {
             availability: "immediately",
         },
     },
-    professional: {
+    [ParagraphName]: {
         head: "Profession Details",
-        data: "<p></p>\n",
+        data: [],
     },
     [EmployName]: {
         head: "Employment History",
@@ -70,7 +71,7 @@ export const defaultData: Data = {
         head: "References",
         data: [],
     },
-    [ExtraActivitesName]: {
+    [ExtraActivitiesName]: {
         head: "Extra Activities",
         data: [],
     },
@@ -102,7 +103,7 @@ export const defaultSectionState: SectionStateType = {
             hiddenState: false,
             order: curOrder++,
         },
-        professional: {
+        [ParagraphName]: {
             hiddenState: false,
             order: curOrder++,
         },
@@ -136,7 +137,7 @@ export const defaultSectionState: SectionStateType = {
         },
         [SkillName]: {
             hiddenState: false,
-            order: curOrder,
+            order: curOrder++,
         },
         [LangName]: {
             hiddenState: true,
@@ -154,7 +155,7 @@ export const defaultSectionState: SectionStateType = {
             hiddenState: true,
             order: curOrder,
         },
-        [ExtraActivitesName]: {
+        [ExtraActivitiesName]: {
             hiddenState: true,
             order: curOrder,
         },

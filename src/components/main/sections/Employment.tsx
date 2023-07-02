@@ -6,7 +6,7 @@ import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import DatePicker from "@src/components/common/inputs/datePicker";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import { LabelElem } from "@src/components/common/inputs/styles";
+import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import MultiSelectInput from "@src/components/common/inputs/multiSelect";
 import data from "@src/components/main/sections/Skills/data.json";
 import lodash from "lodash";
@@ -132,7 +132,7 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                         })}
                     />
                 </Grid2Container>
-                <LabelElem
+                <WrapElem
                     className="my-4"
                     label={"Teleologies Used"}
                 >
@@ -147,8 +147,8 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                         control={control}
                         name={`${Name}.data.${i}.technologies`}
                     />
-                </LabelElem>
-                <LabelElem
+                </WrapElem>
+                <WrapElem
                     label={"Description"}
                     className="my-4"
                 >
@@ -157,7 +157,7 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                         {...register(`${Name}.data.${i}.desc`)}
                         placeholder="e.g. Created and implemented lesson plans based on child-led interests and curiosities"
                     />
-                </LabelElem>
+                </WrapElem>
             </Elem>
         );
     }
