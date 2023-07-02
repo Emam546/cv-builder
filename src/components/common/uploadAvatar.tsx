@@ -17,8 +17,8 @@ interface Props {
 }
 const DeleteFileUrl = "/api/v1/images";
 const UploadFileUrl = "/api/v1/images";
-export function DeleteFile(key: string) {
-    return OrgDeleteFile(DeleteFileUrl, key);
+export function DeleteFile(name: string) {
+    return OrgDeleteFile(DeleteFileUrl, name);
 }
 function UploadButton({ label, defaultValue, name, imageId, control }: Props) {
     const [edit, setEdit] = useState(false);

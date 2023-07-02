@@ -52,6 +52,7 @@ export function checkFile(e: React.ChangeEvent<HTMLInputElement>) {
 export async function DeleteFile(url: string, name: string) {
     const token = Cookies.get("token");
     if (!token) return;
+    if (!name) return;
     await axios.delete(url, {
         data: {
             name: name,
