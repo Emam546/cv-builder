@@ -1,0 +1,6 @@
+.phone_number {
+    @apply pl-2;
+    > input {
+        @apply focus:outline-none bg-neutral-10 px-4 py-3 block w-full;
+    }
+}

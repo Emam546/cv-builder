@@ -7,14 +7,14 @@ import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import DatePicker from "@src/components/common/inputs/datePicker";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
+import { WrapElem } from "@src/components/common/inputs/styles";
 import {
     InputData as ImageInputData,
     ListElem as ImageListItem,
     InitData as ImageInitData,
+    onDelete as ImageOnDelete,
 } from "@src/components/main/sections/photos";
 import InfoGetter from "./InsertCommonData/input";
-import lodash from "lodash";
 import { uuid } from "@src/utils";
 export const Name = "education";
 export type NameType = typeof Name;
@@ -94,6 +94,7 @@ export function CreateItem(Name: NameRules) {
                         Elem={ImageListItem}
                         addButtonLabel="add one more Image"
                         initData={ImageInitData}
+                        onDeleteElem={ImageOnDelete}
                     />
                 </WrapElem>
                 <WrapElem

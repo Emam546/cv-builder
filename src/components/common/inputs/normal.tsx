@@ -1,5 +1,5 @@
 import { assertIsNode, hasOwnProperty } from "@src/utils";
-import { useForceUpdate, useSyncRefs } from "@src/utils/hooks";
+import { useSyncRefs } from "@src/utils/hooks";
 import classNames from "classnames";
 import React, {
     Dispatch,
@@ -8,8 +8,7 @@ import React, {
     useRef,
     useState,
 } from "react";
-import { BottomLine, GeneralInputProps, StyledInput } from "./styles";
-import { v4 as uuid } from "uuid";
+import { BottomLine, StyledInput } from "./styles";
 import { LabelElem } from "./styles";
 import { Control, useController } from "react-hook-form";
 export interface PropsWithOutOptions
@@ -21,9 +20,8 @@ export interface PropsWithOptions
     label: string;
     options: string[];
     control: Control;
-    setValue: Dispatch<string>;
+    name: string;
 }
-type Props = PropsWithOutOptions | PropsWithOptions;
 function DropDownComp({
     value,
     options,
@@ -92,7 +90,8 @@ function DropDownComp({
                     <div
                         key={i}
                         onClick={(e) => {
-                            selectOption(val);
+                            selectOption(validOptions[i]);
+                            setIsOpen(false);
                         }}
                         className={classNames(
                             "py-2 px-4 select-none",
@@ -109,23 +108,10 @@ function DropDownComp({
         </div>
     );
 }
-function isHasProps(val: unknown): val is PropsWithOptions {
-    return hasOwnProperty(val, "options") && Array.isArray(val.options);
-}
-const NormalInput = React.forwardRef<HTMLInputElement, Props>(
+const NormalInput = React.forwardRef<HTMLInputElement, PropsWithOutOptions>(
     ({ label, ...props }, ref) => {
         const inputRef = useRef<HTMLInputElement>(null);
-        const [focus, setFocus] = useState(false);
-        const [open, setIsOpen] = useState(false);
-        const allRef = useSyncRefs(ref, inputRef);
         const containerRef = useRef<HTMLDivElement>(null);
-        const value = inputRef.current?.value;
-        const forceUpdate = useForceUpdate();
-        let control: Control,
-            options: string[] | undefined,
-            setValue: Dispatch<string>;
-        if (isHasProps(props))
-            ({ setValue, control, options, ...props } = props);
 
         return (
             <LabelElem
@@ -137,48 +123,71 @@ const NormalInput = React.forwardRef<HTMLInputElement, Props>(
                         <StyledInput
                             {...props}
                             autoComplete="off"
-                            ref={allRef}
-                            onChange={(ev) => {
-                                if (props.onChange) props.onChange(ev);
-                                setIsOpen(true);
-                                forceUpdate();
-                            }}
-                            onFocusCapture={(ev) => {
-                                if (props.onFocusCapture)
-                                    props.onFocusCapture(ev);
-                                setFocus(true);
-                            }}
-                            onBlurCapture={(ev) => {
-                                if (props.onBlurCapture)
-                                    props.onBlurCapture(ev);
-                                assertIsNode(ev.target);
-                                if (
-                                    !containerRef.current!.contains(ev.target)
-                                ) {
-                                    setFocus(false);
-                                }
-                            }}
+                            ref={ref}
                         />
                     </BottomLine>
-                    {options && focus && value && (
-                        <DropDownComp
-                            value={value}
-                            options={options}
-                            containerRef={containerRef}
-                            selectOption={(val) => {
-                                if (setValue) setValue(val);
-                                inputRef.current!.value = val;
-                                setFocus(false);
-                            }}
-                            setIsOpen={setIsOpen}
-                            className={classNames({
-                                hidden: !focus || !open,
-                            })}
-                        />
-                    )}
                 </div>
             </LabelElem>
         );
     }
 );
+export const OptionsInput = React.forwardRef<
+    HTMLInputElement,
+    PropsWithOptions
+>(({ label, control, options, ...props }, ref) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [focus, setFocus] = useState(false);
+    const [open, setIsOpen] = useState(false);
+    const allRef = useSyncRefs(ref, inputRef);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { field } = useController({ name: props.name, control });
+    const value = field.value;
+    return (
+        <LabelElem
+            ref={containerRef}
+            label={label}
+        >
+            <div className="relative">
+                <BottomLine>
+                    <StyledInput
+                        {...props}
+                        value={field.value}
+                        autoComplete="off"
+                        ref={allRef}
+                        onChange={(ev) => {
+                            if (props.onChange) props.onChange(ev);
+                            field.onChange(ev.target.value);
+                            setIsOpen(true);
+                        }}
+                        onFocusCapture={(ev) => {
+                            if (props.onFocusCapture) props.onFocusCapture(ev);
+                            setFocus(true);
+                        }}
+                        onBlurCapture={(ev) => {
+                            if (props.onBlurCapture) props.onBlurCapture(ev);
+                            assertIsNode(ev.target);
+                            if (!containerRef.current!.contains(ev.target))
+                                setFocus(false);
+                        }}
+                    />
+                </BottomLine>
+                {options && value && (
+                    <DropDownComp
+                        value={value}
+                        options={options}
+                        containerRef={containerRef}
+                        selectOption={(val) => {
+                            field.onChange(val);
+                            setFocus(false);
+                        }}
+                        setIsOpen={setIsOpen}
+                        className={classNames({
+                            hidden: !focus || !open,
+                        })}
+                    />
+                )}
+            </div>
+        </LabelElem>
+    );
+});
 export default NormalInput;

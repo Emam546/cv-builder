@@ -2,7 +2,7 @@ import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import React from "react";
 import { UseFormReturn, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
-import NormalInput from "@src/components/common/inputs/normal";
+import NormalInput, { OptionsInput } from "@src/components/common/inputs/normal";
 
 import {
     Name as TeamName,
@@ -75,12 +75,10 @@ export const ListElem = React.forwardRef(
                                 valueAsNumber: true,
                             })}
                         />
-                        <NormalInput
+                        <OptionsInput
                             options={[mateJobTitle]}
                             label="Role"
-                            setValue={(val) =>
-                                setValue(`${Name}.${i}.role`, val)
-                            }
+                            control={control as any}
                             {...register(`${Name}.${i}.role`)}
                         />
                     </Grid2Container>

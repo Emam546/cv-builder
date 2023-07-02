@@ -14,7 +14,6 @@ import {
     UploadLocalImage,
 } from "@serv/util/uploadImage";
 import { NodeEnvs } from "@serv/declarations/enums";
-import logger from "@serv/logger";
 cloudinary.config(EnvVars.cloudinary);
 const router = Router();
 export const MaxSize = 2 * 1024 * 1024;
@@ -44,15 +43,16 @@ router
             });
         }
         const ext = mime.getExtension(img.mimetype);
-
-        if (!ext || !["png", "jpg", "jpeg", "pdf"].includes(ext))
+        const validState =
+            (ext && ["pdf"].includes(ext)) || img.mimetype.startsWith("image/");
+        if (!validState || !ext)
             return res
                 .status(400)
                 .json({ status: false, msg: "Invalid file extention" });
         if (!EnvVars.APPLY_LOCAL) {
             const result = await UploadCloudinary(img, {
                 public_id: req.body.name,
-                format: ext,
+                format: ext || undefined,
                 folder: req.user._id,
             });
             res.status(200).json({

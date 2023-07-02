@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
-import { Control, UseFormReturn, useWatch } from "react-hook-form";
+import { UseFormReturn, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
-import NormalInput from "@src/components/common/inputs/normal";
+import NormalInput, { OptionsInput } from "@src/components/common/inputs/normal";
 import FinalEditor from "@src/components/common/inputs/Editor";
 import { ListItem as LinkListItem, InitData as LinkInitData } from "../links";
 import {
@@ -26,14 +26,10 @@ import InfoGetter, {
     ListElemType,
 } from "@src/components/main/sections/InsertCommonData/input";
 import DatePicker from "@src/components/common/inputs/datePicker";
-import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
+import { WrapElem } from "@src/components/common/inputs/styles";
 import RangeInput from "@src/components/common/inputs/rangeInput";
 import MultiSelectInput from "@src/components/common/inputs/multiSelect";
-import data from "@src/components/main/sections/Skills/data.json";
-const Technologies = data.programming_technologies.map((value) => ({
-    value,
-    label: value,
-}));
+
 export type EleNameType = string;
 export type NameType = "projects";
 export const Name: NameType = "projects";
@@ -89,6 +85,7 @@ type ImagesPathType = `${EleNameType}.${number}.images`;
 type LessonPathType = `${EleNameType}.${number}.lessons`;
 import BudgetInput from "./budget";
 import { uuid } from "@src/utils";
+import { Technologies } from "../../utils";
 
 function KindsInput({
     EleName,
@@ -111,10 +108,10 @@ function KindsInput({
         });
 
     return (
-        <NormalInput
+        <OptionsInput
             label="Kind"
             options={kinds}
-            setValue={(val) => setValue(`${EleName}.${i}.kind`, val)}
+            control={control}
             {...register(`${EleName}.${i}.kind`)}
         />
     );

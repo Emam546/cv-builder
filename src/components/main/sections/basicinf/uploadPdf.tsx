@@ -15,10 +15,10 @@ interface Props {
 }
 function UploadPDF({ label, defaultValue, name, control, pdfId }: Props) {
     const UploadFile = useUploadFile("/api/v1/images", pdfId);
-    const DeleteFile = useDeleteFile("/api/v1/images", pdfId);
     const { field } = useController({ control, name, defaultValue });
     const [loading, setLoading] = useState(false);
     const orgUrl = field.value;
+    const DeleteFile = useDeleteFile("/api/v1/images", orgUrl);
     const [err, setError] = useState<string>();
     return (
         <div className="group pt-5 select-none">
@@ -63,6 +63,7 @@ function UploadPDF({ label, defaultValue, name, control, pdfId }: Props) {
                                 });
                             setLoading(true);
                         }}
+                        accept=".pdf"
                         className="absolute invisible -z-50 appearance-none"
                     />
                 </label>

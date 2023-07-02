@@ -1,7 +1,9 @@
 import { SyntheticEvent, useRef, useState } from "react";
 import Header from "@src/components/common/inputs/header";
 import { Control, FieldValues, UseFormReturn, useWatch } from "react-hook-form";
-import NormalInput from "@src/components/common/inputs/normal";
+import NormalInput, {
+    OptionsInput,
+} from "@src/components/common/inputs/normal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import Grid2Container from "@src/components/common/2GridInputHolder";
@@ -12,6 +14,8 @@ import SelectInput, {
     OptionType,
 } from "@src/components/common/inputs/selectOption";
 import UploadPDF from "./uploadPdf";
+import PhoneNumber from "./phoneNumber";
+import React from "react";
 const COUNTRIES = Object.keys(data.countries).map((name) => name);
 const CITIES: Map<string, string[]> = new Map(Object.entries(data.countries));
 const JOP_TITLES = data.jobs;
@@ -40,16 +44,21 @@ export interface InputData {
     };
 }
 const AvailabilityOptions: OptionType[] = data.availabilityOptions;
-type CityInputProps = Parameters<typeof NormalInput>[0] & { control: Control };
-function CityInput({ control, ...props }: CityInputProps) {
-    const country = useWatch({ control, name: "info.data.country" });
-    return (
-        <NormalInput
-            options={CITIES.get(country) || []}
-            {...props}
-        />
-    );
-}
+type CityInputProps = Omit<Parameters<typeof OptionsInput>[0], "options"> & {
+    control: Control;
+};
+const CityInput = React.forwardRef<HTMLInputElement, CityInputProps>(
+    ({ control, ...props }, ref) => {
+        const country = useWatch({ control, name: "info.data.country" });
+        return (
+            <OptionsInput
+                control={control}
+                options={CITIES.get(country) || []}
+                {...props}
+            />
+        );
+    }
+);
 export default function BasicInfo({
     register,
     resetField,
@@ -57,7 +66,6 @@ export default function BasicInfo({
     setValue,
 }: UseFormReturn<InputData>) {
     const [eddData, setEddData] = useState(false);
-    const ref = useRef<HTMLDivElement>(null);
 
     return (
         <section className="my-4">
@@ -70,12 +78,12 @@ export default function BasicInfo({
                     },
                 })}
             />
-            <Grid2Container ref={ref}>
-                <NormalInput
+            <Grid2Container>
+                <OptionsInput
                     label="Wanted Job Title"
                     placeholder="e.g. Teacher"
                     options={JOP_TITLES}
-                    setValue={(val) => setValue("info.data.jobTitle", val)}
+                    control={control as any}
                     {...register("info.data.jobTitle")}
                 />
                 <UploadButton
@@ -97,19 +105,20 @@ export default function BasicInfo({
                     type="email"
                     {...register("info.data.email")}
                 />
-                <NormalInput
+                <PhoneNumber
                     label="Phone"
-                    {...register("info.data.phone")}
+                    control={control as any}
+                    name="info.data.phone"
                 />
-                <NormalInput
+                <OptionsInput
                     label="Country"
                     options={COUNTRIES}
-                    setValue={(val) => setValue("info.data.country", val)}
+                    control={control as any}
                     {...register("info.data.country")}
                 />
                 <SelectInput
                     options={AvailabilityOptions}
-                    label="availability"
+                    label="Availability"
                     control={control as any}
                     {...register(`info.data.availability`)}
                 />
@@ -127,9 +136,6 @@ export default function BasicInfo({
                         <CityInput
                             label="City"
                             control={control as any}
-                            setValue={(val: string) =>
-                                setValue("info.data.city", val)
-                            }
                             {...register("info.data.city")}
                         />
                         <NormalInput
@@ -148,7 +154,7 @@ export default function BasicInfo({
                             pdfId="info.data.cv"
                             label="Upload you Cv"
                             control={control as any}
-                            {...register("info.data.cv")}
+                            name="info.data.cv"
                         />
                     </Grid2Container>
                 </div>

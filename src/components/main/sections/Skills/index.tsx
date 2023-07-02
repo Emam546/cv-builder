@@ -4,7 +4,7 @@ import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { useWatch } from "react-hook-form";
 import InfoGetter, { ListElemType } from "../InsertCommonData/input";
 import Grid2Container from "@src/components/common/2GridInputHolder";
-import NormalInput from "@src/components/common/inputs/normal";
+import NormalInput, { OptionsInput } from "@src/components/common/inputs/normal";
 import data from "./data.json";
 import LevelInput, { LevelType } from "@src/components/common/inputs/level";
 import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
@@ -74,11 +74,9 @@ export const ListElem = React.forwardRef(
             >
                 <div className="mb-4">
                     <Grid2Container>
-                        <NormalInput
+                        <OptionsInput
                             label="Skill"
-                            setValue={(val) =>
-                                setValue(`${Name}.${i}.label`, val)
-                            }
+                            control={control as any}
                             options={programmingLangs}
                             {...register(`${Name}.${i}.label`)}
                         />

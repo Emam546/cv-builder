@@ -12,6 +12,7 @@ import {
     InputData as ImageInputData,
     ListElem as ImageListItem,
     InitData as ImageInitData,
+    onDelete as ImageOnDelete,
 } from "@src/components/main/sections/photos";
 import InfoGetter from "./InsertCommonData/input";
 import { uuid } from "@src/utils";
@@ -40,16 +41,16 @@ export const InitData: () => InputData = () => ({
     desc: "<p></p>\n",
     images: [],
 });
-export const ListItem = React.forwardRef(
-    ({ index: i, props: { form }, ...props }, ref) => {
+export const MainElem = React.forwardRef(
+    ({ index: i, props: { form, name }, ...props }, ref) => {
         const { register, control } = form;
 
-        const ImagePath = `${Name}.${i}.images`;
+        const ImagePath = `${name}.data.${i}.images`;
         return (
             <Elem
                 headLabel={function G() {
                     const { label, institution } = useWatch({
-                        name: `${Name}.${i}`,
+                        name: `${name}.data.${i}`,
                         control,
                     });
                     return (
@@ -71,21 +72,21 @@ export const ListItem = React.forwardRef(
                 <Grid2Container>
                     <NormalInput
                         label="Course"
-                        {...register(`${Name}.${i}.label`)}
+                        {...register(`${name}.data.${i}.label`)}
                     />
                     <NormalInput
                         label="Institution"
-                        {...register(`${Name}.${i}.institution`)}
+                        {...register(`${name}.data.${i}.institution`)}
                     />
                     <DatePicker
                         applyPresent
                         label="Start &End Time"
                         startData={{
-                            ...register(`${Name}.${i}.date.start`),
+                            ...register(`${name}.data.${i}.date.start`),
                             placeholder: "MM / YYYY",
                         }}
                         endData={{
-                            ...register(`${Name}.${i}.date.end`),
+                            ...register(`${name}.data.${i}.date.end`),
                             placeholder: "MM / YYYY",
                         }}
                         control={control}
@@ -100,8 +101,9 @@ export const ListItem = React.forwardRef(
                         formRegister={form as any}
                         name={ImagePath}
                         Elem={ImageListItem}
-                        addButtonLabel="add one more Image"
+                        addButtonLabel="Add one more Image"
                         initData={ImageInitData}
+                        onDeleteElem={ImageOnDelete}
                     />
                 </WrapElem>
                 <WrapElem
@@ -110,25 +112,11 @@ export const ListItem = React.forwardRef(
                 >
                     <FinalEditor
                         control={control}
-                        {...register(`${Name}.${i}.desc`)}
+                        {...register(`${name}.data.${i}.desc`)}
                         placeholder="e.g. Created and implemented lesson plans based on child-led interests and curiosities"
                     />
                 </WrapElem>
             </Elem>
-        );
-    }
-) as ListElemType<InputData>;
-export const MainElem = React.forwardRef(
-    ({ index: i, props: { form, id, index, name }, ...props }, ref) => {
-        return (
-            <ListItem
-                index={i}
-                props={{
-                    ...{ id, index, name: `${name}.data`, form: form as any },
-                }}
-                ref={ref}
-                {...props}
-            />
         );
     }
 ) as ElemType<InputData>;

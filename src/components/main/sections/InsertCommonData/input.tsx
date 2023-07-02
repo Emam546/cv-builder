@@ -1,8 +1,8 @@
 import React, { ForwardRefRenderFunction, useRef, useState } from "react";
-import { FieldValues, UseFormReturn } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
-import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
+import { WrapElem } from "@src/components/common/inputs/styles";
 import classNames from "classnames";
 import ElemGenerator, {
     ElemType,

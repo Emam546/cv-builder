@@ -138,31 +138,15 @@ export function useUploadFile(
     return Update;
 }
 
-export function useDeleteFile(
-    url: string,
-    key: string
-): () => Promise<any> {
+export function useDeleteFile(url: string, filename: string) {
     const dispatch = useAppDispatch();
     const isSignedIn = useAppSelector((state) => state.user.isSingIn);
-    const userId = useAppSelector((state) => {
-        if (state.user.isSingIn) {
-            return state.user.user._id;
-        }
-        return false;
-    });
     async function Update() {
         if (!isSignedIn) {
             dispatch(LoginModelActions.open());
             return "";
         }
-        if (!userId) return "";
-        const name = crypto
-            .createHash("sha256")
-            .update(userId + key)
-            .digest()
-            .toString("base64")
-            .replaceAll(/[?&#\\%<>+=/]/g, "");
-        return await DeleteFile(url, name);
+        return await DeleteFile(url, filename);
     }
     return Update;
 }

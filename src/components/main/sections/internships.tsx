@@ -6,10 +6,25 @@ import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import DatePicker from "@src/components/common/inputs/datePicker";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
+import { WrapElem } from "@src/components/common/inputs/styles";
+import {
+    ListItem as LinkListItem,
+    InitData as LinkInitData,
+    InputData as LinksInputData,
+} from "./links";
 import { uuid } from "@src/utils";
+import {
+    InitData as ImageInitData,
+    InputData as ImageInputData,
+    ListItem as ImageListItem,
+    OnDelete as ImageOnDelete,
+} from "./Projects/images";
+import InfoGetter from "./InsertCommonData/input";
+import MultiSelectInput from "@src/components/common/inputs/multiSelect";
+import { Technologies } from "../utils";
 export type NameType = "internships";
 export const Name: NameType = "internships";
+
 export interface InputData {
     id: string;
     jobTitle: string;
@@ -20,6 +35,9 @@ export interface InputData {
     };
     city: string;
     desc: string;
+    images: ImageInputData[];
+    links: LinksInputData[];
+    technologies: string[];
 }
 export const InitData: () => InputData = () => ({
     id: uuid(),
@@ -31,18 +49,15 @@ export const InitData: () => InputData = () => ({
     desc: "<p></p>\n",
     employer: "",
     jobTitle: "",
+    images: [],
+    links: [],
+    technologies:[],
 });
 const EmployElem: ElemType<InputData> = React.forwardRef(
-    (
-        {
-            index: i,
-            props: {
-                form: { register, control, setValue },
-            },
-            ...props
-        },
-        ref
-    ) => {
+    ({ index: i, props: { form }, ...props }, ref) => {
+        const { register, control } = form;
+        const ImagePath = `${Name}.data.${i}.images`;
+        const LinkPath = `${Name}.data.${i}.links`;
         return (
             <Elem
                 headLabel={function G() {
@@ -94,6 +109,30 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                         {...register(`${Name}.data.${i}.city`)}
                     />
                 </Grid2Container>
+                <WrapElem label={"Technologies"}>
+                    <MultiSelectInput
+                        options={Technologies}
+                        name={`${Name}.data.${i}.technologies`}
+                        control={control}
+                    />
+                </WrapElem>
+                <InfoGetter
+                    formRegister={form as any}
+                    name={ImagePath}
+                    Elem={ImageListItem}
+                    addButtonLabel="Add one more Image"
+                    initData={ImageInitData}
+                    onDeleteElem={ImageOnDelete}
+                />
+
+                <InfoGetter
+                    formRegister={form as any}
+                    addButtonLabel="Add one more Link"
+                    Elem={LinkListItem}
+                    initData={LinkInitData}
+                    name={LinkPath}
+                    label={"Links"}
+                />
                 <WrapElem
                     label={"Description"}
                     className="mt-5"

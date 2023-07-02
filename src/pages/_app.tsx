@@ -2,6 +2,7 @@ import "@src/styles/globals.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import "react-phone-number-input/style.css";
 config.autoAddCss = false;
 import type { AppProps } from "next/app";
 import wrapper from "@src/store";

@@ -16,10 +16,10 @@ export interface InputData {
 }
 export const InitData = () => ({
     id: uuid(),
-    name: "string",
-    company: "string",
-    phone: "string",
-    email: "string",
+    name: "",
+    company: "",
+    phone: "",
+    email: "",
 });
 const ReferenceElem: ElemType<InputData> = React.forwardRef(
     (

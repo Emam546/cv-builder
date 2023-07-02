@@ -37,7 +37,6 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
     (
         {
             options = [{ val: "", label: "Select Option" }],
-            setValue,
             label,
             control,
             name,
