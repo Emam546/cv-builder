@@ -114,7 +114,6 @@ function Uploader({
 export default function Main({ values }: { values?: Data }) {
     const dispatch = useDispatch();
     const form = useForm<Data>({
-        defaultValues: defaultData,
         values: values || defaultData,
     });
     form.resetField = (path) => {
