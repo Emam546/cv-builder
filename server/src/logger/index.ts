@@ -42,6 +42,7 @@ if (EnvVars.nodeEnv == NodeEnvs.Production) {
             }),
         ],
         format: format.combine(
+            format.metadata(),
             format.json(),
             format.timestamp(),
             format.errors({ stack: true })

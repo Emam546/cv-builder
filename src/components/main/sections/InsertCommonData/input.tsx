@@ -121,7 +121,7 @@ export default function InfoGetter<T extends PSchema>({
                                     name,
                                     id: val.id,
                                 }))}
-                                resort={(indexes) => {
+                                onResort={(indexes) => {
                                     const allData = getValues(`${name}`);
                                     const data = indexes
                                         .map((i) => allData[i])

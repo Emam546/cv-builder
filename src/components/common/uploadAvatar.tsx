@@ -8,6 +8,7 @@ import { Control, useController } from "react-hook-form";
 import LoadingPanner from "./loading/loading";
 import { DeleteFile as OrgDeleteFile } from "@src/utils";
 import { useDeleteDialog } from "./confirmAction";
+import DeleteSnackBar from "@src/components/main/sections/InsertCommonData/deleteAlert";
 interface Props {
     name: string;
     label: string;
@@ -31,6 +32,7 @@ function UploadButton({ label, defaultValue, name, imageId, control }: Props) {
     const [Dialog, stateAccept] = useDeleteDialog({
         title: "Are you sure the you want to delete Image Profile",
     });
+    const [error, setErr] = useState<string>();
     return (
         <>
             <div className="group pt-5 select-none">
@@ -94,6 +96,9 @@ function UploadButton({ label, defaultValue, name, imageId, control }: Props) {
                                                     field.onChange("");
                                                     setBlob(undefined);
                                                 })
+                                                .catch((err) =>
+                                                    setErr(err.message)
+                                                )
                                                 .finally(() => {
                                                     setLoading(false);
                                                     res(null);
@@ -127,8 +132,9 @@ function UploadButton({ label, defaultValue, name, imageId, control }: Props) {
                                     if (url) field.onChange(url);
                                     else setBlob(undefined);
                                 })
-                                .catch(() => {
+                                .catch((err) => {
                                     setBlob(undefined);
+                                    setErr(err.message);
                                 })
                                 .finally(() => {
                                     setLoading(false);
@@ -140,6 +146,14 @@ function UploadButton({ label, defaultValue, name, imageId, control }: Props) {
                 </div>
             </div>
             <Dialog />
+            <DeleteSnackBar
+                open={error != undefined}
+                setClose={() => setErr(undefined)}
+                undo={function () {
+                    throw new Error("Function not implemented.");
+                }}
+                error={error}
+            />
         </>
     );
 }

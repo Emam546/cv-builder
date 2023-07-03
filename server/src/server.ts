@@ -24,8 +24,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(EnvVars.cookieProps.secret));
 app.use(fileUpload());
-// app.use(parseMultiFormData);
-// app.use(session({ secret: EnvVars.session.secret, name: "sid" }));
 app.use(
     expressWinstom.logger({
         winstonInstance: logger,

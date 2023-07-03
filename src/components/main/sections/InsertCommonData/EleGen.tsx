@@ -4,6 +4,7 @@ import React, {
     PropsWithoutRef,
     RefAttributes,
     useRef,
+    useState,
 } from "react";
 
 export interface PrimaryProps {
@@ -27,7 +28,7 @@ export interface PSchema {
 export default function ElemGenerator<P extends PSchema>({
     Elem,
     noDragging,
-    resort,
+    onResort,
     onDelete: deleteSelf,
     data,
     onDuplicate: duplicate,
@@ -36,10 +37,11 @@ export default function ElemGenerator<P extends PSchema>({
     data: P[];
     onDelete?: (id: string) => any;
     onDuplicate?: (id: string) => any;
-    resort?: (indexes: number[]) => void;
+    onResort?: (indexes: number[]) => void;
     noDragging?: boolean;
 }) {
-    const allEle: HTMLDivElement[] = [];
+    const allEle = useRef<HTMLDivElement[]>([]);
+    allEle.current.length = data.length;
     return (
         <div className="flex flex-col items-stretch space-y-4 transition-all duration-700 mb-1">
             {data.map((props, i) => {
@@ -48,10 +50,15 @@ export default function ElemGenerator<P extends PSchema>({
                         onDuplicate={duplicate && (() => duplicate(props.id))}
                         noDragging={noDragging}
                         index={i}
-                        onDelete={deleteSelf && (() => deleteSelf(props.id))}
-                        key={uuid()}
+                        onDelete={
+                            deleteSelf &&
+                            (() => {
+                                deleteSelf(props.id);
+                            })
+                        }
+                        key={`${props.id}_${i}`}
                         onDragOver={(ele) => {
-                            const indexes = allEle
+                            const indexes = allEle.current
                                 .map<[number, number]>((ele, i) => {
                                     const rect = ele.getBoundingClientRect();
                                     return [
@@ -63,12 +70,11 @@ export default function ElemGenerator<P extends PSchema>({
                                 })
                                 .sort((a, b) => a[0] - b[0])
                                 .map(([, i]) => i);
-
-                            if (resort) resort(indexes);
+                            if (onResort) onResort(indexes);
                         }}
                         ref={(ele) => {
                             if (!ele) return;
-                            allEle.push(ele);
+                            allEle.current[i] = ele;
                         }}
                         props={props}
                     />

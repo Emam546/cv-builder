@@ -147,11 +147,11 @@ export default function InfoGetter<T extends PSchema>({
                                 allData.find(({ id }) => id == xid) as T,
                                 allData.findIndex(({ id }) => id == xid),
                             ];
-                            const newdata = allData.filter(
+                            const newData = allData.filter(
                                 ({ id }) => id != xid
                             );
-                            setValue(`${name}.data`, newdata as any);
-                            setEleData([...newdata]);
+                            setValue(`${name}.data`, newData as any);
+                            setEleData([...newData]);
                             setOpen(true);
                         });
                     }}
@@ -163,7 +163,7 @@ export default function InfoGetter<T extends PSchema>({
                         setValue(`${name}.data`, [...allData, data] as any);
                         setEleData([...allData, data]);
                     }}
-                    resort={(indexes) => {
+                    onResort={(indexes) => {
                         const allData = getValues(`${name}.data`);
                         const data = indexes.map((i) => allData[i]);
                         setValue(`${name}.data`, data as any);
