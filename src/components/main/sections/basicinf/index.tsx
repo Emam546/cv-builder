@@ -16,6 +16,7 @@ import SelectInput, {
 import UploadPDF from "./uploadPdf";
 import PhoneNumber from "./phoneNumber";
 import React from "react";
+import { onDelete as AvatarOnDelete } from "./uploadPdf";
 const COUNTRIES = Object.keys(data.countries).map((name) => name);
 const CITIES: Map<string, string[]> = new Map(Object.entries(data.countries));
 const JOP_TITLES = data.jobs;
@@ -43,6 +44,9 @@ export interface InputData {
         };
     };
 }
+export const onDelete: (val: InputData) => Promise<void> = async (val) => {
+    return AvatarOnDelete(val.info.data.imgUrl);
+};
 const AvailabilityOptions: OptionType[] = data.availabilityOptions;
 type CityInputProps = Omit<Parameters<typeof OptionsInput>[0], "options"> & {
     control: Control;
@@ -63,7 +67,6 @@ export default function BasicInfo({
     register,
     resetField,
     control,
-    setValue,
 }: UseFormReturn<InputData>) {
     const [eddData, setEddData] = useState(false);
 

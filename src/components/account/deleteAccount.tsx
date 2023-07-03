@@ -9,23 +9,36 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { getAuthHeaders } from "@src/utils";
+import { useAppSelector } from "@src/store";
+import { DeleteAllData } from "@src/utils/deleteAllData";
 function DeleteDialog() {
     const [open, setOpen] = useState(false);
     const [submitting, setSubmit] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
     };
+    const state = useAppSelector((state) => state.form);
     const route = useRouter();
     const Delete = () => {
         setSubmit(true);
-        
-        axios
-            .post("/api/v1/user/delete", {}, { headers: getAuthHeaders() })
+        DeleteAllData(state)
             .then(() => {
-                route.push(`/login`).then(() => {
-                    setSubmit(false);
-                    setOpen(false);
-                });
+                axios
+                    .post(
+                        "/api/v1/user/delete",
+                        {},
+                        { headers: getAuthHeaders() }
+                    )
+                    .then(() => {
+                        route.push(`/login`).then(() => {
+                            setSubmit(false);
+                            setOpen(false);
+                        });
+                    })
+                    .catch(() => {
+                        setSubmit(false);
+                        setOpen(false);
+                    });
             })
             .catch(() => {
                 setSubmit(false);

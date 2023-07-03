@@ -2,7 +2,7 @@ import { faDownload, faFile, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CircularProgress } from "@mui/material";
 import { useDeleteDialog } from "@src/components/common/confirmAction";
-import { checkFile } from "@src/utils";
+import { DeleteFile, checkFile } from "@src/utils";
 import { useDeleteFile, useUploadFile } from "@src/utils/hooks";
 import { useEffect, useState } from "react";
 import { Control, useController } from "react-hook-form";
@@ -14,8 +14,12 @@ interface Props {
     defaultValue?: string;
     pdfId: string;
 }
+const DeleteUrl = "/api/v1/images";
+export const onDelete: (val: string) => Promise<void> = (val) => {
+    return DeleteFile(DeleteUrl, val);
+};
 function UploadPDF({ label, defaultValue, name, control, pdfId }: Props) {
-    const UploadFile = useUploadFile("/api/v1/images", pdfId);
+    const UploadFile = useUploadFile(DeleteUrl, pdfId);
     const { field } = useController({ control, name, defaultValue });
     const [loading, setLoading] = useState(false);
     const orgUrl = field.value;

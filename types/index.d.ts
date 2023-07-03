@@ -29,15 +29,15 @@ import type {
     NameType as ReferenceNameType,
 } from "@src/components/main/sections/reference";
 import type {
-    InputData as ExtraActivitesDataType,
-    NameType as ExtraActivitesNameType,
+    InputData as ExtraActivitiesDataType,
+    NameType as ExtraActivitiesNameType,
 } from "@src/components/main/sections/ExtraActivites";
 import type {
     InputData as TeamDataType,
     NameType as TeamNameType,
 } from "@src/components/main/sections/Team";
 import type {
-    EleInputData as ProjectsDataType,
+    InputData as ProjectsDataType,
     NameType as ProjectsNameType,
 } from "@src/components/main/sections/Projects";
 import type {
@@ -84,7 +84,7 @@ declare global {
         GeneratorData<SkillDataType, SkillNameType> &
         GeneratorData<InternShipDataType, InternShipNameType> &
         GeneratorData<CourseDataType, CourseNameType> &
-        GeneratorData<ExtraActivitesDataType, ExtraActivitesNameType> &
+        GeneratorData<ExtraActivitiesDataType, ExtraActivitiesNameType> &
         GeneratorData<TeamDataType, TeamNameType> &
         GeneratorData<ProjectsDataType, ProjectsNameType> &
         GeneratorData<ReferenceDataType, ReferenceNameType> &
