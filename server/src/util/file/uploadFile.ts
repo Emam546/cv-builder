@@ -9,7 +9,7 @@ import fs from "fs/promises";
 import path from "path";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import crypto from "crypto";
-
+import { exist } from "./utils";
 function UploadCloudinary(file: UploadedFile, opt?: UploadApiOptions) {
     return new Promise<UploadApiResponse | undefined>((res, rej) => {
         const uploadStream = cloudinary.uploader.upload_stream(
@@ -41,7 +41,7 @@ async function UploadLocalImage(
     name: string
 ) {
     const p = path.join("./public/users", folder);
-    if (!(await fs.stat(p)).isDirectory()) fs.mkdir(p, { recursive: true });
+    if (!(await exist(p))) await fs.mkdir(p, { recursive: true });
     await fs.writeFile(path.join(p, name), file.data);
     return path.join("/users", folder, name).replaceAll("\\", "/");
 }

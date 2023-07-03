@@ -74,7 +74,7 @@ router
         req.user.data = req.body;
         res.status(200).send({ status: true, msg: "success", data: req.body });
     });
-router.route("/delete").post(async (req, res) => {
+router.route("/delete").delete(async (req, res) => {
     assertIsAuth(req);
     await User.deleteOne({ _id: req.user._id });
     res.status(200).send({ status: true, msg: "success" });

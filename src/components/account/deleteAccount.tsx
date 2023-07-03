@@ -11,12 +11,14 @@ import { useRouter } from "next/router";
 import { getAuthHeaders } from "@src/utils";
 import { useAppSelector } from "@src/store";
 import { DeleteAllData } from "@src/utils/deleteAllData";
+import DeleteAlert from "@src/components/common/deleteAlert";
 function DeleteDialog() {
     const [open, setOpen] = useState(false);
     const [submitting, setSubmit] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
     };
+    const [err, setErr] = useState<string>();
     const state = useAppSelector((state) => state.form);
     const route = useRouter();
     const Delete = () => {
@@ -24,25 +26,25 @@ function DeleteDialog() {
         DeleteAllData(state)
             .then(() => {
                 axios
-                    .post(
-                        "/api/v1/user/delete",
-                        {},
-                        { headers: getAuthHeaders() }
-                    )
+                    .delete("/api/v1/user/delete", {
+                        headers: getAuthHeaders(),
+                    })
                     .then(() => {
                         route.push(`/login`).then(() => {
                             setSubmit(false);
                             setOpen(false);
                         });
                     })
-                    .catch(() => {
+                    .catch((err) => {
                         setSubmit(false);
                         setOpen(false);
+                        setErr(err.message);
                     });
             })
-            .catch(() => {
+            .catch((err) => {
                 setSubmit(false);
                 setOpen(false);
+                setErr(err.message);
             });
     };
 
@@ -93,6 +95,17 @@ function DeleteDialog() {
                     </div>
                 </DialogActions>
             </Dialog>
+            <DeleteAlert
+                open={err != undefined}
+                message={err || ""}
+                setClose={function () {
+                    setErr(undefined);
+                }}
+                undo={function () {
+                    throw new Error("Function not implemented.");
+                }}
+                error
+            />
         </div>
     );
 }

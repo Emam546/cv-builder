@@ -40,7 +40,7 @@ interface Props {
     defaultValue?: string;
 }
 const ImageUploadUrl = "/api/v1/images";
-const ImageDeleteUrl = "/api/v1/image";
+const ImageDeleteUrl = "/api/v1/images";
 export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
     (
         { defaultValue, label, setValue, name, control, aspect, imageId },

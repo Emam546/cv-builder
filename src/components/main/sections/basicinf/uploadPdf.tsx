@@ -23,7 +23,7 @@ function UploadPDF({ label, defaultValue, name, control, pdfId }: Props) {
     const { field } = useController({ control, name, defaultValue });
     const [loading, setLoading] = useState(false);
     const orgUrl = field.value;
-    const DeleteFile = useDeleteFile("/api/v1/image", orgUrl);
+    const DeleteFile = useDeleteFile("/api/v1/images", orgUrl);
     const [err, setError] = useState<string>();
     const [Dialog, stateAccept] = useDeleteDialog({
         title: "Are you sure the you want to delete this file",
