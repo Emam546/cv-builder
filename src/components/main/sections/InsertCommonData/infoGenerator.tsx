@@ -146,7 +146,7 @@ export default function MainInfoGetter<T extends PSchema>({
                         onDelete={(xid) => {
                             onClose().then(() => {
                                 setMessage("Element successfully deleted");
-                                const allData = getValues(`${name}`);
+                                const allData = getValues(keys.data);
                                 const data = allData.filter(
                                     ({ id }) => id != xid
                                 );
