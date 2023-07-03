@@ -18,6 +18,7 @@ function DeleteDialog() {
     const route = useRouter();
     const Delete = () => {
         setSubmit(true);
+        
         axios
             .post("/api/v1/user/delete", {}, { headers: getAuthHeaders() })
             .then(() => {
