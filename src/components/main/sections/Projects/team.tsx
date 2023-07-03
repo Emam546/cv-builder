@@ -3,12 +3,10 @@ import React from "react";
 import { UseFormReturn, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput, { OptionsInput } from "@src/components/common/inputs/normal";
-
 import {
     Name as TeamName,
     InputData as TeamInputData,
 } from "@src/components/main/sections/Team";
-
 import FElem from "../links";
 import { ElemType } from "../InsertCommonData/EleGen";
 import { uuid } from "@src/utils";

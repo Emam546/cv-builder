@@ -19,6 +19,7 @@ import loadash from "lodash";
 import { DeleteFile, uuid } from "@src/utils";
 import { getPath } from "../InsertCommonData/utils";
 import { useDeleteDialog } from "@src/components/common/confirmAction";
+import DeleteAlert from "../InsertCommonData/deleteAlert";
 export type NameType = "images";
 export const Name: NameType = "images";
 export type NameRules = string;
@@ -38,7 +39,7 @@ interface Props {
     defaultValue?: string;
 }
 const ImageUploadUrl = "/api/v1/images";
-const ImageDeleteUrl = "/api/v1/images";
+const ImageDeleteUrl = "/api/v1/image";
 export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
     (
         { defaultValue, label, setValue, name, control, aspect, imageId },
@@ -54,6 +55,7 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
         const [Dialog, stateAccept] = useDeleteDialog({
             title: "Are you sure the you want to delete Image Profile",
         });
+        const [error, setErr] = useState<string>();
         useNotInitEffect(() => {
             setValue("");
             setBlob(undefined);
@@ -89,9 +91,7 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                     )}
                     {orgImg && !loading && (
                         <>
-                            <div
-                                className="cursor-pointer"
-                            >
+                            <div className="cursor-pointer">
                                 <div
                                     style={{
                                         aspectRatio: aspect,
@@ -131,6 +131,13 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                                                             setBlob(
                                                                                 undefined
                                                                             );
+                                                                        }
+                                                                    )
+                                                                    .catch(
+                                                                        (
+                                                                            err
+                                                                        ) => {
+                                                                            setErr(err.message)
                                                                         }
                                                                     )
                                                                     .finally(
@@ -207,8 +214,9 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                         if (url) setValue(url);
                                         else setBlob(undefined);
                                     })
-                                    .catch(() => {
+                                    .catch((err) => {
                                         setBlob(undefined);
+                                        setErr(err.message);
                                     })
                                     .finally(() => {
                                         setLoading(false);
@@ -220,6 +228,14 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                     </div>
                 </div>
                 <Dialog />
+                <DeleteAlert
+                    open={error != undefined}
+                    setClose={() => setErr(undefined)}
+                    undo={function () {
+                        throw new Error("Function not implemented.");
+                    }}
+                    error={error}
+                />
             </>
         );
     }

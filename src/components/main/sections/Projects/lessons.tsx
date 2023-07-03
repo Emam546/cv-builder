@@ -1,12 +1,11 @@
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
-
-import { Path, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
 import FElem from "../links";
 import FinalEditor from "@src/components/common/inputs/Editor";
-import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
+import { WrapElem } from "@src/components/common/inputs/styles";
 import { uuid } from "@src/utils";
 export type NameType = "links";
 export const Name: NameType = "links";

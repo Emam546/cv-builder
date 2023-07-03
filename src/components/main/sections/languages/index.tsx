@@ -3,7 +3,7 @@ import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
-import NormalInput, { OptionsInput } from "@src/components/common/inputs/normal";
+import { OptionsInput } from "@src/components/common/inputs/normal";
 import SelectInput, {
     OptionType,
 } from "@src/components/common/inputs/selectOption";

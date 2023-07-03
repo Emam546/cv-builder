@@ -8,7 +8,7 @@ export interface Props {
     undo: () => any;
     deps?: any[];
     error?: string;
-    loading: boolean;
+    loading?: boolean;
 }
 export default function DeleteAlert({
     open,
