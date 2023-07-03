@@ -1,7 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { v4 as _uuid } from "uuid";
 import Cookies from "js-cookie";
-import crypto from "crypto";
+import mime from "mime";
+import { checkMimeType } from "@serv/routes/images/utils";
+import { MaxSize } from "@serv/routes/images/constants";
 
 export function assertIsNode(e: EventTarget | null): asserts e is Node {
     if (!e || !("nodeType" in e)) {
@@ -29,7 +31,6 @@ export function getAuthHeaders<T>() {
         Authorization: `Bearer ${token}`,
     } as AxiosRequestConfig<T>["headers"];
 }
-const MaxSize = 2 * 1024 * 1024;
 
 export function checkFile(e: React.ChangeEvent<HTMLInputElement>) {
     const length = e.target.files?.length;
@@ -48,6 +49,26 @@ export function checkFile(e: React.ChangeEvent<HTMLInputElement>) {
             });
         })
     );
+}
+export async function UploadFile(url: string, name: string, blob: Blob) {
+    const token = Cookies.get("token");
+    if (!token) return "";
+    const ext = mime.getExtension(blob.type);
+
+    if (!checkMimeType(blob.type))
+        throw new Error(`Un recognized type ${blob.type}`);
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("img", blob, `image.${ext}`);
+
+    const res = await axios.post(url, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            ...getAuthHeaders(),
+        },
+    });
+    return res.data.data.url;
 }
 export async function DeleteFile(url: string, name: string) {
     const token = Cookies.get("token");

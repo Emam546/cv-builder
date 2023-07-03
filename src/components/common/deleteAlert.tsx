@@ -4,10 +4,11 @@ import { useDebounceEffect } from "@src/utils/hooks";
 import React, { useEffect } from "react";
 export interface Props {
     open: boolean;
+    message: string;
     setClose: () => any;
     undo: () => any;
     deps?: any[];
-    error?: string;
+    error?: boolean;
     loading?: boolean;
 }
 export default function DeleteAlert({
@@ -17,6 +18,7 @@ export default function DeleteAlert({
     deps = [],
     error,
     loading,
+    message,
 }: Props) {
     useDebounceEffect(
         () => {
@@ -46,11 +48,9 @@ export default function DeleteAlert({
                 }
                 onClose={error ? setClose : undefined}
             >
-                {error
-                    ? `Error happened:${error}`
-                    : "Element successfully deleted"}
+                <span>{message}</span>
                 {loading && (
-                    <CircularProgress className="max-w-[1.2rem] max-h-[1.2rem]" />
+                    <CircularProgress className="max-w-[1.2rem] max-h-[1.2rem] inline-block" />
                 )}
             </Alert>
         </Snackbar>

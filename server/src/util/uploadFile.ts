@@ -5,9 +5,12 @@ import {
     v2 as cloudinary,
 } from "cloudinary";
 import stream from "stream";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
-export function UploadCloudinary(file: UploadedFile, opt?: UploadApiOptions) {
+import EnvVars from "@serv/declarations/major/EnvVars";
+import crypto from "crypto";
+
+function UploadCloudinary(file: UploadedFile, opt?: UploadApiOptions) {
     return new Promise<UploadApiResponse | undefined>((res, rej) => {
         const uploadStream = cloudinary.uploader.upload_stream(
             {
@@ -31,21 +34,40 @@ export function UploadCloudinary(file: UploadedFile, opt?: UploadApiOptions) {
         readableStream.pipe(uploadStream);
     });
 }
-export async function DeleteCloudinary(public_id: string) {
-    await cloudinary.uploader.destroy(public_id, {});
-}
-export function UploadLocalImage(
+
+async function UploadLocalImage(
     file: UploadedFile,
     folder: string,
     name: string
 ) {
     const p = path.join("./public/users", folder);
-    if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
-    fs.writeFileSync(path.join(p, name), file.data);
+    if (!(await fs.stat(p)).isDirectory()) fs.mkdir(p, { recursive: true });
+    await fs.writeFile(path.join(p, name), file.data);
     return path.join("/users", folder, name).replaceAll("\\", "/");
 }
-export function DeleteLocalImage(name: string) {
-    const p = path.join("./public", name);
-    if (fs.existsSync(p)) fs.unlinkSync(p);
-    return name;
+
+export async function UploadFile(
+    img: UploadedFile,
+    name: string,
+    ext: string,
+    folder: string,
+    userId: string
+) {
+    const hash = crypto
+        .createHash("sha256")
+        .update(userId + name)
+        .digest()
+        .toString("base64")
+        .replaceAll(/[?&#\\%<>+=/]/g, "");
+    if (!EnvVars.APPLY_LOCAL) {
+        const result = await UploadCloudinary(img, {
+            public_id: hash,
+            format: ext || undefined,
+            folder: folder,
+        });
+        return result?.url || "";
+    } else {
+        const url = UploadLocalImage(img, folder, `${hash}.${ext}`);
+        return url;
+    }
 }

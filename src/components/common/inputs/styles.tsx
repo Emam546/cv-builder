@@ -54,12 +54,10 @@ export const WrapElem = React.forwardRef<HTMLDivElement, Props>(
                 ref={ref}
                 {...props}
             >
-                <div className="block">
-                    <span className="py-2 block text-neutral-40 leading-6">
-                        {label}
-                    </span>
-                    {children}
-                </div>
+                <span className="py-2 block text-neutral-40 leading-6">
+                    {label}
+                </span>
+                {children}
             </div>
         );
     }

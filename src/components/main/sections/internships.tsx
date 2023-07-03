@@ -51,8 +51,11 @@ export const InitData: () => InputData = () => ({
     jobTitle: "",
     images: [],
     links: [],
-    technologies:[],
+    technologies: [],
 });
+export const onDelete: (val: InputData) => Promise<void> = async (val) => {
+    await Promise.all(val.images.map(ImageOnDelete));
+};
 const EmployElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
         const { register, control } = form;
@@ -117,6 +120,7 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                     />
                 </WrapElem>
                 <InfoGetter
+                    label="Images"
                     formRegister={form as any}
                     name={ImagePath}
                     Elem={ImageListItem}

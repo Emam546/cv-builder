@@ -110,7 +110,6 @@ function DropDownComp({
 }
 const NormalInput = React.forwardRef<HTMLInputElement, PropsWithOutOptions>(
     ({ label, ...props }, ref) => {
-        const inputRef = useRef<HTMLInputElement>(null);
         const containerRef = useRef<HTMLDivElement>(null);
 
         return (

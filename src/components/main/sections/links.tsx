@@ -2,7 +2,7 @@ import { Elem as _Elem } from "@src/components/main/sections/InsertCommonData/El
 import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
-import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
+import { ListElemType } from "@src/components/main/sections/InsertCommonData/input";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { uuid } from "@src/utils";
 import React from "react";
@@ -18,7 +18,7 @@ export const InitData: () => InputData = () => ({
     label: "",
     link: "",
 });
-export const ListItem = forwardRef<InputData>(
+export const ListItem = React.forwardRef(
     (
         {
             index: i,
@@ -67,7 +67,7 @@ export const ListItem = forwardRef<InputData>(
             </_Elem>
         );
     }
-);
+) as ListElemType<InputData>;
 
 const MainElem = React.forwardRef(
     ({ index: i, props: { form, id, index, name }, ...props }, ref) => {

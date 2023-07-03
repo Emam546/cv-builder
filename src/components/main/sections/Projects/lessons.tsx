@@ -2,11 +2,12 @@ import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
-import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
+import { ListElemType } from "@src/components/main/sections/InsertCommonData/input";
 import FElem from "../links";
 import FinalEditor from "@src/components/common/inputs/Editor";
 import { WrapElem } from "@src/components/common/inputs/styles";
 import { uuid } from "@src/utils";
+import React from "react";
 export type NameType = "links";
 export const Name: NameType = "links";
 export type NameRules = string;
@@ -23,7 +24,7 @@ export const InitData: () => InputData = () => {
     };
 };
 
-export const ListItem = forwardRef<InputData>(
+export const ListItem = React.forwardRef(
     (
         {
             index: i,
@@ -73,6 +74,6 @@ export const ListItem = forwardRef<InputData>(
             </Elem>
         );
     }
-);
+) as ListElemType<InputData>;
 
 export default FElem;

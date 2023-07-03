@@ -3,7 +3,9 @@ import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { UseFormReturn, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
-import NormalInput, { OptionsInput } from "@src/components/common/inputs/normal";
+import NormalInput, {
+    OptionsInput,
+} from "@src/components/common/inputs/normal";
 import FinalEditor from "@src/components/common/inputs/Editor";
 import { ListItem as LinkListItem, InitData as LinkInitData } from "../links";
 import {
@@ -16,6 +18,7 @@ import {
     InputData as ImageInputData,
     InitData as ImageInitData,
     OnDelete as ImageOnDelete,
+    onDuplicate as ImageOnDuplicate,
 } from "./images";
 import {
     ListItem as LessonListItem,
@@ -86,6 +89,7 @@ type LessonPathType = `${EleNameType}.${number}.lessons`;
 import BudgetInput from "./budget";
 import { uuid } from "@src/utils";
 import { Technologies } from "../../utils";
+import { Duplicate } from "../InsertCommonData/utils";
 
 function KindsInput({
     EleName,
@@ -93,7 +97,7 @@ function KindsInput({
     i,
 }: {
     EleName: string;
-    form: UseFormReturn<ListData<EleInputData, string>>;
+    form: any;
     i: number;
 }) {
     const { register, control, setValue } = form;
@@ -268,6 +272,18 @@ export const InitData: () => InputData = () => ({
 export const onDelete = async (value: InputData) => {
     await Promise.all(value.data.map(onDeleteElem));
 };
+export const onDuplicateElem = async (
+    value: EleInputData,
+    path: string
+): Promise<EleInputData> => {
+    const newValue = Duplicate(value);
+    newValue.images = await Promise.all(
+        newValue.images.map((val) =>
+            ImageOnDuplicate(val, `${path}.${value.id}.images`)
+        )
+    );
+    return newValue;
+};
 type PathType = `${NameType}.data.${number}.data`;
 const ProjectElem: ElemType<InputData> = React.forwardRef(
     ({ index: i, props: { form }, ...props }, ref) => {
@@ -312,4 +328,14 @@ const ProjectElem: ElemType<InputData> = React.forwardRef(
     }
 );
 
+export const onDuplicate = async (
+    value: InputData,
+    path: string
+): Promise<InputData> => {
+    const newValue = Duplicate(value);
+    newValue.data = await Promise.all(
+        newValue.data.map((val) => onDuplicateElem(val, `${path}.${newValue.id}.data`))
+    );
+    return newValue;
+};
 export default ProjectElem;

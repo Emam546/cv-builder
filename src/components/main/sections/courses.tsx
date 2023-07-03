@@ -41,10 +41,12 @@ export const InitData: () => InputData = () => ({
     desc: "<p></p>\n",
     images: [],
 });
+export const onDelete: (val: InputData) => Promise<void> = async (val) => {
+    await Promise.all(val.images.map(ImageOnDelete));
+};
 export const MainElem = React.forwardRef(
     ({ index: i, props: { form, name }, ...props }, ref) => {
         const { register, control } = form;
-
         const ImagePath = `${name}.data.${i}.images`;
         return (
             <Elem
@@ -93,11 +95,9 @@ export const MainElem = React.forwardRef(
                         labelEnd="Currently Work here."
                     />
                 </Grid2Container>
-                <WrapElem
-                    label={"Images"}
-                    className="my-4"
-                >
+                <div className="my-4">
                     <InfoGetter
+                        label={"Images"}
                         formRegister={form as any}
                         name={ImagePath}
                         Elem={ImageListItem}
@@ -105,7 +105,7 @@ export const MainElem = React.forwardRef(
                         initData={ImageInitData}
                         onDeleteElem={ImageOnDelete}
                     />
-                </WrapElem>
+                </div>
                 <WrapElem
                     label={"Description"}
                     className="my-4"

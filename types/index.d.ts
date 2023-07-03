@@ -68,9 +68,7 @@ declare global {
     interface FieldsType {
         [k: string]: any;
     }
-    export type ListData<T, Name extends string> = {
-        [f in Name]: T[];
-    };
+
     type GeneratorData<T, Name extends string> = {
         [f in Name]: {
             head: string;

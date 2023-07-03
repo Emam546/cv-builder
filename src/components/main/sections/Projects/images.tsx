@@ -8,7 +8,7 @@ import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { Control, useController, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
-import { forwardRef } from "@src/components/main/sections/InsertCommonData/input";
+import { ListElemType } from "@src/components/main/sections/InsertCommonData/input";
 import {
     useDeleteFile,
     useNotInitEffect,
@@ -16,10 +16,11 @@ import {
 } from "@src/utils/hooks";
 import LoadingPanner from "@src/components/common/loading/loading";
 import loadash from "lodash";
-import { DeleteFile, uuid } from "@src/utils";
-import { getPath } from "../InsertCommonData/utils";
+import { DeleteFile, UploadFile, copyObject, uuid } from "@src/utils";
+import { Duplicate, getPath } from "../InsertCommonData/utils";
 import { useDeleteDialog } from "@src/components/common/confirmAction";
-import DeleteAlert from "../InsertCommonData/deleteAlert";
+import DeleteAlert from "../../../common/deleteAlert";
+import axios from "axios";
 export type NameType = "images";
 export const Name: NameType = "images";
 export type NameRules = string;
@@ -137,7 +138,9 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                                                                         (
                                                                             err
                                                                         ) => {
-                                                                            setErr(err.message)
+                                                                            setErr(
+                                                                                err.message
+                                                                            );
                                                                         }
                                                                     )
                                                                     .finally(
@@ -230,11 +233,12 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                 <Dialog />
                 <DeleteAlert
                     open={error != undefined}
+                    message={`Error happened:${error}`}
                     setClose={() => setErr(undefined)}
                     undo={function () {
                         throw new Error("Function not implemented.");
                     }}
-                    error={error}
+                    error={true}
                 />
             </>
         );
@@ -250,7 +254,24 @@ export const OnDelete = async (value: InputData) => {
     if (!value.image) return;
     return await DeleteFile(ImageDeleteUrl, value.image);
 };
-export const ListItem = forwardRef<InputData>(
+export const onDuplicate = async (
+    value: InputData,
+    path: string
+): Promise<InputData> => {
+    const newValue = Duplicate(value);
+    if (!newValue.image) return newValue;
+    const response = await axios.get(value.image, { responseType: "blob" });
+    const blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+    });
+    newValue.image = await UploadFile(
+        ImageUploadUrl,
+        `${path}.${newValue.id}.image`,
+        blob
+    );
+    return newValue;
+};
+export const ListItem = React.forwardRef(
     (
         {
             index: i,
@@ -312,4 +333,4 @@ export const ListItem = forwardRef<InputData>(
             </Elem>
         );
     }
-);
+) as ListElemType<InputData>;

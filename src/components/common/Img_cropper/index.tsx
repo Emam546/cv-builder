@@ -10,7 +10,6 @@ import { PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { canvasPreview } from "./canvasPreview";
 import { checkFile } from "@src/utils";
-const MaxSize = 2 * 1024 * 1024;
 function toBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
     return new Promise((resolve) => {
         canvas.toBlob(resolve);
@@ -229,7 +228,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                                 onMouseUp={() => {
                                     setStartpos(false);
                                 }}
-                                className="overflow-hidden w-[15rem] relative"
+                                className="overflow-hidden w-[15rem] bg-neutral-300 relative"
                                 style={{
                                     aspectRatio: aspect,
                                     MozWindowDragging: "no-drag",
@@ -247,7 +246,7 @@ export default function ImageCropper({ exit, setValue, aspect = 1 }: Props) {
                                         if (e)
                                             e.style.backgroundImage = `url(${imgSrc})`;
                                     }}
-                                    className="absolute max-w-[15rem] bg-contain origin-top-left"
+                                    className="absolute max-w-[15rem]  bg-contain origin-top-left"
                                 ></div>
                             </div>
                             <div

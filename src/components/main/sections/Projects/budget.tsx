@@ -4,7 +4,6 @@ import SelectInput, {
 } from "@src/components/common/inputs/selectOption";
 import {
     StyledInput,
-    LabelElem,
     GeneralInputProps,
     WrapElem,
 } from "@src/components/common/inputs/styles";

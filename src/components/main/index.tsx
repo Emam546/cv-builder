@@ -12,6 +12,7 @@ import EducElem, {
     NameType as EducNameType,
     Name as EducName,
     InitData as EducInitData,
+    onDelete as EducOnDelete,
 } from "./sections/education";
 import LinkElem, {
     InputData as LinkDataType,
@@ -34,12 +35,14 @@ import CourseElem, {
     NameType as CourseNameType,
     Name as CourseName,
     InitData as CourseInitData,
+    onDelete as CourseOnDelete,
 } from "./sections/courses";
 import InternShipElem, {
     InputData as InternShipDataType,
     NameType as InternShipNameType,
     Name as InternShipName,
     InitData as InternInitData,
+    onDelete as InternOnDelete,
 } from "./sections/internships";
 import ReferenceElem, {
     InputData as ReferenceDataType,
@@ -47,11 +50,11 @@ import ReferenceElem, {
     Name as ReferenceName,
     InitData as ReferenceInitData,
 } from "./sections/reference";
-import ExtraActivitesElem, {
-    InputData as ExtraActivitesDataType,
-    NameType as ExtraActivitesNameType,
-    Name as ExtraActivitesName,
-    InitData as ExtraActivitesInitData,
+import ExtraActivitiesElem, {
+    InputData as ExtraActivitiesDataType,
+    NameType as ExtraActivitiesNameType,
+    Name as ExtraActivitiesName,
+    InitData as ExtraActivitiesInitData,
 } from "./sections/ExtraActivites";
 import TeamElem, {
     InputData as TeamDataType,
@@ -66,10 +69,9 @@ import ProjectsElem, {
     Name as ProjectsName,
     InitData as ProjectInitData,
     onDelete as ProjectOnDelete,
+    onDuplicate as ProjectOnDuplicate,
 } from "./sections/Projects";
 import ImageElem, {
-    InputData as ImagesDataType,
-    NameType as ImagesNameType,
     Name as ImagesName,
     InitData as ImageInitData,
     onDelete as ImageOnDelete,
@@ -134,11 +136,7 @@ export default function Main({ values }: { values?: Data }) {
             />
             <BasicInfo {...(form as any)} />
             <InfoGetter
-                formRegister={
-                    form as unknown as UseFormReturn<
-                        GeneratorData<ImagesDataType, ImagesNameType>
-                    >
-                }
+                formRegister={form as any}
                 addButtonLabel="Add one more Picture group"
                 name={ImagesName}
                 initData={ImageInitData}
@@ -177,6 +175,7 @@ export default function Main({ values }: { values?: Data }) {
                 addButtonLabel="Add Education"
                 name={EducName}
                 initData={EducInitData}
+                onDeleteElem={EducOnDelete}
                 Elem={EducElem}
                 desc="A varied education on your resume sums up the value that your learnings and background will bring to job."
             />
@@ -191,6 +190,7 @@ export default function Main({ values }: { values?: Data }) {
                 onDeleteElem={ProjectOnDelete}
                 Elem={ProjectsElem}
                 initData={ProjectInitData}
+                onDuplicateElem={ProjectOnDuplicate}
                 desc="Show your relevant Projects"
             />
             <InfoGetter
@@ -312,6 +312,7 @@ export default function Main({ values }: { values?: Data }) {
                     addButtonLabel="Add one more Course"
                     name={CourseName}
                     initData={CourseInitData}
+                    onDeleteElem={CourseOnDelete}
                     Elem={CourseElem}
                 />
             </Container>
@@ -338,31 +339,34 @@ export default function Main({ values }: { values?: Data }) {
                     name={InternShipName}
                     initData={InternInitData}
                     Elem={InternShipElem}
+                    onDeleteElem={InternOnDelete}
                 />
             </Container>
             <Container
-                hiddenState={sectionHiddenState[ExtraActivitesName].hiddenState}
-                order={sectionHiddenState[ExtraActivitesName].order}
+                hiddenState={
+                    sectionHiddenState[ExtraActivitiesName].hiddenState
+                }
+                order={sectionHiddenState[ExtraActivitiesName].order}
             >
                 <InfoGetter
                     setDelete={() =>
                         dispatchSection({
-                            name: ExtraActivitesName,
+                            name: ExtraActivitiesName,
                             type: "HIDE",
                         })
                     }
                     formRegister={
                         form as unknown as UseFormReturn<
                             GeneratorData<
-                                ExtraActivitesDataType,
-                                ExtraActivitesNameType
+                                ExtraActivitiesDataType,
+                                ExtraActivitiesNameType
                             >
                         >
                     }
                     addButtonLabel="Add one more activity"
-                    name={ExtraActivitesName}
-                    initData={ExtraActivitesInitData}
-                    Elem={ExtraActivitesElem}
+                    name={ExtraActivitiesName}
+                    initData={ExtraActivitiesInitData}
+                    Elem={ExtraActivitiesElem}
                 />
             </Container>
             <Container

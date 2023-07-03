@@ -8,7 +8,7 @@ import { Control, useController } from "react-hook-form";
 import LoadingPanner from "./loading/loading";
 import { DeleteFile as OrgDeleteFile } from "@src/utils";
 import { useDeleteDialog } from "./confirmAction";
-import DeleteSnackBar from "@src/components/main/sections/InsertCommonData/deleteAlert";
+import DeleteSnackBar from "@src/components/common/deleteAlert";
 interface Props {
     name: string;
     label: string;
@@ -152,7 +152,8 @@ function UploadButton({ label, defaultValue, name, imageId, control }: Props) {
                 undo={function () {
                     throw new Error("Function not implemented.");
                 }}
-                error={error}
+                message={`Error happened:${error}`}
+                error={true}
             />
         </>
     );

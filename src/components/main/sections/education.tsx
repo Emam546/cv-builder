@@ -30,7 +30,9 @@ export interface InputData {
     desc: string;
     images: ImageInputData[];
 }
-
+export const onDelete: (val: InputData) => Promise<void> = async (val) => {
+    await Promise.all(val.images.map(ImageOnDelete));
+};
 export function CreateItem(Name: NameRules) {
     return React.forwardRef(({ index: i, props: { form }, ...props }, ref) => {
         const { register, control } = form;
@@ -84,11 +86,9 @@ export function CreateItem(Name: NameRules) {
                         labelEnd="Currently Work here."
                     />
                 </Grid2Container>
-                <WrapElem
-                    label={"Images"}
-                    className="my-4"
-                >
+                <div className="my-4">
                     <InfoGetter
+                        label={"Images"}
                         formRegister={form as any}
                         name={ImagePath}
                         Elem={ImageListItem}
@@ -96,7 +96,7 @@ export function CreateItem(Name: NameRules) {
                         initData={ImageInitData}
                         onDeleteElem={ImageOnDelete}
                     />
-                </WrapElem>
+                </div>
                 <WrapElem
                     label={"Description"}
                     className="my-4"

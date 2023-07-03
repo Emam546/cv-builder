@@ -129,18 +129,16 @@ export const FElem: ElemType<InputData> = React.forwardRef(
                         {...register(`${Name}.data.${i}.label`)}
                     />
                 </Grid2Container>
-                <WrapElem
-                    label={"Skills"}
-                    className="my-4"
-                >
+                <div className="my-4">
                     <InfoGetter
+                        label={"Skills"}
                         formRegister={form as any}
                         name={skillPath}
                         Elem={ListElem}
                         initData={EleInitData}
                         addButtonLabel={"Add one more skill"}
                     />
-                </WrapElem>
+                </div>
             </Elem>
         );
     }
