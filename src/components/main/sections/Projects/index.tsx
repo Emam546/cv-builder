@@ -1,7 +1,7 @@
 import React from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
-import { UseFormReturn, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput, {
     OptionsInput,
@@ -277,10 +277,8 @@ export const onDuplicateElem = async (
     path: string
 ): Promise<EleInputData> => {
     const newValue = Duplicate(value);
-    newValue.images = await Promise.all(
-        newValue.images.map((val) =>
-            ImageOnDuplicate(val, `${path}.${value.id}.images`)
-        )
+    newValue.images = newValue.images.map((val) =>
+        Duplicate({ ...val, image: "" })
     );
     return newValue;
 };
@@ -321,6 +319,7 @@ const ProjectElem: ElemType<InputData> = React.forwardRef(
                         label="Projects"
                         onDeleteElem={onDeleteElem}
                         formRegister={form as any}
+                        onDuplicateElem={onDuplicateElem}
                     />
                 </div>
             </Elem>
@@ -332,10 +331,21 @@ export const onDuplicate = async (
     value: InputData,
     path: string
 ): Promise<InputData> => {
-    const newValue = Duplicate(value);
-    newValue.data = await Promise.all(
-        newValue.data.map((val) => onDuplicateElem(val, `${path}.${newValue.id}.data`))
+    const MainValue = Duplicate(value);
+    MainValue.data = await Promise.all(
+        MainValue.data.map(async (value) => {
+            const newValue = Duplicate(value);
+            newValue.images = await Promise.all(
+                newValue.images.map((val) =>
+                    ImageOnDuplicate(
+                        val,
+                        `${path}.${MainValue.id}.data.${value.id}.images`
+                    )
+                )
+            );
+            return newValue;
+        })
     );
-    return newValue;
+    return MainValue;
 };
 export default ProjectElem;
