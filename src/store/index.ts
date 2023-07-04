@@ -1,7 +1,4 @@
-import {
-    combineReducers,
-    configureStore
-} from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 import { FormSlice } from "./form";

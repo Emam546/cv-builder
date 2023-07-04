@@ -34,7 +34,6 @@ app.use(
 app.use(passport.initialize());
 // app.use(passport.session());
 
-
 // Security
 if (EnvVars.nodeEnv === NodeEnvs.Production) {
     app.use(
@@ -64,7 +63,7 @@ app.use(
         if (err instanceof RouteError) {
             status = err.status;
         }
-        return res.status(status).json({ msg: err.message });
+        return res.status(status).json({ status: false, msg: err.message });
     }
 );
 

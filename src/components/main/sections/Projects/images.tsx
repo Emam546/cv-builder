@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageCropper from "@src/components/common/Img_cropper";
 import classNames from "classnames";
 import React, { useState, Dispatch } from "react";
-
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { Control, useController, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";

@@ -38,12 +38,11 @@ if (EnvVars.nodeEnv == NodeEnvs.Production) {
                 db: EnvVars.MONGODB_URL,
                 dbName: "Resume_logs",
                 collection: "logs",
-                // format: format.metadata(),
             }),
         ],
         format: format.combine(
-            format.metadata(),
             format.json(),
+            format.metadata(),
             format.timestamp(),
             format.errors({ stack: true })
         ),
