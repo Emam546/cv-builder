@@ -45,6 +45,7 @@ export default function MainInfoGetter<T extends PSchema>({
 }: Props<T>) {
     const { setValue, getValues } = formRegister;
     const [EleData, setEleData] = useState(getValues(keys.data));
+    const [process, setProcess] = useState(false);
     const [open, setOpen] = useState(false);
     const lastData = useRef<[T, number]>();
     const [loadingElem, setLoadingElem] = useState(false);
@@ -125,6 +126,7 @@ export default function MainInfoGetter<T extends PSchema>({
                                 const val = allData.find(({ id }) => xid == id);
                                 if (!val) throw new Error("undefined instance");
                                 setLoadingElem(true);
+                                setProcess(true);
                                 setMessage("Duplicating element");
                                 onDuplicateElem(val, keys.data)
                                     .then((data) => {
@@ -140,6 +142,7 @@ export default function MainInfoGetter<T extends PSchema>({
                                     })
                                     .finally(() => {
                                         setLoadingElem(false);
+                                        setProcess(false);
                                     });
                             })
                         }
@@ -179,7 +182,7 @@ export default function MainInfoGetter<T extends PSchema>({
 
             <DeleteAlert
                 deps={[lastData.current]}
-                open={open}
+                open={open || process}
                 message={
                     errDeleting ? `Error happened:${errDeleting}` : message
                 }

@@ -47,11 +47,19 @@ export default function DeleteAlert({
                     ) : undefined
                 }
                 onClose={error ? setClose : undefined}
+                className="flex items-center"
             >
-                <span>{message}</span>
-                {loading && (
-                    <CircularProgress className="max-w-[1.2rem] max-h-[1.2rem] inline-block" />
-                )}
+                <div className="flex items-center">
+                    <span>{message}</span>
+                    {loading && (
+                        <div className="flex items-center ml-5 overflow-hidden max-w-[2rem] max-h-[2rem]">
+                            <CircularProgress
+                                color="inherit"
+                                className=" text-neutral-5 max-w-[1.3rem] max-h-[1.3rem]"
+                            />
+                        </div>
+                    )}
+                </div>
             </Alert>
         </Snackbar>
     );
