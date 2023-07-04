@@ -112,7 +112,7 @@ export default function MainInfoGetter<T extends PSchema>({
                             id: val.id,
                         }))}
                         onResort={(indexes) => {
-                            const allData = getValues(`${name}`);
+                            const allData = getValues(keys.data);
                             const data = indexes
                                 .map((i) => allData[i])
                                 .filter((val) => val);
