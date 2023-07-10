@@ -76,7 +76,7 @@ router
                 status: false,
                 msg: "you has no access",
             });
-        await DeleteFile(fileName);
+        await DeleteFile(fileName, req.user._id);
         res.status(200).json({
             status: true,
             msg: "file deleted successfully",

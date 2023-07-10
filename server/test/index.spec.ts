@@ -90,33 +90,40 @@ describe("Main tests", () => {
                         fs.existsSync(path.join("./public", res.body.data.url))
                     ).true;
                 } else {
-                    try {
-                        const res = await axios.get(url);
-                        expect(res.status).lessThan(300);
-                    } catch (err) {
-                        expect(err).undefined;
-                    }
+                    const res = await axios.get(url, {
+                        validateStatus(status) {
+                            return true;
+                        },
+                    });
+                    expect(res.status).lessThan(300);
                 }
             }, 30000);
             it("delete image", async () => {
-                const post = request
+                const res = await request
                     .delete("/api/v1/images")
                     .send({
                         name: url,
                     })
                     .set("Authorization", `Bearer ${token}`)
                     .expect(200);
-                const res = await post.expect(200);
                 expect(res.body.status).true;
                 if (EnvVars.APPLY_LOCAL) {
                     expect(fs.existsSync(path.join("./public", url))).false;
                 } else {
-                    try {
-                        const res = await axios.get(url);
-                        expect(res.status).not.lessThan(400);
-                    } catch (err) {
-                        expect(err).not.undefined;
-                    }
+                    await new Promise((resH) => {
+                        setTimeout(() => {
+                            axios
+                                .get(url, {
+                                    validateStatus(status) {
+                                        return true;
+                                    },
+                                })
+                                .then((res) => {
+                                    expect(res.status).not.eq(200);
+                                    resH(null);
+                                });
+                        }, 3000);
+                    });
                 }
             });
         });
