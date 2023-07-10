@@ -15,16 +15,17 @@ interface Props {
     defaultValue?: string;
     pdfId: string;
 }
+const UploadUrl = "/api/v1/images";
 const DeleteUrl = "/api/v1/images";
 export const onDelete: (val: string) => Promise<void> = (val) => {
     return DeleteFile(DeleteUrl, val);
 };
 function UploadPDF({ label, defaultValue, name, control, pdfId }: Props) {
-    const UploadFile = useUploadFile(DeleteUrl, pdfId);
+    const UploadFile = useUploadFile(UploadUrl, pdfId);
     const { field } = useController({ control, name, defaultValue });
     const [loading, setLoading] = useState(false);
     const orgUrl = field.value;
-    const DeleteFile = useDeleteFile("/api/v1/images", orgUrl);
+    const DeleteFile = useDeleteFile(DeleteUrl, orgUrl);
     const [err, setError] = useState<string>();
     const [Dialog, stateAccept] = useDeleteDialog({
         title: "Are you sure the you want to delete this file",

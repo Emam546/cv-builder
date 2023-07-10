@@ -11,6 +11,7 @@ import path from "path";
 import fs from "fs";
 import mongoose from "mongoose";
 import { convertSection2Data } from "@src/components/main/utils";
+import axios from "axios";
 const request = supertest(server);
 function readFile(p: string) {
     return path.join(__dirname, p);
@@ -74,7 +75,6 @@ describe("Main tests", () => {
         });
         describe("/images", () => {
             let url: string;
-            console.log(EnvVars.APPLY_LOCAL);
             it("upload image", async () => {
                 const post = request
                     .post("/api/v1/images")
@@ -86,10 +86,16 @@ describe("Main tests", () => {
                 expect(res.body.data.url).not.undefined;
                 url = res.body.data.url;
                 if (EnvVars.APPLY_LOCAL) {
-                    
                     expect(
                         fs.existsSync(path.join("./public", res.body.data.url))
                     ).true;
+                } else {
+                    try {
+                        const res = await axios.get(url);
+                        expect(res.status).lessThan(300);
+                    } catch (err) {
+                        expect(err).undefined;
+                    }
                 }
             }, 30000);
             it("delete image", async () => {
@@ -98,11 +104,19 @@ describe("Main tests", () => {
                     .send({
                         name: url,
                     })
-                    .set("Authorization", `Bearer ${token}`);
+                    .set("Authorization", `Bearer ${token}`)
+                    .expect(200);
                 const res = await post.expect(200);
                 expect(res.body.status).true;
                 if (EnvVars.APPLY_LOCAL) {
-                    expect(!fs.existsSync(path.join("./public", url))).true;
+                    expect(fs.existsSync(path.join("./public", url))).false;
+                } else {
+                    try {
+                        const res = await axios.get(url);
+                        expect(res.status).not.lessThan(400);
+                    } catch (err) {
+                        expect(err).not.undefined;
+                    }
                 }
             });
         });

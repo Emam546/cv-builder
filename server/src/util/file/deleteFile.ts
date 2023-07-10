@@ -15,5 +15,5 @@ export async function DeleteLocalImage(name: string) {
 export async function DeleteFile(fileName: string) {
     if (!EnvVars.APPLY_LOCAL) {
         await DeleteCloudinary(fileName);
-    } else DeleteLocalImage(fileName);
+    } else await DeleteLocalImage(fileName);
 }

@@ -32,7 +32,7 @@ export default {
         APP_ID: process.env.GOOGLE_APP_ID ?? "",
         APP_SECRET: process.env.GOOGLE_APP_SECRET ?? "",
     },
-    APPLY_LOCAL: process.env.APPLY_LOCAL,
+    APPLY_LOCAL: process.env.APPLY_LOCAL == "true",
     cloudinary: {
         cloud_name: process.env.cloudinary_cloud_name ?? "",
         api_key: process.env.cloudinary_api_key ?? "",
