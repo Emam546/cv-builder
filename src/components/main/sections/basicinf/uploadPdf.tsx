@@ -6,6 +6,7 @@ import { DeleteFile, checkFile } from "@src/utils";
 import { useDeleteFile, useUploadFile } from "@src/utils/hooks";
 import { useEffect, useState } from "react";
 import { Control, useController } from "react-hook-form";
+import { fileToBlob } from "../../utils";
 
 interface Props {
     name: string;
@@ -51,23 +52,21 @@ function UploadPDF({ label, defaultValue, name, control, pdfId }: Props) {
                         <input
                             type="file"
                             onChange={(e) => {
-                                const files = e.target.files;
+                                const files = e.target.files!;
                                 checkFile(e)
                                     .then((values) => {
-                                        UploadFile(
-                                            new Blob([values[0]], {
-                                                type: files![0].type,
-                                            })
-                                        )
-                                            .then((url) => {
-                                                field.onChange(url);
-                                            })
-                                            .catch((err) => {
-                                                setError(err.message);
-                                            })
-                                            .finally(() => {
-                                                setLoading(false);
-                                            });
+                                        fileToBlob(files[0]).then((blob) => {
+                                            UploadFile(blob)
+                                                .then((url) => {
+                                                    field.onChange(url);
+                                                })
+                                                .catch((err) => {
+                                                    setError(err.message);
+                                                })
+                                                .finally(() => {
+                                                    setLoading(false);
+                                                });
+                                        });
                                     })
                                     .catch((err) => {
                                         setError(err.message);

@@ -19,4 +19,17 @@ export function convertSection2Data(
     });
     return Sections;
 }
+export function fileToBlob(file: File) {
+    return new Promise<Blob>((resolve, reject) => {
+        const reader = new FileReader();
 
+        reader.onloadend = () => {
+            const blob = new Blob([reader.result!], { type: file.type });
+            resolve(blob);
+        };
+
+        reader.onerror = reject;
+
+        reader.readAsArrayBuffer(file);
+    });
+}

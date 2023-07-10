@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
 import ElemGenerator, { ElemType, PSchema } from "./EleGen";
-import { Duplicate } from "./utils";
 import DeleteAlert from "@src/components/common/deleteAlert";
 export type NameRules = `${string}.data` | string;
 export interface ListProps<FormData extends FieldValues> extends PSchema {
