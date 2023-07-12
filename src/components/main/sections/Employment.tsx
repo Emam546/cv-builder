@@ -100,10 +100,12 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
             >
                 <Grid2Container>
                     <NormalInput
+                        control={control}
                         label="Job Title"
                         {...register(`${Name}.data.${i}.jobTitle`)}
                     />
                     <NormalInput
+                        control={control}
                         label="Employer"
                         {...register(`${Name}.data.${i}.employer`)}
                     />
@@ -122,10 +124,12 @@ const EmployElem: ElemType<InputData> = React.forwardRef(
                         labelEnd="Currently Work here."
                     />
                     <NormalInput
+                        control={control}
                         label="City"
                         {...register(`${Name}.data.${i}.city`)}
                     />
                     <NormalInput
+                        control={control}
                         label="Team Size"
                         {...register(`${Name}.data.${i}.teamSize`, {
                             valueAsNumber: true,

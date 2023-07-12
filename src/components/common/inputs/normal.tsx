@@ -14,12 +14,14 @@ import { Control, useController } from "react-hook-form";
 export interface PropsWithOutOptions
     extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
+    control: Control<any>;
+    name: string;
 }
 export interface PropsWithOptions
     extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
     options: string[];
-    control: Control;
+    control: Control<any>;
     name: string;
 }
 function DropDownComp({
@@ -109,9 +111,9 @@ function DropDownComp({
     );
 }
 const NormalInput = React.forwardRef<HTMLInputElement, PropsWithOutOptions>(
-    ({ label, ...props }, ref) => {
+    ({ label, control, ...props }, ref) => {
         const containerRef = useRef<HTMLDivElement>(null);
-
+        const { field } = useController({ name: props.name, control });
         return (
             <LabelElem
                 ref={containerRef}
@@ -123,6 +125,7 @@ const NormalInput = React.forwardRef<HTMLInputElement, PropsWithOutOptions>(
                             {...props}
                             autoComplete="off"
                             ref={ref}
+                            value={field.value}
                         />
                     </BottomLine>
                 </div>

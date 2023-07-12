@@ -17,7 +17,7 @@ export interface Props {
     email?: string;
 }
 export default function UploadAction({ values }: { values: Props }) {
-    const { register, handleSubmit, formState, clearErrors } = useForm<Props>({
+    const { register, handleSubmit, formState, clearErrors,control } = useForm<Props>({
         values,
     });
     return (
@@ -33,16 +33,22 @@ export default function UploadAction({ values }: { values: Props }) {
             >
                 <Grid2Container className="md:gap-x-10 md:gap-y-6">
                     <NormalInput
+                        control={control}
+
                         label="First Name"
                         required
                         {...register("firstName", { required: true })}
                     />
                     <NormalInput
+                        control={control}
+
                         label="Last Name"
                         required
                         {...register("lastName", { required: true })}
                     />
                     <NormalInput
+                        control={control}
+
                         label="Email"
                         type="email"
                         required

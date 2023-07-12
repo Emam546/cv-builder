@@ -2,7 +2,9 @@ import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import React from "react";
 import { UseFormReturn, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
-import NormalInput, { OptionsInput } from "@src/components/common/inputs/normal";
+import NormalInput, {
+    OptionsInput,
+} from "@src/components/common/inputs/normal";
 import {
     Name as TeamName,
     InputData as TeamInputData,
@@ -68,6 +70,7 @@ export const ListElem = React.forwardRef(
                 <div className="mb-2">
                     <Grid2Container>
                         <NormalInput
+                            control={control}
                             label="Index"
                             {...register(`${Name}.${i}.index`, {
                                 valueAsNumber: true,
@@ -76,7 +79,7 @@ export const ListElem = React.forwardRef(
                         <OptionsInput
                             options={[mateJobTitle]}
                             label="Role"
-                            control={control as any}
+                            control={control}
                             {...register(`${Name}.${i}.role`)}
                         />
                     </Grid2Container>

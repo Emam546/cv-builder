@@ -5,7 +5,7 @@ import { LabelElem } from "@src/components/common/inputs/styles";
 import style from "./style.module.scss";
 interface Props {
     name: string;
-    control: Control;
+    control: Control<any>;
     label?: string;
 }
 const PhoneNumber = React.forwardRef<HTMLInputElement, Props>(

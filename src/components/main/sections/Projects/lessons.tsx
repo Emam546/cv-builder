@@ -57,6 +57,7 @@ export const ListItem = React.forwardRef(
                 <div className="mb-2">
                     <Grid2Container>
                         <NormalInput
+                            control={control}
                             label="Title"
                             {...register(`${Name}.${i}.title`)}
                         />

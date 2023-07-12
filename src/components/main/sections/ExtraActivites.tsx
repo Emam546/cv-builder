@@ -69,10 +69,12 @@ const ExtraActivites: ElemType<InputData> = React.forwardRef(
             >
                 <Grid2Container>
                     <NormalInput
+                        control={control}
                         label="Function Title"
                         {...register(`${Name}.data.${i}.title`)}
                     />
                     <NormalInput
+                        control={control}
                         label="Employer"
                         {...register(`${Name}.data.${i}.employer`)}
                     />
@@ -91,6 +93,7 @@ const ExtraActivites: ElemType<InputData> = React.forwardRef(
                         labelEnd="Currently Work here."
                     />
                     <NormalInput
+                        control={control}
                         label="City"
                         {...register(`${Name}.data.${i}.city`)}
                     />

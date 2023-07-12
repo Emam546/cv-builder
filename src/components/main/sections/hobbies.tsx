@@ -30,7 +30,7 @@ export default function Hobbies({
                 reset={() => resetField(`${Name}.head`)}
                 desc="What do you like?"
                 setDelete={setDelete}
-                control={control as any}
+                control={control}
             />
             <TextArea
                 {...register(`${Name}.data`)}

@@ -13,7 +13,7 @@ interface Props {
     name: string;
     label: string;
     imageId: string;
-    control: Control;
+    control: Control<any>;
     defaultValue?: string;
 }
 const DeleteFileUrl = "/api/v1/images";

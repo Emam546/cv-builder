@@ -35,7 +35,7 @@ interface Props {
     aspect: number;
     name: string;
     imageId: string;
-    control: Control;
+    control: Control<any>;
     defaultValue?: string;
 }
 const ImageUploadUrl = "/api/v1/images";
@@ -302,12 +302,14 @@ export const ListItem = React.forwardRef(
                 <div className="mb-2">
                     <Grid2Container>
                         <NormalInput
+                            control={control}
                             label="Width ratio"
                             {...register(`${Name}.${i}.widthRation`, {
                                 valueAsNumber: true,
                             })}
                         />
                         <NormalInput
+                            control={control}
                             label="Height ratio"
                             {...register(`${Name}.${i}.heightRation`, {
                                 valueAsNumber: true,

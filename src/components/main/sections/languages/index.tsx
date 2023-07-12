@@ -80,7 +80,7 @@ const FElem: ElemType<InputData> = React.forwardRef(
                     <Grid2Container>
                         <OptionsInput
                             label="Label"
-                            control={control as any}
+                            control={control}
                             options={LANG}
                             {...register(`${Name}.data.${i}.language`)}
                         />

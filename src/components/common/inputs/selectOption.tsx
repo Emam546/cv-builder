@@ -11,7 +11,7 @@ export interface OptionType {
 }
 export interface Props extends GeneralInputProps<string> {
     label?: string;
-    control: Control;
+    control: Control<any>;
     options: OptionType[];
     name: string;
 }
@@ -44,7 +44,6 @@ const SelectInput = React.forwardRef<HTMLInputElement, Props>(
         },
         ref
     ) => {
-        
         const [expand, setExpand] = useState(false);
         const containerDiv = useRef<HTMLDivElement>(null);
         const { field } = useController({ name, control });

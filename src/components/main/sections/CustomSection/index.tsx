@@ -70,10 +70,12 @@ const ListElem = React.forwardRef(
             >
                 <Grid2Container>
                     <NormalInput
+                        control={control}
                         label="Activity name ,Job title,book title etc"
                         {...register(`${Name}.data.${i}.title`)}
                     />
                     <NormalInput
+                        control={control}
                         label="City"
                         {...register(`${Name}.data.${i}.city`)}
                     />

@@ -13,19 +13,11 @@ import { Control, FieldValues, useController } from "react-hook-form";
 
 interface Props {
     name: string;
-    control: Control<FieldValues>;
+    control: Control<any>;
     defaultValue?: string;
     placeholder?: string;
 }
-function checkIfValueIsConvertible(val: unknown): val is string {
-    try {
-        if (val && typeof val == "string") {
-            convertFromHTML(val);
-            return true;
-        }
-    } catch (err) {}
-    return false;
-}
+
 
 const FinalEditor = React.forwardRef<HTMLInputElement, Props>(
     ({ defaultValue, name, control, placeholder }, ref) => {

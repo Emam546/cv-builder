@@ -35,7 +35,7 @@ function CustomButton({
 }
 export interface Props extends GeneralInputProps<string> {
     reset: Function;
-    control: Control;
+    control: Control<any>;
     setDelete?: Function;
     loading?: boolean;
 }

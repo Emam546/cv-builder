@@ -64,10 +64,12 @@ export function CreateItem(Name: NameRules) {
             >
                 <Grid2Container>
                     <NormalInput
+                        control={control}
                         label="Degree"
                         {...register(`${Name}.${i}.degree`)}
                     />
                     <NormalInput
+                        control={control}
                         label="Collage or Institution"
                         {...register(`${Name}.${i}.institution`)}
                     />

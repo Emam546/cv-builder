@@ -71,6 +71,7 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
             >
                 <Grid2Container>
                     <NormalInput
+                        control={control}
                         label="Full Name"
                         {...register(`${Name}.data.${i}.name`)}
                     />
@@ -90,10 +91,12 @@ const TeamElem: ElemType<InputData> = React.forwardRef(
                         control={control}
                     />
                     <NormalInput
+                        control={control}
                         label="Job Title"
                         {...register(`${Name}.data.${i}.jobTitle`)}
                     />
                     <NormalInput
+                        control={control}
                         label="Email"
                         {...register(`${Name}.data.${i}.email`)}
                     />

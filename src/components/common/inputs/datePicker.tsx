@@ -142,7 +142,7 @@ type CustomInputProps = InputProps & {
     defaultS?: string;
     label?: string;
     applyPresent?: boolean;
-    control: Control;
+    control: Control<any>;
     name: string;
 };
 const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
@@ -236,7 +236,7 @@ type Props = {
     applyPresent?: boolean;
     startData: Omit<CustomInputProps, "control">;
     endData: Omit<CustomInputProps, "control">;
-    control: Control;
+    control: Control<any>;
 };
 export default function DatePicker({
     label,

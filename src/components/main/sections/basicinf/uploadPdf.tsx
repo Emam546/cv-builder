@@ -11,7 +11,7 @@ import { fileToBlob } from "../../utils";
 interface Props {
     name: string;
     label: string;
-    control: Control;
+    control: Control<any>;
     defaultValue?: string;
     pdfId: string;
 }

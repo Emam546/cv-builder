@@ -4,7 +4,9 @@ import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { useWatch } from "react-hook-form";
 import InfoGetter, { ListElemType } from "../InsertCommonData/input";
 import Grid2Container from "@src/components/common/2GridInputHolder";
-import NormalInput, { OptionsInput } from "@src/components/common/inputs/normal";
+import NormalInput, {
+    OptionsInput,
+} from "@src/components/common/inputs/normal";
 import data from "./data.json";
 import LevelInput, { LevelType } from "@src/components/common/inputs/level";
 import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
@@ -76,7 +78,7 @@ export const ListElem = React.forwardRef(
                     <Grid2Container>
                         <OptionsInput
                             label="Skill"
-                            control={control as any}
+                            control={control}
                             options={programmingLangs}
                             {...register(`${Name}.${i}.label`)}
                         />
@@ -125,6 +127,7 @@ export const FElem: ElemType<InputData> = React.forwardRef(
             >
                 <Grid2Container>
                     <NormalInput
+                        control={control}
                         label="Label"
                         {...register(`${Name}.data.${i}.label`)}
                     />

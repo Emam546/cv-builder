@@ -73,10 +73,12 @@ export const MainElem = React.forwardRef(
             >
                 <Grid2Container>
                     <NormalInput
+                        control={control}
                         label="Course"
                         {...register(`${name}.data.${i}.label`)}
                     />
                     <NormalInput
+                        control={control}
                         label="Institution"
                         {...register(`${name}.data.${i}.institution`)}
                     />

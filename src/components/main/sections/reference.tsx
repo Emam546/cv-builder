@@ -53,18 +53,22 @@ const ReferenceElem: ElemType<InputData> = React.forwardRef(
             >
                 <Grid2Container className="pb-4">
                     <NormalInput
+                        control={control}
                         label="Referent's Full Name"
                         {...register(`${Name}.data.${i}.name`)}
                     />
                     <NormalInput
+                        control={control}
                         label="Company"
                         {...register(`${Name}.data.${i}.company`)}
                     />
                     <NormalInput
+                        control={control}
                         label="Phone"
                         {...register(`${Name}.data.${i}.phone`)}
                     />
                     <NormalInput
+                        control={control}
                         label="Email"
                         {...register(`${Name}.data.${i}.email`)}
                     />

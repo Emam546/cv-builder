@@ -49,7 +49,7 @@ export const onDelete: (val: InputData) => Promise<void> = async (val) => {
 };
 const AvailabilityOptions: OptionType[] = data.availabilityOptions;
 type CityInputProps = Omit<Parameters<typeof OptionsInput>[0], "options"> & {
-    control: Control;
+    control: Control<any>;
 };
 const CityInput = React.forwardRef<HTMLInputElement, CityInputProps>(
     ({ control, ...props }, ref) => {
@@ -73,7 +73,7 @@ export default function BasicInfo({
     return (
         <section className="my-4">
             <Header
-                control={control as any}
+                control={control}
                 reset={() => resetField("info.head")}
                 {...register("info.head", {
                     onBlur(e: SyntheticEvent<HTMLInputElement>) {
@@ -86,43 +86,46 @@ export default function BasicInfo({
                     label="Wanted Job Title"
                     placeholder="e.g. Teacher"
                     options={JOP_TITLES}
-                    control={control as any}
+                    control={control}
                     {...register("info.data.jobTitle")}
                 />
                 <UploadButton
                     label="Upload photo"
                     name="info.data.imgUrl"
                     imageId="info.data.imgUrl"
-                    control={control as any}
+                    control={control}
                 />
                 <NormalInput
+                    control={control}
                     label="First Name"
                     {...register("info.data.firstName")}
                 />
                 <NormalInput
+                    control={control}
                     label="Last Name"
                     {...register("info.data.lastName")}
                 />
                 <NormalInput
+                    control={control}
                     label="Email"
                     type="email"
                     {...register("info.data.email")}
                 />
                 <PhoneNumber
                     label="Phone"
-                    control={control as any}
+                    control={control}
                     name="info.data.phone"
                 />
                 <OptionsInput
                     label="Country"
                     options={COUNTRIES}
-                    control={control as any}
+                    control={control}
                     {...register("info.data.country")}
                 />
                 <SelectInput
                     options={AvailabilityOptions}
                     label="Availability"
-                    control={control as any}
+                    control={control}
                     {...register(`info.data.availability`)}
                 />
             </Grid2Container>
@@ -138,25 +141,28 @@ export default function BasicInfo({
                     <Grid2Container>
                         <CityInput
                             label="City"
-                            control={control as any}
+                            control={control}
                             {...register("info.data.city")}
                         />
                         <NormalInput
+                            control={control}
                             label="Address"
                             {...register("info.data.address")}
                         />
                         <NormalInput
+                            control={control}
                             label="Postal Code"
                             {...register("info.data.postalCode")}
                         />
                         <NormalInput
+                            control={control}
                             label="Nationality"
                             {...register("info.data.nationality")}
                         />
                         <UploadPDF
                             pdfId="info.data.cv"
                             label="Upload you Cv"
-                            control={control as any}
+                            control={control}
                             name="info.data.cv"
                         />
                     </Grid2Container>

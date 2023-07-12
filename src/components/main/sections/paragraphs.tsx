@@ -51,13 +51,14 @@ const Professional = React.forwardRef(
             >
                 <Grid2Container>
                     <NormalInput
+                        control={control}
                         label="Title"
                         {...register(`${name}.data.${i}.title`)}
                     />
                 </Grid2Container>
                 <div className="my-4">
                     <FinalEditor
-                        control={control as any}
+                        control={control}
                         {...register(`${name}.data.${i}.desc`)}
                         placeholder="e.g. passionate science teacher with 8+ years of experience and track record of ..."
                     />

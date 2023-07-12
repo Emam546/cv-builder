@@ -19,7 +19,7 @@ interface PropsForm {
     message: string;
 }
 export default function Contact() {
-    const { register, handleSubmit, formState } = useForm<PropsForm>();
+    const { register, handleSubmit, formState, control } = useForm<PropsForm>();
     const [sent, setSent] = useState(false);
     useEffect(() => {
         if (!sent) return;
@@ -61,12 +61,14 @@ export default function Contact() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-7 gap-y-4">
                             <div className="space-y-6">
                                 <NormalInput
+                                    control={control}
                                     label="Email"
                                     type="email"
                                     required
                                     {...register("message", { required: true })}
                                 />
                                 <NormalInput
+                                    control={control}
                                     label="Subject"
                                     {...register("subject", { required: true })}
                                 />

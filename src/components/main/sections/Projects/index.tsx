@@ -107,8 +107,8 @@ function KindsInput({
     });
     const kinds = allData
         .map((val) => val.kind)
-        .filter((value, index, self) => {
-            return self.indexOf(value) === index;
+        .filter((_, index) => {
+            return index != i;
         });
 
     return (
@@ -153,6 +153,7 @@ const MiniProjectElem = React.forwardRef(
             >
                 <Grid2Container>
                     <NormalInput
+                        control={control}
                         label="Project Name"
                         {...register(`${EleName}.${i}.name`)}
                     />
@@ -185,6 +186,7 @@ const MiniProjectElem = React.forwardRef(
                         </div>
                     </WrapElem>
                     <NormalInput
+                        control={control}
                         label="Team Size"
                         {...register(`${EleName}.${i}.teamSize`, {
                             valueAsNumber: true,
@@ -307,6 +309,7 @@ const ProjectElem: ElemType<InputData> = React.forwardRef(
                 ref={ref}
             >
                 <NormalInput
+                    control={control}
                     label="Project Name"
                     {...register(`${Name}.data.${i}.label`)}
                 />
