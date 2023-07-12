@@ -65,18 +65,18 @@ router
     )
     .delete(async (req, res) => {
         assertIsAuth(req);
-        const fileName = req.body.name;
-        if (typeof fileName != "string")
+        const url = req.body.name;
+        if (typeof url != "string")
             return res.status(401).json({
                 status: false,
                 msg: "filename is not exist",
             });
-        if (!fileName.includes(req.user._id))
+        if (!url.includes(req.user._id))
             return res.status(401).json({
                 status: false,
                 msg: "you has no access",
             });
-        await DeleteFile(fileName, req.user._id);
+        await DeleteFile(url, req.user._id);
         res.status(200).json({
             status: true,
             msg: "file deleted successfully",

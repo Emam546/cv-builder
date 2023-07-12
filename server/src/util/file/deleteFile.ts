@@ -3,19 +3,23 @@ import { v2 as cloudinary } from "cloudinary";
 import fs from "fs/promises";
 import path from "path";
 import { exist } from "./utils";
+import { RouteError } from "@serv/declarations/classes";
 function getPublicIdFromUrl(publicUrl: string) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const publicId = publicUrl.split("/").pop()!.split(".")[0];
     return publicId;
 }
 export async function DeleteCloudinary(public_id: string, userId: string) {
-    await cloudinary.uploader.destroy(
-        userId + "/" + getPublicIdFromUrl(public_id),
-        {
-            invalidate: true,
-            type: "upload",
-        }
-    );
+    const publicId = userId + "/" + getPublicIdFromUrl(public_id);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const result = await cloudinary.uploader.destroy(publicId, {
+        invalidate: true,
+        type: "upload",
+    });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (result.result != "ok")
+        throw new RouteError(404, "The image is not exist");
 }
 export async function DeleteLocalImage(name: string, userId: string) {
     const publicId = getPublicIdFromUrl(name);
