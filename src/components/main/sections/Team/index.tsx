@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
 import { useWatch } from "react-hook-form";
@@ -12,7 +12,7 @@ import {
     InitData as LinkInitData,
 } from "../links";
 import InfoGetter from "@src/components/main/sections/InsertCommonData/input";
-import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
+import { WrapElem } from "@src/components/common/inputs/styles";
 import lodash from "lodash";
 import { uuid } from "@src/utils";
 import { getPath } from "../InsertCommonData/utils";

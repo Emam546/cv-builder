@@ -90,116 +90,98 @@ export const UploadButton = React.forwardRef<HTMLInputElement, Props>(
                         </div>
                     )}
                     {orgImg && !loading && (
-                        <>
-                            <div className="cursor-pointer">
-                                <div
-                                    style={{
-                                        aspectRatio: aspect,
-                                        backgroundImage: `url('${orgImg}')`,
-                                    }}
-                                    className={classNames(
-                                        "mx-auto bg-cover bg-center bg-neutral-10 max-w-full max-h-[20rem] group-hover:bg-blue-10  flex items-center justify-center",
-                                        "group relative after:content-[''] after:w-full after:h-full after:absolute hover:after:opacity-60 after:opacity-0 after:bg-neutral-100 after:top-0 after:left-0 after:transition-all after:duration-400"
-                                    )}
-                                >
-                                    <div className="text-center relative z-10 hidden group-hover:block">
-                                        <div className="font-medium">
-                                            <button
-                                                type="button"
-                                                className="block text-blue-40 hover:text-blue-50 cursor-pointer"
-                                                onClick={(e) => setEdit(true)}
-                                                aria-label="edit"
-                                            >
-                                                <FontAwesomeIcon icon={faPen} />
-                                                <span className="px-3">
-                                                    Edit photo
-                                                </span>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="block text-neutral-20 hover:text-red-40 mt-1 cursor-pointer"
-                                                onClick={(e) => {
-                                                    stateAccept.accept(() => {
-                                                        return new Promise(
-                                                            (res) => {
-                                                                DeleteFile()
-                                                                    .then(
-                                                                        () => {
-                                                                            setValue(
-                                                                                ""
-                                                                            );
-                                                                            setBlob(
-                                                                                undefined
-                                                                            );
-                                                                        }
-                                                                    )
-                                                                    .catch(
-                                                                        (
-                                                                            err
-                                                                        ) => {
-                                                                            setErr(
-                                                                                err.message
-                                                                            );
-                                                                        }
-                                                                    )
-                                                                    .finally(
-                                                                        () => {
-                                                                            setLoading(
-                                                                                false
-                                                                            );
-                                                                            res(
-                                                                                null
-                                                                            );
-                                                                        }
+                        <div className="cursor-pointer">
+                            <div
+                                style={{
+                                    aspectRatio: aspect,
+                                    backgroundImage: `url('${orgImg}')`,
+                                }}
+                                className={classNames(
+                                    "mx-auto bg-cover bg-center bg-neutral-10 max-w-full max-h-[20rem] group-hover:bg-blue-10  flex items-center justify-center",
+                                    "group relative after:content-[''] after:w-full after:h-full after:absolute hover:after:opacity-60 after:opacity-0 after:bg-neutral-100 after:top-0 after:left-0 after:transition-all after:duration-400"
+                                )}
+                            >
+                                <div className="text-center relative z-10 hidden group-hover:block">
+                                    <div className="font-medium">
+                                        <button
+                                            type="button"
+                                            className="block text-blue-40 hover:text-blue-50 cursor-pointer"
+                                            onClick={(e) => setEdit(true)}
+                                            aria-label="edit"
+                                        >
+                                            <FontAwesomeIcon icon={faPen} />
+                                            <span className="px-3">
+                                                Edit photo
+                                            </span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="block text-neutral-20 hover:text-red-40 mt-1 cursor-pointer"
+                                            onClick={(e) => {
+                                                stateAccept.accept(() => {
+                                                    return new Promise(
+                                                        (res) => {
+                                                            DeleteFile()
+                                                                .then(() => {
+                                                                    setValue(
+                                                                        ""
                                                                     );
-                                                                setLoading(
-                                                                    true
-                                                                );
-                                                            }
-                                                        );
-                                                    });
-                                                }}
-                                                aria-label="delete"
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon={faTrash}
-                                                />
-                                                <span className="px-3">
-                                                    Delete
-                                                </span>
-                                            </button>
-                                        </div>
+                                                                    setBlob(
+                                                                        undefined
+                                                                    );
+                                                                })
+                                                                .catch(
+                                                                    (err) => {
+                                                                        setErr(
+                                                                            err.message
+                                                                        );
+                                                                    }
+                                                                )
+                                                                .finally(() => {
+                                                                    setLoading(
+                                                                        false
+                                                                    );
+                                                                    res(null);
+                                                                });
+                                                            setLoading(true);
+                                                        }
+                                                    );
+                                                });
+                                            }}
+                                            aria-label="delete"
+                                        >
+                                            <FontAwesomeIcon icon={faTrash} />
+                                            <span className="px-3">Delete</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </>
+                        </div>
                     )}
                     {loading && (
-                        <>
+                        <div
+                            onClick={() => {
+                                setEdit(true);
+                            }}
+                            className="cursor-pointer"
+                        >
                             <div
-                                onClick={() => {
-                                    setEdit(true);
+                                style={{
+                                    aspectRatio: aspect,
+                                    backgroundImage: `url('${orgImg}')`,
                                 }}
-                                className="cursor-pointer"
+                                className={classNames(
+                                    "mx-auto bg-cover bg-center bg-neutral-10 max-w-full max-h-[20rem] group-hover:bg-blue-10  flex items-center justify-center",
+                                    "group relative after:content-[''] after:w-full after:h-full after:absolute after:opacity-60 after:bg-neutral-100 after:top-0 after:left-0 after:transition-all after:duration-400"
+                                )}
                             >
-                                <div
-                                    style={{
-                                        aspectRatio: aspect,
-                                        backgroundImage: `url('${orgImg}')`,
-                                    }}
-                                    className={classNames(
-                                        "mx-auto bg-cover bg-center bg-neutral-10 max-w-full max-h-[20rem] group-hover:bg-blue-10  flex items-center justify-center",
-                                        "group relative after:content-[''] after:w-full after:h-full after:absolute after:opacity-60 after:bg-neutral-100 after:top-0 after:left-0 after:transition-all after:duration-400"
-                                    )}
-                                >
-                                    <div className="text-center relative z-10">
-                                        <div className="font-medium">
-                                            <LoadingPanner />
-                                        </div>
+                                <div className="text-center relative z-10">
+                                    <div className="font-medium">
+                                        <LoadingPanner />
                                     </div>
                                 </div>
                             </div>
-                        </>
+                        </div>
                     )}
                     <div
                         className={classNames({

@@ -14,6 +14,7 @@ import { decode } from "@serv/util/jwt";
 import UploadDataEle from "@src/components/upload";
 import LoginModel from "@src/components/loginModel";
 import ApiViewer from "@src/components/apiViewer";
+import InterFaceCode from "@src/components/showResult/interface";
 export type SectionsEnabled = {
     [k in keyof UserData]?: boolean;
 };
@@ -35,6 +36,7 @@ const Home: NextPage<Props> = function ({ values, isSigned }) {
                 <div className="px-1">
                     <Main values={values?.sections}></Main>
                     <ShowResult />
+                    <InterFaceCode />
                     <ApiViewer />
                     {!state && <Login />}
                     <AddSection />

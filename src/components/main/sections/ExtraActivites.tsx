@@ -8,8 +8,8 @@ import DatePicker from "@src/components/common/inputs/datePicker";
 import FinalEditor from "@src/components/common/inputs/Editor";
 import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import { uuid } from "@src/utils";
-export type NameType = "extraActivites";
-export const Name: NameType = "extraActivites";
+export type NameType = "extraActivities";
+export const Name: NameType = "extraActivities";
 export interface InputData {
     id: string;
     title: string;
