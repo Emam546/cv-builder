@@ -20,8 +20,9 @@ export default function UserComponent() {
     useEffect(() => {
         if (!container.current) return;
         function Listener(ev: MouseEvent) {
+            if (!container.current) return;
             assertIsNode(ev.target);
-            const state = container.current!.contains(ev.target);
+            const state = container.current.contains(ev.target);
             if (!state) setExpand(false);
         }
         window.addEventListener("click", Listener);
