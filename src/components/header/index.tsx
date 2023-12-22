@@ -27,11 +27,11 @@ export default function Header() {
                 <div className="relative flex flex-wrap justify-between items-center">
                     <Link
                         href="/"
-                        className="flex items-center"
+                        className="flex items-center gap-x-3"
                     >
                         <img
                             src="./logo.png"
-                            className="mr-3 h-7 sm:h-9 aspect-square"
+                            className="h-7 sm:h-9 aspect-square"
                             alt="ResumeMaker Logo"
                         />
                         <span className="self-center text-xl font-semibold whitespace-nowrap">
