@@ -16,6 +16,7 @@ const interfaceCode = `interface Data {
             nationality: string;
             phone: string;
             placeOfBirth: string;
+            dateOfBirth: string;
             postalCode: string;
             availability: string;
             cv: string;
