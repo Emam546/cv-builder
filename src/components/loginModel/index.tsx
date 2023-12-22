@@ -5,6 +5,7 @@ import Login from "../login";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
+import { ButtonToolTip } from "../common/buttonToolTip";
 export const LoginModelSlice = createSlice({
     initialState: false,
     name: "loginModel",

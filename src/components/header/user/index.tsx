@@ -1,5 +1,6 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ButtonToolTip } from "@src/components/common/buttonToolTip";
 import { useAppSelector } from "@src/store";
 import { assertIsNode } from "@src/utils";
 import classNames from "classnames";
@@ -38,7 +39,8 @@ export default function UserComponent() {
                 ref={container}
                 className="cursor-pointer relative"
             >
-                <button
+                <ButtonToolTip
+                    toolTip="Upload"
                     className={classNames(
                         "w-10 aspect-square overflow-hidden rounded-[50%] bg-neutral-10 flex items-center justify-center",
                         "hover:border border-blue-60 border-solid",
@@ -66,7 +68,7 @@ export default function UserComponent() {
                             className="w-full"
                         />
                     )}
-                </button>
+                </ButtonToolTip>
                 <div
                     className={classNames(
                         "absolute min-h-0 bg-white z-[60] shadow-xl rounded-lg transition-[max-height,max-width] overflow-hidden duration-500 top-full right-0",

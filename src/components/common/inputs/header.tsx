@@ -12,13 +12,14 @@ import { assertIsNode } from "@src/utils";
 import { GeneralInputProps } from "./styles";
 import { Control, useController } from "react-hook-form";
 import { CircularProgress } from "@mui/material";
+import { ButtonToolTip, Props as ButtonToolTipProps } from "../buttonToolTip";
 
 function CustomButton({
     editable,
     ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { editable: boolean }) {
+}: ButtonToolTipProps & { editable: boolean }) {
     return (
-        <button
+        <ButtonToolTip
             type="button"
             {...props}
             className={classNames(
@@ -30,7 +31,7 @@ function CustomButton({
             )}
         >
             {props.children}
-        </button>
+        </ButtonToolTip>
     );
 }
 export interface Props extends GeneralInputProps<string> {
@@ -124,6 +125,7 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                         input.current!.focus();
                     }}
                     aria-label="edit header"
+                    toolTip="edit"
                 >
                     <FontAwesomeIcon icon={faPen} />
                 </CustomButton>
@@ -134,6 +136,7 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                         onClick={() => reset()}
                         className="font-bold"
                         aria-label="reset header"
+                        toolTip="reset"
                     >
                         <FontAwesomeIcon icon={faRotateRight} />
                     </CustomButton>
@@ -145,6 +148,7 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                         onClick={() => setDelete()}
                         className="font-bold"
                         aria-label="delete section"
+                        toolTip="delete section"
                     >
                         <FontAwesomeIcon icon={faTrash} />
                     </CustomButton>

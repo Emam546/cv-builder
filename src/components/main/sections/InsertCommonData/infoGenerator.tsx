@@ -5,6 +5,7 @@ import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames";
 import ElemGenerator, { ElemType, PSchema } from "./EleGen";
 import DeleteAlert from "@src/components/common/deleteAlert";
+import { ButtonToolTip } from "@src/components/common/buttonToolTip";
 export type NameRules = `${string}.data` | string;
 export interface ListProps<FormData extends FieldValues> extends PSchema {
     index: number;
@@ -163,7 +164,7 @@ export default function MainInfoGetter<T extends PSchema>({
                         }}
                     />
                 </div>
-                <button
+                <ButtonToolTip
                     className="text-blue-60 font-bold hover:bg-blue-10 transition-all block w-full py-3 text-start px-4 space-x-2"
                     onClick={() => {
                         const data = initData();
@@ -176,7 +177,7 @@ export default function MainInfoGetter<T extends PSchema>({
                 >
                     <FontAwesomeIcon icon={faAdd} />
                     <span>{addButtonLabel}</span>
-                </button>
+                </ButtonToolTip>
             </div>
 
             <DeleteAlert

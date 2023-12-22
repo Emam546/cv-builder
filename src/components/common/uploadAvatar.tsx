@@ -9,6 +9,7 @@ import LoadingPanner from "./loading/loading";
 import { DeleteFile as OrgDeleteFile } from "@src/utils";
 import { useDeleteDialog } from "./confirmAction";
 import DeleteSnackBar from "@src/components/common/deleteAlert";
+import { ButtonToolTip } from "./buttonToolTip";
 interface Props {
     name: string;
     label: string;
@@ -75,7 +76,7 @@ function UploadButton({ label, defaultValue, name, imageId, control }: Props) {
                             )}
                         </div>
                         <div className="font-medium">
-                            <button
+                            <ButtonToolTip
                                 type="button"
                                 className="block text-blue-50 hover:text-blue-80 cursor-pointer"
                                 onClick={() => setEdit(true)}
@@ -83,7 +84,7 @@ function UploadButton({ label, defaultValue, name, imageId, control }: Props) {
                             >
                                 <FontAwesomeIcon icon={faPen} />
                                 <span className="px-3">Edit photo</span>
-                            </button>
+                            </ButtonToolTip>
                             <button
                                 type="button"
                                 className="block text-neutral-20 hover:text-red-40 mt-1 cursor-pointer"

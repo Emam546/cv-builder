@@ -12,6 +12,7 @@ import React from "react";
 import { PrimaryProps } from "./EleGen";
 import { faClone } from "@fortawesome/free-regular-svg-icons";
 import { CircularProgress } from "@mui/material";
+import { ButtonToolTip } from "@src/components/common/buttonToolTip";
 
 export interface DraggableItem extends PrimaryProps {
     children: React.ReactNode;
@@ -87,21 +88,22 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                             </span>
                         )}
                         {duplicate && (
-                            <button
+                            <ButtonToolTip
                                 type="button"
                                 className="enabled:group-hover:text-blue-60 disabled:text-neutral-60"
                                 onClick={() => {
                                     if (parentDiv) duplicate.call(parentDiv);
                                 }}
-                                aria-label="delete"
+                                aria-label="duplicate"
                                 disabled={disabled}
+                                toolTip="Duplicate"
                             >
                                 <FontAwesomeIcon icon={faClone} />
-                            </button>
+                            </ButtonToolTip>
                         )}
 
                         {deleteSelf && (
-                            <button
+                            <ButtonToolTip
                                 type="button"
                                 className="enabled:group-hover:text-blue-60 disabled:text-neutral-60"
                                 onClick={() => {
@@ -109,10 +111,11 @@ export const Elem = React.forwardRef<HTMLDivElement, DraggableItem>(
                                     setExpand(false);
                                 }}
                                 aria-label="delete"
+                                toolTip="Delete"
                                 disabled={disabled}
                             >
                                 <FontAwesomeIcon icon={faTrashCan} />
-                            </button>
+                            </ButtonToolTip>
                         )}
 
                         <button
