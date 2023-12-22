@@ -83,3 +83,11 @@ export async function DeleteFile(url: string, name: string) {
         },
     });
 }
+export function formateDate(date: Date, sep: string = "-") {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-indexed, so we add 1
+    const day = date.getDate().toString().padStart(2, "0");
+
+    // Create the formatted date string
+    return `${year}${sep}${month}${sep}${day}`;
+}

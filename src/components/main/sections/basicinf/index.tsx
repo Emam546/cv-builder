@@ -1,6 +1,15 @@
 import { SyntheticEvent, useRef, useState } from "react";
 import Header from "@src/components/common/inputs/header";
-import { Control, FieldValues, UseFormReturn, useWatch } from "react-hook-form";
+import {
+    Control,
+    Controller,
+    ControllerFieldState,
+    ControllerRenderProps,
+    FieldValues,
+    UseFormReturn,
+    UseFormStateReturn,
+    useWatch,
+} from "react-hook-form";
 import NormalInput, {
     OptionsInput,
 } from "@src/components/common/inputs/normal";
@@ -17,6 +26,8 @@ import UploadPDF from "./uploadPdf";
 import PhoneNumber from "./phoneNumber";
 import React from "react";
 import { onDelete as AvatarOnDelete } from "./uploadPdf";
+import DatePicker from "@src/components/common/inputs/datePickerComplete";
+import { BottomLine, LabelElem } from "@src/components/common/inputs/styles";
 const COUNTRIES = Object.keys(data.countries).map((name) => name);
 const CITIES: Map<string, string[]> = new Map(Object.entries(data.countries));
 const JOP_TITLES = data.jobs;
@@ -40,6 +51,7 @@ export interface InputData {
             availability?: string;
             militaryState?: string;
             maritalState?: string;
+            dateOfBirth?: string;
             cv?: string;
         };
     };
@@ -63,6 +75,35 @@ const CityInput = React.forwardRef<HTMLInputElement, CityInputProps>(
         );
     }
 );
+function DatePickerG({ control }: { control: Control<InputData> }) {
+    return (
+        <Controller
+            render={({ field }) => {
+                return (
+                    <LabelElem label="Date Of Birth">
+                        <div className="relative">
+                            <BottomLine>
+                                <DatePicker
+                                    value={
+                                        field.value
+                                            ? new Date(field.value)
+                                            : new Date()
+                                    }
+                                    onChange={(val) => {
+                                        if (!val) return;
+                                        field.onChange(val.toString());
+                                    }}
+                                />
+                            </BottomLine>
+                        </div>
+                    </LabelElem>
+                );
+            }}
+            name={"info.data.dateOfBirth"}
+            control={control}
+        />
+    );
+}
 export default function BasicInfo({
     register,
     resetField,
@@ -159,6 +200,7 @@ export default function BasicInfo({
                             label="Nationality"
                             {...register("info.data.nationality")}
                         />
+                        <DatePickerG control={control} />
                         <UploadPDF
                             pdfId="info.data.cv"
                             label="Upload you Cv"

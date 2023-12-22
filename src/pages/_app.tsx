@@ -8,12 +8,16 @@ import type { AppProps } from "next/app";
 import wrapper from "@src/store";
 import { Provider } from "react-redux";
 import LoadingState from "@src/components/loading";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 function App({ Component, ...rest }: AppProps) {
     const { store, props } = wrapper.useWrappedStore(rest);
     return (
         <Provider store={store}>
-            <LoadingState />
-            <Component {...props.pageProps} />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LoadingState />
+                <Component {...props.pageProps} />
+            </LocalizationProvider>
         </Provider>
     );
 }
