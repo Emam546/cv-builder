@@ -72,7 +72,7 @@ function DeleteDialog() {
                         will be permanently deleted and cannot be restored.
                         Alternatively if you keep your free account, the next
                         time you want to edit or update your resume you won{"'"}
-                        t have to start from scratch..
+                        t have to start from scratch.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
