@@ -18,7 +18,6 @@ interface Props {
     placeholder?: string;
 }
 
-
 const FinalEditor = React.forwardRef<HTMLInputElement, Props>(
     ({ defaultValue, name, control, placeholder }, ref) => {
         const { field } = useController({
@@ -45,6 +44,7 @@ const FinalEditor = React.forwardRef<HTMLInputElement, Props>(
                                       )
                                   )
                         }
+                        handlePastedText={() => false}
                         placeholder={placeholder}
                     />
                 </div>
