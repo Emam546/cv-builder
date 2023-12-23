@@ -1,6 +1,5 @@
 import { useAppSelector } from "@src/store";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { UserData } from "@serv/models/user";
 import { Dispatch, useEffect, useRef, useState } from "react";
 import { useInitialEffect } from "@src/utils/hooks";
@@ -16,17 +15,19 @@ export function useUploadData() {
     const lastData = useRef(JSON.stringify(data));
     const [err, setErr] = useState<string>();
     const str = JSON.stringify(data);
+    const uploadData = async () => {
+        if (!isSingIn) return;
+        if (lastData.current == str) return;
+        lastData.current = str;
+        const source = axios.CancelToken.source();
+        return await axios.post("/api/v1/user/data", data, {
+            headers: getAuthHeaders(),
+            cancelToken: source.token,
+        });
+    };
     useInitialEffect(() => {
         const t = setTimeout(() => {
-            if (!isSingIn) return;
-            if (lastData.current == str) return;
-            lastData.current = str;
-            const source = axios.CancelToken.source();
-            axios
-                .post("/api/v1/user/data", data, {
-                    headers: getAuthHeaders(),
-                    cancelToken: source.token,
-                })
+            uploadData()
                 .then(() => {
                     setErr(undefined);
                 })
@@ -40,10 +41,19 @@ export function useUploadData() {
         setState(false);
         return () => clearTimeout(t);
     }, [str]);
+    useEffect(() => {
+        window.addEventListener("beforeunload", uploadData);
 
+        return () => {
+            window.removeEventListener("beforeunload", uploadData);
+        };
+    }, [str]);
     return [state, setState, err] as [
         boolean,
         Dispatch<boolean>,
         string | undefined
     ];
+}
+function useLayoutEffect(arg0: () => () => void, arg1: never[]) {
+    throw new Error("Function not implemented.");
 }
