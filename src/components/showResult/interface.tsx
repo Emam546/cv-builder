@@ -26,7 +26,7 @@ const interfaceCode = `interface Data {
         head: string;
         data: Array<{
             id: string;
-            label: string;
+            title: string;
             desc: string;
         }>;
     };
