@@ -109,7 +109,12 @@ function KindsInput({
         .map((val) => val.kind)
         .filter((_, index) => {
             return index != i;
-        });
+        })
+        .reduce((acc, val) => {
+            const state = acc.some((v) => v != val);
+            if (state) return acc;
+            return [...acc, val];
+        }, [] as string[]);
 
     return (
         <OptionsInput
