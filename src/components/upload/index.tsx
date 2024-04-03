@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
     ref
@@ -18,17 +18,29 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     );
 });
 export default function UploadDataEle() {
+    const [open, setOpen] = useState(false);
     const [state, setState, err] = useUploadData();
     useEffect(() => {
+        if (!state) return;
         const t = setTimeout(() => {
-            if (state) setState(false);
+            setState(false);
+            setOpen(false);
         }, 2000);
+        setOpen(true);
         return () => clearTimeout(t);
     }, [state]);
+    useEffect(() => {
+        if (!err) return;
+        const t = setTimeout(() => {
+            setOpen(false);
+        }, 2000);
+        setOpen(true);
+        return () => clearTimeout(t);
+    }, [err]);
     return (
         <Snackbar
             autoHideDuration={6000}
-            open={state}
+            open={open}
         >
             <Alert
                 severity={err ? "error" : "success"}

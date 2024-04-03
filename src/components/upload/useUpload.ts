@@ -3,7 +3,6 @@ import axios from "axios";
 import { UserData } from "@serv/models/user";
 import { Dispatch, useEffect, useRef, useState } from "react";
 import { useInitialEffect } from "@src/utils/hooks";
-import { getAuthHeaders } from "@src/utils";
 export function useUploadData() {
     const time = +(process.env.NEXT_PUBLIC_UPLOADING_TIME || "3000");
     const data: UserData = useAppSelector((state) => ({
@@ -16,26 +15,24 @@ export function useUploadData() {
     const [err, setErr] = useState<string>();
     const str = JSON.stringify(data);
     const uploadData = async () => {
-        if (!isSingIn) return;
-        if (lastData.current == str) return;
+        if (!isSingIn) return false;
+        if (lastData.current == str) return false;
         lastData.current = str;
         const source = axios.CancelToken.source();
-        return await axios.post("/api/v1/user/data", data, {
-            headers: getAuthHeaders(),
+        await axios.post("/api/v1/user/data", data, {
             cancelToken: source.token,
         });
+        return true;
     };
     useInitialEffect(() => {
         const t = setTimeout(() => {
             uploadData()
-                .then(() => {
+                .then((state) => {
                     setErr(undefined);
+                    setState(state);
                 })
                 .catch((err) => {
                     setErr(err.message);
-                })
-                .finally(() => {
-                    setState(true);
                 });
         }, time);
         setState(false);
