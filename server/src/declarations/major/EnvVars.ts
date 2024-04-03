@@ -1,5 +1,5 @@
 /* eslint-disable node/no-process-env */
-
+import { SignOptions } from "jsonwebtoken";
 export default {
     nodeEnv: process.env.NODE_ENV ?? "",
     port: process.env.PORT ?? 0,
@@ -21,7 +21,7 @@ export default {
     },
     jwt: {
         secret: process.env.JWT_SECRET ?? "",
-        exp: process.env.COOKIE_EXP ?? "", // exp at the same time as the cookie
+        options: { expiresIn: process.env.COOKIE_EXP ?? "" } as SignOptions,
     },
     MONGODB_URL: process.env.MONGODB_URL ?? "",
     facebook: {

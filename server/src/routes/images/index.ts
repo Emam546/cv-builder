@@ -74,7 +74,7 @@ router
         if (!url.includes(req.user._id))
             return res.status(401).json({
                 status: false,
-                msg: "you has no access",
+                msg: "you don't have the permission to access this file",
             });
         await DeleteFile(url, req.user._id);
         res.status(200).json({
