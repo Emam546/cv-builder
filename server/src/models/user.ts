@@ -4,18 +4,18 @@ export interface UserData {
     sectionState: SectionStateType;
 }
 export interface User {
-    _id: string;
     firstName: string;
     lastName: string;
     email?: string;
     data?: UserData;
     apiKey: string;
-}
-export interface UserProvider extends User {
     provider_id?: string;
     provider_type?: "facebook" | "google" | "linkedin";
 }
-const schema = new mongoose.Schema<User | UserProvider>({
+export interface UserTokenInfo extends Omit<User, "data"> {
+    _id: string;
+}
+const schema = new mongoose.Schema<User>({
     firstName: {
         type: String,
         min: 2,
@@ -48,22 +48,10 @@ const schema = new mongoose.Schema<User | UserProvider>({
         type: String,
     },
 });
+
 schema.index({ apiKey: 1 });
 schema.index({ provider_id: 1, provider_type: 1 });
 type TSchema = typeof schema;
-type model = mongoose.Model<
-    mongoose.InferSchemaType<TSchema>,
-    mongoose.ObtainSchemaGeneric<TSchema, "TQueryHelpers">,
-    mongoose.ObtainSchemaGeneric<TSchema, "TInstanceMethods">,
-    mongoose.ObtainSchemaGeneric<TSchema, "TVirtuals">,
-    mongoose.HydratedDocument<
-        mongoose.InferSchemaType<TSchema>,
-        mongoose.ObtainSchemaGeneric<TSchema, "TVirtuals"> &
-            mongoose.ObtainSchemaGeneric<TSchema, "TInstanceMethods">,
-        mongoose.ObtainSchemaGeneric<TSchema, "TQueryHelpers">
-    >,
-    TSchema
-> &
-    mongoose.ObtainSchemaGeneric<TSchema, "TStaticMethods">;
-export default (mongoose.models && (mongoose.models.user as model)) ||
-    mongoose.model("user", schema);
+
+export default ((mongoose.models && mongoose.models.user) ||
+    mongoose.model("user", schema)) as MongoModel<TSchema>;

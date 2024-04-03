@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Router } from "express";
-import User from "@serv/models/user";
+import User, { UserTokenInfo } from "@serv/models/user";
 import { assertIsAuth } from "@serv/util/utils";
 import passport from "passport";
 import rateLimiter from "express-rate-limit";
-import type { UserInfo } from "@serv/util/user";
+import { getData, UpdateToken } from "@serv/util/user";
 
 const router = Router();
 router.use(passport.authenticate("jwt", { session: false }));
@@ -40,7 +40,7 @@ router
                 { _id: req.user._id },
                 { $set: { data: req.body } }
             );
-            req.user.data = req.body;
+
             res.status(200).send({
                 status: true,
                 msg: "success",
@@ -57,21 +57,17 @@ router
             return res
                 .status(401)
                 .send({ status: false, msg: "you are not authorized" });
+
         res.send({
             status: true,
             msg: "success",
-            data: {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                provider_id: user.toObject(),
-            } as UserInfo,
+            data: getData(user, user._id.toString()),
         });
     })
     .post(async (req, res) => {
         assertIsAuth(req);
         await User.updateOne({ _id: req.user._id }, { $set: { ...req.body } });
-        req.user.data = req.body;
+        UpdateToken(res, { ...req.user, ...(req.body as UserTokenInfo) });
         res.status(200).send({ status: true, msg: "success", data: req.body });
     });
 router.route("/delete").delete(async (req, res) => {

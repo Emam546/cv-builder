@@ -63,7 +63,7 @@ import type {
 } from "@src/components/main/sections/CustomSection/types";
 
 import { FieldValues, Path } from "react-hook-form";
-import { type } from "os";
+
 declare global {
     interface FieldsType {
         [k: string]: any;

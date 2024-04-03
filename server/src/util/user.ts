@@ -1,6 +1,8 @@
-import Users, { UserProvider } from "@serv/models/user";
+import Users, { User, UserTokenInfo } from "@serv/models/user";
+import { Response } from "express";
 import generateApiKey from "generate-api-key";
-export type UserInfo = Omit<UserProvider, "data" | "apiKey" | "_id">;
+import { sign } from "./jwt";
+export type UserInfo = Omit<User, "data" | "apiKey" | "_id">;
 function removeSuspiciousCharacters(key: string) {
     // Define a regular expression pattern to match suspicious characters
     const pattern = /[^A-Za-z0-9\-_.~]/g;
@@ -16,9 +18,23 @@ export async function createUser(props: UserInfo) {
         apiKey: removeSuspiciousCharacters(
             generateApiKey({
                 dashes: false,
-            }) as string
+            }).toString()
         ),
     });
     const res = await newUser.save();
     return res;
+}
+export function UpdateToken(res: Response, data: UserTokenInfo) {
+    res.set("X-Access-Token", sign(data));
+}
+export function getData(data: User, id: string): UserTokenInfo {
+    return {
+        _id: id,
+        apiKey: data.apiKey,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        provider_id: data.provider_id,
+        provider_type: data.provider_type,
+    };
 }

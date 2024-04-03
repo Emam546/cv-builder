@@ -3,18 +3,11 @@ import passportFacebook from "passport-facebook";
 import passportGoogle from "passport-google-oauth";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import Users, { UserProvider } from "@serv/models/user";
-import { createUser } from "@serv/util/user";
+import Users, { UserTokenInfo } from "@serv/models/user";
+import { createUser } from "./util/user";
 const FacebookStrategy = passportFacebook.Strategy;
 const GoogleStrategy = passportGoogle.OAuth2Strategy;
-
-declare global {
-    // eslint-disable-next-line @typescript-eslint/no-namespace
-    namespace Express {
-        // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        interface User extends UserProvider {}
-    }
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 
 passport.use(
     new FacebookStrategy(
@@ -60,6 +53,7 @@ passport.use(
             if (result) return done(null, result.toObject());
 
             const newUser = await createUser({
+           
                 firstName: profile.name?.givenName || "",
                 lastName: profile.name?.familyName || "",
                 email: profile.emails?.[0]?.value,
@@ -87,6 +81,6 @@ passport.serializeUser(function (profile, cb) {
 });
 
 passport.deserializeUser(function (id, cb) {
-    cb(null, id as UserProvider);
+    cb(null, id as UserTokenInfo);
 });
 export default passport;

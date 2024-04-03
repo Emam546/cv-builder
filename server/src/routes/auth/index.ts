@@ -1,20 +1,17 @@
 import { Router } from "express";
 import FacebookRouter from "./facebook";
 import GoogleRouter from "./google";
-import logger from "@serv/logger";
-import { sign } from "@serv/util/jwt";
+import { UpdateToken } from "@serv/util/user";
 const router = Router();
 router.use("/facebook", FacebookRouter);
 router.use("/google", GoogleRouter);
 router.get("/logout", (req, res) => {
-    req.logout({ keepSessionInfo: false }, (err) => logger.error(err));
-    res.cookie("token", undefined);
+    res.set("X-Access-Token", "");
     res.send({ status: true, msg: "success", data: {} });
 });
 router.use((req, res, next) => {
     if (!req.isAuthenticated()) return next();
-    delete req.user.data;
-    res.cookie("token", sign(req.user));
+    UpdateToken(res, req.user);
     res.redirect("/");
 });
 export default router;
