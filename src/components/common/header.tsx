@@ -1,4 +1,4 @@
-function HeaderComponent({
+export function HeaderComponent({
     name = "",
     subName = "",
 }: {

@@ -9,6 +9,7 @@ import { Name as ReferenceName } from "./sections/reference";
 import { Name as ExtraActivitiesName } from "./sections/ExtraActivites";
 import { Name as TeamName } from "./sections/Team";
 import { Name as ProjectsName } from "./sections/Projects";
+import { Name as YearResolutionName } from "./sections/yearsResloutions";
 import { Name as PhotosName } from "./sections/photos";
 import { Name as CustomName } from "./sections/CustomSection/types";
 import { Name as HobbiesName } from "./sections/hobbies";
@@ -96,6 +97,10 @@ export const defaultData: Data = {
         head: "Testimonials",
         data: [],
     },
+    [YearResolutionName]: {
+        head: "New Year's resolutions ",
+        data: [],
+    },
 };
 export const defaultSectionState: SectionStateType = {
     sections: {
@@ -160,6 +165,10 @@ export const defaultSectionState: SectionStateType = {
             order: curOrder,
         },
         [ReferenceName]: {
+            hiddenState: false,
+            order: curOrder++,
+        },
+        [YearResolutionName]: {
             hiddenState: false,
             order: curOrder++,
         },

@@ -5,12 +5,14 @@ import { Name as ReferenceName } from "@src/components/main/sections/reference";
 import { Name as ExtraActivitesName } from "@src/components/main/sections/ExtraActivites";
 import { Name as HobbiesName } from "@src/components/main/sections/hobbies";
 import { Name as TestimonialsName } from "@src/components/main/sections/tesimonial";
+import { Name as YearsResolutionName } from "@src/components/main/sections/yearsResloutions";
 import { Dispatch } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBook,
     faBriefcase,
     faBullhorn,
+    faBullseye,
     faFootball,
     faLanguage,
     faPlateWheat,
@@ -161,12 +163,23 @@ export function AddSection({}: {}) {
                     }}
                 />
                 <Item
-                    label="Languages"
-                    hiddenState={data[LangName].hiddenState}
+                    label="Year's Resolution"
+                    hiddenState={data[YearsResolutionName].hiddenState}
                     icon={faLanguage}
                     setData={() => {
                         dispatchSection({
-                            name: LangName,
+                            name: YearsResolutionName,
+                            type: "SHOW",
+                        });
+                    }}
+                />
+                <Item
+                    label="Languages"
+                    hiddenState={data[YearsResolutionName].hiddenState}
+                    icon={faBullseye}
+                    setData={() => {
+                        dispatchSection({
+                            name: YearsResolutionName,
                             type: "SHOW",
                         });
                     }}

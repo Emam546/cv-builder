@@ -56,6 +56,10 @@ import type {
     InputData as ParaInputData,
     NameType as ParaName,
 } from "@src/components/main/sections/paragraphs";
+import type {
+    InputData as YearResolutionsDataType,
+    NameType as YearResolutionsNameType,
+} from "@src/components/main/sections/yearsResloutions";
 import type { InputData as HobbiesData } from "@src/components/main/sections/hobbies";
 import type {
     InputData as CustomInputData,
@@ -91,6 +95,9 @@ declare global {
         GeneratorData<PhotosDataType, PhotosNameType> &
         GeneratorData<EducationDataType, EducationNameType> &
         GeneratorData<TestimonialData, TestimonialNameType> &
+        Partial<
+            GeneratorData<YearResolutionsDataType, YearResolutionsNameType>
+        > &
         CustomInputData;
 
     type SectionNamesType = Exclude<keyof Data, CustomNameType>;

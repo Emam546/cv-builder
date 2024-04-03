@@ -1,5 +1,5 @@
 import { decode } from "@serv/util/jwt";
-import UserDB, { User } from "@serv/models/user";
+import UserDB, { User, UserTokenInfo } from "@serv/models/user";
 import { wrapper } from "@src/store";
 import { UserActions } from "@src/store/user";
 import { MakeItSerializable } from "@src/utils";
@@ -119,7 +119,7 @@ export const getServerSideProps = wrapper.getServerSideProps<Props>(
     (store) => async (ctx) => {
         if (ctx.req.cookies.token) {
             try {
-                const user = decode<User>(ctx.req.cookies.token);
+                const user = decode<UserTokenInfo>(ctx.req.cookies.token);
                 if (typeof user == "string")
                     throw new Error("Unexpected Value");
                 const res = await UserDB.findById(user._id);

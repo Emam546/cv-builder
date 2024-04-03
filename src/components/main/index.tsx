@@ -87,6 +87,12 @@ import Professional, {
     InitData as ParagraphInitData,
     Name as ParagraphName,
 } from "./sections/paragraphs";
+import YearsResolution, {
+    InitData as YearsResolutionInitData,
+    Name as YearsResolutionName,
+    InputData as YearsResolutionDataType,
+    NameType as YearsResolutionNameType,
+} from "./sections/yearsResloutions";
 import Hobbies, { Name as HobbiesName } from "./sections/hobbies";
 import CustomSection from "./sections/CustomSection";
 import InfoGetter from "@src/components/main/sections/InsertCommonData/index";
@@ -99,6 +105,7 @@ import { useAppSelector } from "@src/store";
 import { ActionType, StateActions } from "@src/store/state";
 import { copyObject } from "@src/utils";
 import loadash from "lodash";
+import YearResolutionElem from "./sections/yearsResloutions";
 function Uploader({
     form,
 }: {
@@ -340,6 +347,33 @@ export default function Main({ values }: { values?: Data }) {
                     initData={InternInitData}
                     Elem={InternShipElem}
                     onDeleteElem={InternOnDelete}
+                />
+            </Container>
+            <Container
+                hiddenState={
+                    sectionHiddenState[YearsResolutionName].hiddenState
+                }
+                order={sectionHiddenState[YearsResolutionName].order}
+            >
+                <InfoGetter
+                    setDelete={() =>
+                        dispatchSection({
+                            name: YearsResolutionName,
+                            type: "HIDE",
+                        })
+                    }
+                    formRegister={
+                        form as unknown as UseFormReturn<
+                            GeneratorData<
+                                YearsResolutionDataType,
+                                YearsResolutionNameType
+                            >
+                        >
+                    }
+                    addButtonLabel="Add one more year's resolution"
+                    name={YearsResolutionName}
+                    initData={YearsResolutionInitData}
+                    Elem={YearResolutionElem}
                 />
             </Container>
             <Container

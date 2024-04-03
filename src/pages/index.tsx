@@ -2,7 +2,7 @@ import Head from "next/head";
 import Login from "@src/components/login";
 import Main from "@src/components/main";
 import { NextPage } from "next";
-import UserDB, { User, UserData } from "@serv/models/user";
+import UserDB, { User, UserData, UserTokenInfo } from "@serv/models/user";
 import wrapper, { useAppSelector } from "@src/store";
 import { setInitialData } from "@src/store/setInitalData";
 import { AddSection } from "@src/components/addSection";
@@ -29,7 +29,10 @@ const Home: NextPage<Props> = function ({ values, isSigned }) {
         <>
             <Head>
                 <title>Make your Resume api</title>
-                <meta name="description" content="Resume API Creator - Simplify resume generation for developers by importing project information. Retrieve project details, including names, descriptions, and technologies used, with ease. Embed your portfolio into websites or applications using the generated API. Showcase your coding skills effortlessly with Resume API Creator."/>
+                <meta
+                    name="description"
+                    content="Resume API Creator - Simplify resume generation for developers by importing project information. Retrieve project details, including names, descriptions, and technologies used, with ease. Embed your portfolio into websites or applications using the generated API. Showcase your coding skills effortlessly with Resume API Creator."
+                />
             </Head>
             <Header />
             <div className="container relative px-4 mx-auto">
@@ -51,7 +54,7 @@ export const getServerSideProps = wrapper.getServerSideProps<Props>(
     (store) => async (ctx) => {
         if (ctx.req.cookies.token) {
             try {
-                const user = decode<User>(ctx.req.cookies.token);
+                const user = decode<UserTokenInfo>(ctx.req.cookies.token);
                 if (typeof user == "string")
                     throw new Error("Unexpected Value");
                 const res = await UserDB.findById(user._id);
