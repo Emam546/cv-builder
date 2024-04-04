@@ -27,7 +27,7 @@ export async function createUser(props: UserInfo) {
 export function UpdateToken(res: Response, data: UserTokenInfo) {
     res.cookie("token", sign(data));
 }
-export function getData(data: User, id: string): UserTokenInfo {
+export function getUserEssentialData(data: User, id: string): UserTokenInfo {
     return {
         _id: id,
         apiKey: data.apiKey,

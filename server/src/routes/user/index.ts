@@ -4,7 +4,7 @@ import User, { UserTokenInfo } from "@serv/models/user";
 import { assertIsAuth } from "@serv/util/utils";
 import passport from "passport";
 import rateLimiter from "express-rate-limit";
-import { getData, UpdateToken } from "@serv/util/user";
+import { getUserEssentialData, UpdateToken } from "@serv/util/user";
 
 const router = Router();
 router.use(passport.authenticate("jwt", { session: false }));
@@ -61,7 +61,7 @@ router
         res.send({
             status: true,
             msg: "success",
-            data: getData(user, user._id.toString()),
+            data: getUserEssentialData(user, user._id.toString()),
         });
     })
     .post(async (req, res) => {

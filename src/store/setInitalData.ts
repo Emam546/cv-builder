@@ -9,6 +9,7 @@ export function setInitialData(cStore: AppStore, data: UserData) {
     cStore.dispatch(
         StateActions.setAllData({
             data: data.sectionState,
+            action: null,
         })
     );
 }

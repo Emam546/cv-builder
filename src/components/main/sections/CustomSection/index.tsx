@@ -179,7 +179,6 @@ export default function CustomSection({
             dispatch(StateActions.setAction(null));
         }
     }, [action]);
-
     return (
         <>
             {orders.map(({ order, id }) => {

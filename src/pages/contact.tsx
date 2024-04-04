@@ -13,6 +13,7 @@ import { Alert, Button, Snackbar } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { MixedExtract } from "@serv/passport.config";
+import { InitServerSide } from "./init";
 interface Props {}
 interface PropsForm {
     subject: string;
@@ -118,33 +119,7 @@ export default function Contact() {
 }
 export const getServerSideProps = wrapper.getServerSideProps<Props>(
     (store) => async (ctx) => {
-        const token = MixedExtract()(ctx.req as any);
-
-        if (token) {
-            try {
-                const user = decode<UserTokenInfo>(token);
-                if (typeof user == "string")
-                    throw new Error("Unexpected Value");
-                const res = await UserDB.findById(user._id);
-                if (!res)
-                    return {
-                        redirect: {
-                            destination: "/",
-                            permanent: true,
-                        },
-                    };
-                store.dispatch(
-                    UserActions.setSingInState({
-                        isSingIn: true,
-                        user: MakeItSerializable(res),
-                    })
-                );
-                if (res.data) setInitialData(store, res.data);
-                return {
-                    props: {},
-                };
-            } catch (err) {}
-        }
+        await InitServerSide(store,ctx);
 
         return {
             props: {},

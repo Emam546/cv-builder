@@ -2,21 +2,17 @@ import Head from "next/head";
 import Login from "@src/components/login";
 import Main from "@src/components/main";
 import { NextPage } from "next";
-import UserDB, { User, UserData, UserTokenInfo } from "@serv/models/user";
+import { UserData } from "@serv/models/user";
 import wrapper, { useAppSelector } from "@src/store";
-import { setInitialData } from "@src/store/setInitalData";
 import { AddSection } from "@src/components/addSection";
 import ShowResult from "@src/components/showResult";
-import { UserActions } from "@src/store/user";
 import { MakeItSerializable } from "@src/utils";
 import Header from "@src/components/header";
-import { decode } from "@serv/util/jwt";
 import UploadDataEle from "@src/components/upload";
 import LoginModel from "@src/components/loginModel";
 import ApiViewer from "@src/components/apiViewer";
 import InterFaceCode from "@src/components/showResult/interface";
-import { ExtractJwt } from "passport-jwt";
-import { MixedExtract } from "@serv/passport.config";
+import { InitServerSide } from "./init";
 export type SectionsEnabled = {
     [k in keyof UserData]?: boolean;
 };
@@ -54,43 +50,22 @@ const Home: NextPage<Props> = function ({ values, isSigned }) {
 };
 export const getServerSideProps = wrapper.getServerSideProps<Props>(
     (store) => async (ctx) => {
-        const token = MixedExtract()(ctx.req as any);
-
-        if (token) {
-            try {
-                const user = decode<UserTokenInfo>(token);
-                if (typeof user == "string")
-                    throw new Error("Unexpected Value");
-                const res = await UserDB.findById(user._id);
-                if (!res)
-                    return {
-                        props: {
-                            isSigned: false,
-                        },
-                    };
-                store.dispatch(
-                    UserActions.setSingInState({
-                        isSingIn: true,
-                        user: MakeItSerializable(res),
-                    })
-                );
-                if (res.data) {
-                    setInitialData(store, res.data);
-                    return {
-                        props: {
-                            values: MakeItSerializable(res).data,
-                            isSigned: true,
-                        },
-                    };
-                } else {
-                    return {
-                        props: {
-                            isSigned: true,
-                        },
-                    };
-                }
-            } catch (err) {}
-        }
+        const res = await InitServerSide(store, ctx);
+        if (res)
+            if (res.data) {
+                return {
+                    props: {
+                        values: MakeItSerializable(res).data,
+                        isSigned: true,
+                    },
+                };
+            } else {
+                return {
+                    props: {
+                        isSigned: true,
+                    },
+                };
+            }
 
         return {
             props: {

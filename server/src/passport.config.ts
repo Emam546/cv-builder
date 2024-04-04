@@ -4,7 +4,7 @@ import passportGoogle from "passport-google-oauth";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import Users, { UserTokenInfo } from "@serv/models/user";
-import { createUser, getData } from "./util/user";
+import { createUser, getUserEssentialData } from "./util/user";
 const FacebookStrategy = passportFacebook.Strategy;
 const GoogleStrategy = passportGoogle.OAuth2Strategy;
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -27,7 +27,10 @@ passport.use(
             if (result)
                 return done(
                     null,
-                    getData(result.toObject(), result._id.toString())
+                    getUserEssentialData(
+                        result.toObject(),
+                        result._id.toString()
+                    )
                 );
 
             const newUser = await createUser({
@@ -37,7 +40,10 @@ passport.use(
                 provider_id: profile.id,
                 provider_type: "facebook",
             });
-            done(null, getData(newUser.toObject(), newUser._id.toString()));
+            done(
+                null,
+                getUserEssentialData(newUser.toObject(), newUser._id.toString())
+            );
         }
     )
 );
@@ -57,7 +63,10 @@ passport.use(
             if (result)
                 return done(
                     null,
-                    getData(result.toObject(), result._id.toString())
+                    getUserEssentialData(
+                        result.toObject(),
+                        result._id.toString()
+                    )
                 );
 
             const newUser = await createUser({
@@ -67,7 +76,10 @@ passport.use(
                 provider_id: profile.id,
                 provider_type: "google",
             });
-            done(null, getData(newUser.toObject(), newUser._id.toString()));
+            done(
+                null,
+                getUserEssentialData(newUser.toObject(), newUser._id.toString())
+            );
         }
     )
 );

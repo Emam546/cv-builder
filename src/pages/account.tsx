@@ -1,5 +1,5 @@
 import { decode } from "@serv/util/jwt";
-import UserDB, { User, UserTokenInfo } from "@serv/models/user";
+import UserDB, { UserTokenInfo } from "@serv/models/user";
 import Header from "@src/components/header";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -12,8 +12,8 @@ import { wrapper } from "@src/store";
 import { UserActions } from "@src/store/user";
 import { MakeItSerializable } from "@src/utils";
 import { setInitialData } from "@src/store/setInitalData";
-import { ExtractJwt } from "passport-jwt";
-import { MixedExtract } from "../../server/src/passport.config";
+import { MixedExtract } from "@serv/passport.config";
+import { InitServerSide } from "./init";
 
 interface Props {
     values: UserInfoProps;
@@ -48,38 +48,17 @@ const Page: NextPage<Props> = ({ values }) => {
 };
 export const getServerSideProps = wrapper.getServerSideProps<Props>(
     (store) => async (ctx) => {
-        const token = MixedExtract()(ctx.req as any);
-        if (token) {
-            try {
-                const user = decode<UserTokenInfo>(token);
-                if (typeof user == "string")
-                    throw new Error("Unexpected Value");
-                const res = await UserDB.findById(user._id);
-                if (!res)
-                    return {
-                        redirect: {
-                            destination: "/",
-                            permanent: true,
-                        },
-                    };
-                store.dispatch(
-                    UserActions.setSingInState({
-                        isSingIn: true,
-                        user: MakeItSerializable(res),
-                    })
-                );
-                if (res.data) setInitialData(store, res.data);
-                return {
-                    props: {
-                        values: {
-                            email: res?.email || "",
-                            firstName: res.firstName,
-                            lastName: res.lastName,
-                        },
+        const res = await InitServerSide(store, ctx);
+        if (res)
+            return {
+                props: {
+                    values: {
+                        email: res?.email || "",
+                        firstName: res.firstName,
+                        lastName: res.lastName,
                     },
-                };
-            } catch (err) {}
-        }
+                },
+            };
 
         return {
             redirect: {
