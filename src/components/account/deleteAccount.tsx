@@ -8,7 +8,6 @@ import DialogActions from "@mui/material/DialogActions";
 import { Button } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { getAuthHeaders } from "@src/utils";
 import { useAppSelector } from "@src/store";
 import { DeleteAllData } from "@src/utils/deleteAllData";
 import DeleteAlert from "@src/components/common/deleteAlert";
@@ -26,9 +25,7 @@ function DeleteDialog() {
         DeleteAllData(state)
             .then(() => {
                 axios
-                    .delete("/api/v1/user/delete", {
-                        headers: getAuthHeaders(),
-                    })
+                    .delete("/api/v1/user/delete")
                     .then(() => {
                         route.push(`/login`).then(() => {
                             setSubmit(false);

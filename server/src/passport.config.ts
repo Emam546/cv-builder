@@ -4,7 +4,7 @@ import passportGoogle from "passport-google-oauth";
 import EnvVars from "@serv/declarations/major/EnvVars";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import Users, { UserTokenInfo } from "@serv/models/user";
-import { createUser } from "./util/user";
+import { createUser, getData } from "./util/user";
 const FacebookStrategy = passportFacebook.Strategy;
 const GoogleStrategy = passportGoogle.OAuth2Strategy;
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -24,7 +24,11 @@ passport.use(
                 provider_id: profile.id,
                 provider_type: "facebook",
             }).hint({ provider_id: 1, provider_type: 1 });
-            if (result) return done(null, result.toObject());
+            if (result)
+                return done(
+                    null,
+                    getData(result.toObject(), result._id.toString())
+                );
 
             const newUser = await createUser({
                 firstName: profile.name?.givenName || "",
@@ -33,7 +37,7 @@ passport.use(
                 provider_id: profile.id,
                 provider_type: "facebook",
             });
-            done(null, newUser.toObject());
+            done(null, getData(newUser.toObject(), newUser._id.toString()));
         }
     )
 );
@@ -50,25 +54,39 @@ passport.use(
                 provider_id: profile.id,
                 provider_type: "google",
             }).hint({ provider_id: 1, provider_type: 1 });
-            if (result) return done(null, result.toObject());
+            if (result)
+                return done(
+                    null,
+                    getData(result.toObject(), result._id.toString())
+                );
 
             const newUser = await createUser({
-           
                 firstName: profile.name?.givenName || "",
                 lastName: profile.name?.familyName || "",
                 email: profile.emails?.[0]?.value,
                 provider_id: profile.id,
                 provider_type: "google",
             });
-            done(null, newUser.toObject());
+            done(null, getData(newUser.toObject(), newUser._id.toString()));
         }
     )
 );
+export const MixedExtract = () =>
+    ExtractJwt.fromExtractors([
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+        (req) => {
+            if (req && req.cookies)
+                return (req.cookies as Record<string, string>).token;
+
+            return null;
+        },
+    ]);
 passport.use(
     new JwtStrategy(
         {
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            jwtFromRequest: MixedExtract(),
             secretOrKey: EnvVars.jwt.secret,
+            jsonWebTokenOptions: EnvVars.jwt.options,
         },
         function (jwt_payload, done) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

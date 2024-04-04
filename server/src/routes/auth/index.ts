@@ -10,7 +10,7 @@ router.get("/logout", (req, res) => {
     res.send({ status: true, msg: "success", data: {} });
 });
 router.use((req, res, next) => {
-    if (!req.isAuthenticated()) return next();
+    if (!req.user) return next();
     UpdateToken(res, req.user);
     res.redirect("/");
 });

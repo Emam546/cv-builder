@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import mime from "mime";
 import { checkMimeType } from "@serv/routes/images/utils";
 import { MaxSize } from "@serv/routes/images/constants";
-
+axios.defaults.withCredentials = true;
 export function assertIsNode(e: EventTarget | null): asserts e is Node {
     if (!e || !("nodeType" in e)) {
         throw new Error(`Node expected`);
@@ -65,7 +65,6 @@ export async function UploadFile(url: string, name: string, blob: Blob) {
     const res = await axios.post(url, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
-            ...getAuthHeaders(),
         },
     });
     return res.data.data.url;
@@ -77,9 +76,6 @@ export async function DeleteFile(url: string, name: string) {
     await axios.delete(url, {
         data: {
             name: name,
-        },
-        headers: {
-            ...getAuthHeaders(),
         },
     });
 }

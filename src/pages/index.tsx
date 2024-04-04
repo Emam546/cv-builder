@@ -15,6 +15,8 @@ import UploadDataEle from "@src/components/upload";
 import LoginModel from "@src/components/loginModel";
 import ApiViewer from "@src/components/apiViewer";
 import InterFaceCode from "@src/components/showResult/interface";
+import { ExtractJwt } from "passport-jwt";
+import { MixedExtract } from "@serv/passport.config";
 export type SectionsEnabled = {
     [k in keyof UserData]?: boolean;
 };
@@ -52,9 +54,11 @@ const Home: NextPage<Props> = function ({ values, isSigned }) {
 };
 export const getServerSideProps = wrapper.getServerSideProps<Props>(
     (store) => async (ctx) => {
-        if (ctx.req.cookies.token) {
+        const token = MixedExtract()(ctx.req as any);
+
+        if (token) {
             try {
-                const user = decode<UserTokenInfo>(ctx.req.cookies.token);
+                const user = decode<UserTokenInfo>(token);
                 if (typeof user == "string")
                     throw new Error("Unexpected Value");
                 const res = await UserDB.findById(user._id);

@@ -12,6 +12,8 @@ import { wrapper } from "@src/store";
 import { UserActions } from "@src/store/user";
 import { MakeItSerializable } from "@src/utils";
 import { setInitialData } from "@src/store/setInitalData";
+import { ExtractJwt } from "passport-jwt";
+import { MixedExtract } from "../../server/src/passport.config";
 
 interface Props {
     values: UserInfoProps;
@@ -46,9 +48,10 @@ const Page: NextPage<Props> = ({ values }) => {
 };
 export const getServerSideProps = wrapper.getServerSideProps<Props>(
     (store) => async (ctx) => {
-        if (ctx.req.cookies.token) {
+        const token = MixedExtract()(ctx.req as any);
+        if (token) {
             try {
-                const user = decode<UserTokenInfo>(ctx.req.cookies.token);
+                const user = decode<UserTokenInfo>(token);
                 if (typeof user == "string")
                     throw new Error("Unexpected Value");
                 const res = await UserDB.findById(user._id);

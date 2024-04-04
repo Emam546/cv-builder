@@ -25,7 +25,7 @@ export async function createUser(props: UserInfo) {
     return res;
 }
 export function UpdateToken(res: Response, data: UserTokenInfo) {
-    res.set("X-Access-Token", sign(data));
+    res.cookie("token", sign(data));
 }
 export function getData(data: User, id: string): UserTokenInfo {
     return {
