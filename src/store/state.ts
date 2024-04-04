@@ -7,17 +7,22 @@ export type ActionType =
       }
     | {
           type: "ADD";
+          id: string;
       }
     | {
           type: "DELETE";
-          index: number;
+          id: string;
       };
-
+export enum Actions {
+    ADD = "Add",
+}
 export interface StateType {
     data: SectionStateType;
+    action: Actions | null;
 }
-const initialState = {
+const initialState: StateType = {
     data: defaultSectionState,
+    action: null,
 };
 export const State = createSlice({
     name: "state",
@@ -53,11 +58,14 @@ export const State = createSlice({
                     }
                     break;
                 case "ADD":
-                    state.data.custom.push({ order: curOrder + 1 });
+                    state.data.custom.push({
+                        order: curOrder + 1,
+                        id: action.id,
+                    });
                     break;
                 case "DELETE":
                     state.data.custom = state.data.custom.filter(
-                        (_, i) => i != action.index
+                        (c) => action.id != c.id
                     );
                     break;
                 default:
@@ -66,6 +74,9 @@ export const State = createSlice({
         },
         setAllData(state, action: { payload: typeof initialState }) {
             return action.payload;
+        },
+        setAction(state, { payload }: { payload: StateType["action"] }) {
+            state.action = payload;
         },
     },
 });

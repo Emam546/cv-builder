@@ -22,7 +22,7 @@ import {
 import classNames from "classnames";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { useDispatch } from "react-redux";
-import { ActionType, StateActions } from "@src/store/state";
+import { Actions, ActionType, StateActions } from "@src/store/state";
 import { useAppSelector } from "@src/store";
 import { FormAction } from "@src/store/form";
 function Item({
@@ -80,7 +80,7 @@ export function AddSection({}: {}) {
                         "flex items-center group gap-3 select-none cursor-pointer"
                     )}
                     onClick={() => {
-                        dispatch(FormAction.addSection());
+                        dispatch(StateActions.setAction(Actions.ADD));
                     }}
                 >
                     <FontAwesomeIcon

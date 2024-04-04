@@ -10,9 +10,6 @@ export const FormSlice = createSlice({
             return action.payload;
             // return { ...state, sections: action.payload };
         },
-        addSection(state, action: { payload: undefined }) {
-            state.custom.push(SectionInitData());
-        },
         setAllData(state, action: { payload: Data }) {
             return { ...action.payload };
         },

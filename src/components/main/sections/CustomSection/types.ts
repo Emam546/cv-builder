@@ -38,5 +38,5 @@ export const SectionInitData: () => SectionData = () => ({
     id: uuid(),
 });
 export interface InputData {
-    custom: SectionData[];
+    custom: Record<string, SectionData>;
 }

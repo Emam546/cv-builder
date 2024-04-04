@@ -9,7 +9,7 @@ export function convertSection2Data(
     sectionState: SectionStateType
 ) {
     const Sections: Record<string, any> = { ...data };
-    data[CustomName].map((val) => {
+    Object.values(data[CustomName]).map((val) => {
         Sections[val.head] = val;
     });
 

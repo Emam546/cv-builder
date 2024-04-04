@@ -3,7 +3,7 @@ import InfoGetter, {
     ElemType,
 } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
-import { UseFormReturn, useWatch } from "react-hook-form";
+import { useForm, UseFormReturn, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import DatePicker from "@src/components/common/inputs/datePicker";
@@ -12,7 +12,7 @@ import { LabelElem, WrapElem } from "@src/components/common/inputs/styles";
 import Container from "@src/components/common/container";
 import { useAppSelector } from "@src/store";
 import { useDispatch } from "react-redux";
-import { StateActions } from "@src/store/state";
+import { Actions, StateActions } from "@src/store/state";
 import {
     NameType as CustomNameType,
     InputData,
@@ -21,9 +21,8 @@ import {
     InitData,
     SectionInitData as MainSectionInitData,
 } from "./types";
-import { uuid } from "@src/utils";
 
-type SectionTypeName = `${CustomNameType}.${number}`;
+type SectionTypeName = `${CustomNameType}.${string}`;
 
 const ListElem = React.forwardRef(
     (
@@ -108,18 +107,28 @@ const ListElem = React.forwardRef(
         );
     }
 ) as ElemType<SectionInputData>;
-
+function deleteAndReturn<T extends Record<string, unknown>, K extends keyof T>(
+    key: K,
+    val: T
+): T {
+    delete val[key];
+    return Object.entries(val).reduce((acc, [id, val]) => {
+        if (id == key) return acc;
+        return { ...acc, [id]: val };
+    }, {} as T);
+}
 function CreateEle({
     order,
-    i,
     form,
+    id,
 }: {
     order: number;
-    i: number;
+    id: string;
     form: UseFormReturn<InputData>;
 }) {
-    const path: SectionTypeName = `${CustomName}.${i}`;
+    const path: SectionTypeName = `${CustomName}.${id}`;
     const dispatch = useDispatch();
+
     return (
         <Container
             hiddenState={false}
@@ -135,12 +144,13 @@ function CreateEle({
                     dispatch(
                         StateActions.setSectionState({
                             type: "DELETE",
-                            index: i,
+                            id,
                         })
                     );
+
                     form.setValue(
                         CustomName,
-                        form.getValues(CustomName).filter((_, ei) => ei != i)
+                        deleteAndReturn(id, form.getValues(CustomName))
                     );
                 }}
             />
@@ -154,26 +164,30 @@ export default function CustomSection({
     defaultData?: { order: number }[] | undefined;
 }) {
     const dispatch = useDispatch();
-    const sectionNum = useAppSelector((state) => state.form.custom.length);
     const orders = useAppSelector((state) => state.state.data.custom);
+    const action = useAppSelector((state) => state.state.action);
     useEffect(() => {
-        if (sectionNum > orders.length) {
-            dispatch(StateActions.setSectionState({ type: "ADD" }));
-            form.setValue(CustomName, [
+        if (action == Actions.ADD) {
+            const data = MainSectionInitData();
+            dispatch(
+                StateActions.setSectionState({ type: "ADD", id: data.id })
+            );
+            form.setValue(CustomName, {
                 ...form.getValues(CustomName),
-                MainSectionInitData(),
-            ]);
+                [data.id]: data,
+            });
+            dispatch(StateActions.setAction(null));
         }
-    }, [sectionNum]);
+    }, [action]);
 
     return (
         <>
-            {orders.map(({ order }, i) => {
+            {orders.map(({ order, id }) => {
                 return (
                     <CreateEle
-                        key={uuid()}
+                        key={`${id}`}
                         order={order}
-                        i={i}
+                        id={id}
                         form={form}
                     />
                 );

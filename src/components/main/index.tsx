@@ -114,9 +114,9 @@ function Uploader({
 }) {
     const dispatch = useDispatch();
 
-    const res: any = useWatch({ control: form.control });
+    const res = useWatch({ control: form.control });
     useEffect(() => {
-        dispatch(FormAction.setData(copyObject(res)));
+        dispatch(FormAction.setData(copyObject(res as Data)));
     });
     return <></>;
 }
@@ -129,13 +129,14 @@ export default function Main({ values }: { values?: Data }) {
     form.resetField = (path) => {
         form.setValue(path, loadash.get(defaultData, path));
     };
-    const State = useAppSelector((state) => state.state);
+    const sectionHiddenState = useAppSelector(
+        (state) => state.state.data.sections
+    );
+    const customData = useAppSelector((state) => state.state.data.custom);
 
     function dispatchSection(val: ActionType) {
         dispatch(StateActions.setSectionState(val));
     }
-    const sectionHiddenState = State.data.sections;
-    console.log(sectionHiddenState);
     return (
         <main className="flex flex-col items-stretch">
             <Uploader
@@ -442,7 +443,7 @@ export default function Main({ values }: { values?: Data }) {
             </Container>
             <CustomSection
                 form={form as any}
-                defaultData={State.data.custom}
+                defaultData={customData}
             />
         </main>
     );
