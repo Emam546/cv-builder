@@ -83,7 +83,7 @@ export const defaultData: Data = {
         head: "Projects",
         data: [],
     },
-    [CustomName]: [],
+    [CustomName]: {},
     [PhotosName]: {
         head: "Pictures",
         data: [],
