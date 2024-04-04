@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { FieldValues, UseFormReturn } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
@@ -44,14 +44,17 @@ export default function MainInfoGetter<T extends PSchema>({
     onDuplicateElem,
 }: Props<T>) {
     const { setValue, getValues } = formRegister;
-    const [EleData, setEleData] = useState(getValues(keys.data));
+    const [EleData, setEleData] = useState(getValues(keys.data) || []);
     const [process, setProcess] = useState(false);
     const [open, setOpen] = useState(false);
     const lastData = useRef<[T, number]>();
     const [loadingElem, setLoadingElem] = useState(false);
     const [errDeleting, setErrDeleting] = useState<string>();
     const [message, setMessage] = useState("");
-
+    useLayoutEffect(() => {
+        const data = getValues(keys.data);
+        if (data == undefined) setValue(keys.data, []);
+    }, [getValues(keys.data)]);
     function undo() {
         if (!lastData.current) return;
         const allData = getValues(keys.data);
@@ -94,6 +97,7 @@ export default function MainInfoGetter<T extends PSchema>({
             }
         });
     }
+
     return (
         <>
             <div>

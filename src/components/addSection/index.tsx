@@ -2,7 +2,7 @@ import { Name as LangName } from "@src/components/main/sections/languages";
 import { Name as CourseName } from "@src/components/main/sections/courses";
 import { Name as InternShipName } from "@src/components/main/sections/internships";
 import { Name as ReferenceName } from "@src/components/main/sections/reference";
-import { Name as ExtraActivitesName } from "@src/components/main/sections/ExtraActivites";
+import { Name as ExtraActivitiesName } from "@src/components/main/sections/ExtraActivites";
 import { Name as HobbiesName } from "@src/components/main/sections/hobbies";
 import { Name as TestimonialsName } from "@src/components/main/sections/tesimonial";
 import { Name as YearsResolutionName } from "@src/components/main/sections/yearsResloutions";
@@ -97,7 +97,7 @@ export function AddSection({}: {}) {
                 </div>
                 <Item
                     label="Testimonials"
-                    hiddenState={data[TestimonialsName].hiddenState}
+                    hiddenState={data[TestimonialsName]?.hiddenState}
                     icon={faUsers}
                     setData={() => {
                         dispatchSection({
@@ -108,11 +108,11 @@ export function AddSection({}: {}) {
                 />
                 <Item
                     label="Extra-curricular Activities"
-                    hiddenState={data[ExtraActivitesName].hiddenState}
+                    hiddenState={data[ExtraActivitiesName]?.hiddenState}
                     icon={faPlateWheat}
                     setData={() => {
                         dispatchSection({
-                            name: ExtraActivitesName,
+                            name: ExtraActivitiesName,
                             type: "SHOW",
                         });
                     }}
@@ -120,7 +120,7 @@ export function AddSection({}: {}) {
 
                 <Item
                     label="Hobbies"
-                    hiddenState={data[HobbiesName].hiddenState}
+                    hiddenState={data[HobbiesName]?.hiddenState}
                     icon={faFootball}
                     setData={() => {
                         dispatchSection({
@@ -131,7 +131,7 @@ export function AddSection({}: {}) {
                 />
                 <Item
                     label="References"
-                    hiddenState={data[ReferenceName].hiddenState}
+                    hiddenState={data[ReferenceName]?.hiddenState}
                     icon={faBullhorn}
                     setData={() => {
                         dispatchSection({
@@ -142,7 +142,7 @@ export function AddSection({}: {}) {
                 />
                 <Item
                     label="Courses"
-                    hiddenState={data[CourseName].hiddenState}
+                    hiddenState={data[CourseName]?.hiddenState}
                     icon={faBook}
                     setData={() => {
                         dispatchSection({
@@ -153,7 +153,7 @@ export function AddSection({}: {}) {
                 />
                 <Item
                     label="InternShips"
-                    hiddenState={data[InternShipName].hiddenState}
+                    hiddenState={data[InternShipName]?.hiddenState}
                     icon={faBriefcase}
                     setData={() => {
                         dispatchSection({
@@ -163,19 +163,19 @@ export function AddSection({}: {}) {
                     }}
                 />
                 <Item
-                    label="Year's Resolution"
-                    hiddenState={data[YearsResolutionName].hiddenState}
+                    label="Languages"
+                    hiddenState={data[LangName]?.hiddenState}
                     icon={faLanguage}
                     setData={() => {
                         dispatchSection({
-                            name: YearsResolutionName,
+                            name: LangName,
                             type: "SHOW",
                         });
                     }}
                 />
                 <Item
-                    label="Languages"
-                    hiddenState={data[YearsResolutionName].hiddenState}
+                    label="Year's resolutions"
+                    hiddenState={data[YearsResolutionName]?.hiddenState}
                     icon={faBullseye}
                     setData={() => {
                         dispatchSection({

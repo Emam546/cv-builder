@@ -15,7 +15,6 @@ import { Name as CustomName } from "./sections/CustomSection/types";
 import { Name as HobbiesName } from "./sections/hobbies";
 import { Name as EducationName } from "./sections/education";
 import { Name as TestimonialsName } from "./sections/tesimonial";
-let curOrder = 0;
 
 export const defaultData: Data = {
     info: {
@@ -103,75 +102,60 @@ export const defaultData: Data = {
     },
 };
 export const defaultSectionState: SectionStateType = {
-    sections: {
+    sections: Object.entries({
         info: {
             hiddenState: false,
-            order: curOrder++,
         },
         [ParagraphName]: {
             hiddenState: false,
-            order: curOrder++,
         },
         [PhotosName]: {
             hiddenState: false,
-            order: curOrder++,
         },
         [EmployName]: {
             hiddenState: false,
-            order: curOrder++,
         },
         [ProjectsName]: {
             hiddenState: false,
-            order: curOrder++,
         },
         [TeamName]: {
             hiddenState: false,
-            order: curOrder++,
         },
         [TestimonialsName]: {
             hiddenState: false,
-            order: curOrder++,
         },
         [EducationName]: {
             hiddenState: false,
-            order: curOrder++,
         },
         [CourseName]: {
             hiddenState: true,
-            order: curOrder,
         },
         [SkillName]: {
             hiddenState: false,
-            order: curOrder++,
         },
         [LangName]: {
             hiddenState: true,
-            order: curOrder,
         },
         [LinkName]: {
             hiddenState: false,
-            order: curOrder++,
         },
         [InternShipName]: {
             hiddenState: true,
-            order: curOrder,
         },
         [HobbiesName]: {
             hiddenState: true,
-            order: curOrder,
         },
         [ExtraActivitiesName]: {
             hiddenState: true,
-            order: curOrder,
         },
         [ReferenceName]: {
             hiddenState: false,
-            order: curOrder++,
         },
         [YearResolutionName]: {
-            hiddenState: false,
-            order: curOrder++,
+            hiddenState: true,
         },
-    },
+    }).reduce((acc, [name, val], i) => {
+        return { ...acc, [name]: { ...val, order: i } };
+    }, {} as SectionStateType["sections"]),
     custom: [],
 };

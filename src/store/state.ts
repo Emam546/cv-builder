@@ -15,11 +15,9 @@ export type ActionType =
 
 export interface StateType {
     data: SectionStateType;
-    curOrder: number;
 }
 const initialState = {
     data: defaultSectionState,
-    curOrder: 7,
 };
 export const State = createSlice({
     name: "state",
@@ -27,20 +25,35 @@ export const State = createSlice({
     reducers: {
         setSectionState(state, { payload: action }: { payload: ActionType }) {
             const type = action.type;
+            const curOrder = Math.max(
+                Object.values(state.data.sections).reduce(
+                    (acc, { order: c }) => (acc > c ? acc : c),
+                    0
+                ),
+                state.data.custom.reduce(
+                    (acc, { order: c }) => (acc > c ? acc : c),
+                    0
+                )
+            );
             switch (type) {
                 case "SHOW":
-                    state.curOrder++;
                     state.data.sections[action.name] = {
                         hiddenState: false,
-                        order: state.curOrder,
+                        order: curOrder + 1,
                     };
                     break;
                 case "HIDE":
-                    state.data.sections[action.name].hiddenState = true;
+                    const obj = state.data.sections[action.name];
+                    if (obj) obj.hiddenState = true;
+                    else {
+                        state.data.sections[action.name] = {
+                            hiddenState: true,
+                            order: curOrder + 1,
+                        };
+                    }
                     break;
                 case "ADD":
-                    state.curOrder++;
-                    state.data.custom.push({ order: state.curOrder });
+                    state.data.custom.push({ order: curOrder + 1 });
                     break;
                 case "DELETE":
                     state.data.custom = state.data.custom.filter(

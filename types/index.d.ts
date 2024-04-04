@@ -108,7 +108,7 @@ declare global {
         };
     };
     interface SectionStateType {
-        sections: SectionStateDataType;
+        sections: Partial<SectionStateDataType>;
         custom: { order: number }[];
     }
 }

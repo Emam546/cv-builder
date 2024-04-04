@@ -12,6 +12,7 @@ import { LabelElem } from "@src/components/common/inputs/styles";
 import { Alert, Button, Snackbar } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { MixedExtract } from "@serv/passport.config";
 interface Props {}
 interface PropsForm {
     subject: string;
@@ -117,9 +118,11 @@ export default function Contact() {
 }
 export const getServerSideProps = wrapper.getServerSideProps<Props>(
     (store) => async (ctx) => {
-        if (ctx.req.cookies.token) {
+        const token = MixedExtract()(ctx.req as any);
+
+        if (token) {
             try {
-                const user = decode<UserTokenInfo>(ctx.req.cookies.token);
+                const user = decode<UserTokenInfo>(token);
                 if (typeof user == "string")
                     throw new Error("Unexpected Value");
                 const res = await UserDB.findById(user._id);
@@ -144,10 +147,7 @@ export const getServerSideProps = wrapper.getServerSideProps<Props>(
         }
 
         return {
-            redirect: {
-                destination: "/",
-                permanent: true,
-            },
+            props: {},
         };
     }
 );

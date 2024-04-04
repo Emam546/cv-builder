@@ -124,6 +124,7 @@ export default function Main({ values }: { values?: Data }) {
     const dispatch = useDispatch();
     const form = useForm<Data>({
         values: values || defaultData,
+        defaultValues: defaultData,
     });
     form.resetField = (path) => {
         form.setValue(path, loadash.get(defaultData, path));
@@ -133,8 +134,8 @@ export default function Main({ values }: { values?: Data }) {
     function dispatchSection(val: ActionType) {
         dispatch(StateActions.setSectionState(val));
     }
-
     const sectionHiddenState = State.data.sections;
+    console.log(sectionHiddenState);
     return (
         <main className="flex flex-col items-stretch">
             <Uploader
@@ -215,8 +216,8 @@ export default function Main({ values }: { values?: Data }) {
             />
 
             <Container
-                hiddenState={sectionHiddenState[LinkName].hiddenState}
-                order={sectionHiddenState[LinkName].order}
+                hiddenState={sectionHiddenState[LinkName]?.hiddenState}
+                order={sectionHiddenState[LinkName]?.order}
             >
                 <InfoGetter
                     setDelete={() =>
@@ -238,8 +239,8 @@ export default function Main({ values }: { values?: Data }) {
                 />
             </Container>
             <Container
-                hiddenState={sectionHiddenState[TestimonialsName].hiddenState}
-                order={sectionHiddenState[TestimonialsName].order}
+                hiddenState={sectionHiddenState[TestimonialsName]?.hiddenState}
+                order={sectionHiddenState[TestimonialsName]?.order}
             >
                 <InfoGetter
                     setDelete={() =>
@@ -265,8 +266,8 @@ export default function Main({ values }: { values?: Data }) {
                 />
             </Container>
             <Container
-                hiddenState={sectionHiddenState[LangName].hiddenState}
-                order={sectionHiddenState[LangName].order}
+                hiddenState={sectionHiddenState[LangName]?.hiddenState}
+                order={sectionHiddenState[LangName]?.order}
             >
                 <InfoGetter
                     setDelete={() =>
@@ -287,8 +288,8 @@ export default function Main({ values }: { values?: Data }) {
                 />
             </Container>
             <Container
-                hiddenState={sectionHiddenState[SkillName].hiddenState}
-                order={sectionHiddenState[SkillName].order}
+                hiddenState={sectionHiddenState[SkillName]?.hiddenState}
+                order={sectionHiddenState[SkillName]?.order}
             >
                 <InfoGetter
                     formRegister={form as any}
@@ -301,8 +302,8 @@ export default function Main({ values }: { values?: Data }) {
             </Container>
 
             <Container
-                hiddenState={sectionHiddenState[CourseName].hiddenState}
-                order={sectionHiddenState[CourseName].order}
+                hiddenState={sectionHiddenState[CourseName]?.hiddenState}
+                order={sectionHiddenState[CourseName]?.order}
             >
                 <InfoGetter
                     setDelete={() =>
@@ -324,8 +325,8 @@ export default function Main({ values }: { values?: Data }) {
                 />
             </Container>
             <Container
-                hiddenState={sectionHiddenState[InternShipName].hiddenState}
-                order={sectionHiddenState[InternShipName].order}
+                hiddenState={sectionHiddenState[InternShipName]?.hiddenState}
+                order={sectionHiddenState[InternShipName]?.order}
             >
                 <InfoGetter
                     setDelete={() =>
@@ -351,9 +352,9 @@ export default function Main({ values }: { values?: Data }) {
             </Container>
             <Container
                 hiddenState={
-                    sectionHiddenState[YearsResolutionName].hiddenState
+                    sectionHiddenState[YearsResolutionName]?.hiddenState
                 }
-                order={sectionHiddenState[YearsResolutionName].order}
+                order={sectionHiddenState[YearsResolutionName]?.order}
             >
                 <InfoGetter
                     setDelete={() =>
@@ -378,9 +379,9 @@ export default function Main({ values }: { values?: Data }) {
             </Container>
             <Container
                 hiddenState={
-                    sectionHiddenState[ExtraActivitiesName].hiddenState
+                    sectionHiddenState[ExtraActivitiesName]?.hiddenState
                 }
-                order={sectionHiddenState[ExtraActivitiesName].order}
+                order={sectionHiddenState[ExtraActivitiesName]?.order}
             >
                 <InfoGetter
                     setDelete={() =>
@@ -404,8 +405,8 @@ export default function Main({ values }: { values?: Data }) {
                 />
             </Container>
             <Container
-                hiddenState={sectionHiddenState[HobbiesName].hiddenState}
-                order={sectionHiddenState[HobbiesName].order}
+                hiddenState={sectionHiddenState[HobbiesName]?.hiddenState}
+                order={sectionHiddenState[HobbiesName]?.order}
             >
                 <Hobbies
                     form={form as any}
@@ -418,8 +419,8 @@ export default function Main({ values }: { values?: Data }) {
                 />
             </Container>
             <Container
-                hiddenState={sectionHiddenState[ReferenceName].hiddenState}
-                order={sectionHiddenState[ReferenceName].order}
+                hiddenState={sectionHiddenState[ReferenceName]?.hiddenState}
+                order={sectionHiddenState[ReferenceName]?.order}
             >
                 <InfoGetter
                     setDelete={() =>
