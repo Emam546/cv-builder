@@ -169,7 +169,7 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
 const HeaderWrapper = React.forwardRef<HTMLInputElement, Props>(
     (props, ref) => {
         if (!props.control) return null;
-        return <Header {...props} />;
+        return <Header {...props} ref={ref}/>;
     }
 );
 export default HeaderWrapper;
