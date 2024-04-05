@@ -51,10 +51,6 @@ export default function MainInfoGetter<T extends PSchema>({
     const [loadingElem, setLoadingElem] = useState(false);
     const [errDeleting, setErrDeleting] = useState<string>();
     const [message, setMessage] = useState("");
-    useLayoutEffect(() => {
-        const data = getValues(keys.data);
-        if (data == undefined) setValue(keys.data, []);
-    }, [getValues(keys.data)]);
     function undo() {
         if (!lastData.current) return;
         const allData = getValues(keys.data);

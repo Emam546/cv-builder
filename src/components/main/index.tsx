@@ -123,8 +123,7 @@ function Uploader({
 export default function Main({ values }: { values?: Data }) {
     const dispatch = useDispatch();
     const form = useForm<Data>({
-        values: values || defaultData,
-        defaultValues: defaultData,
+        values: { ...defaultData, ...values },
     });
     form.resetField = (path) => {
         form.setValue(path, loadash.get(defaultData, path));
