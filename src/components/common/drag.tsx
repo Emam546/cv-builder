@@ -57,11 +57,9 @@ export default function DraggableComp({
             parentDiv.style.top = y - posY + "px";
         }
         function elementDrag(e: MouseEvent) {
-            e.preventDefault();
             XYDragging(e.clientX, e.clientY);
         }
         function elementDragTouch(e: TouchEvent) {
-            e.preventDefault();
             XYDragging(e.touches[0].clientX, e.touches[0].clientY);
         }
         window.addEventListener("mouseup", DragOver);
@@ -95,12 +93,10 @@ export default function DraggableComp({
             })}
             onTouchStart={(e) => {
                 if (!parentDiv) return;
-                e.preventDefault();
                 StartDragging(e.touches[0].clientX, e.touches[0].clientY);
             }}
             onMouseDown={(e) => {
                 if (!parentDiv) return;
-                e.preventDefault();
                 StartDragging(e.clientX, e.clientY);
             }}
         >

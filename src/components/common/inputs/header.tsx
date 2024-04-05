@@ -120,7 +120,6 @@ const Header = React.forwardRef<HTMLInputElement, Props>(
                     editable={editable}
                     type="button"
                     onClick={(e) => {
-                        e.preventDefault();
                         setEditable(true);
                         input.current!.focus();
                     }}

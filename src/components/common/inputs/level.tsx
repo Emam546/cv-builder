@@ -72,7 +72,6 @@ const LevelInput = React.forwardRef<HTMLInputElement, Props>(
                                         "[&:not(:last-child)]:relative [&:not(:last-child)]:after:absolute [&:not(:last-child)]:after:content-[''] [&:not(:last-child)]:after:bg-neutral-20 [&:not(:last-child)]:after:right-0 [&:not(:last-child)]:after:top-1/2 [&:not(:last-child)]:after:-translate-y-1/2 [&:not(:last-child)]:after:w-[1px] [&:not(:last-child)]:after:h-1/2 "
                                     )}
                                     onClick={(e) => {
-                                        e.preventDefault();
                                         setVal(i);
                                         if (setValue) setValue(i);
                                     }}
