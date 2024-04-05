@@ -1,19 +1,13 @@
-import { decode } from "@serv/util/jwt";
-import UserDB, { User, UserTokenInfo } from "@serv/models/user";
 import { wrapper } from "@src/store";
-import { UserActions } from "@src/store/user";
-import { MakeItSerializable } from "@src/utils";
-import { setInitialData } from "@src/store/setInitalData";
 import Header from "@src/components/header";
 import NormalInput from "@src/components/common/inputs/normal";
 import TextArea from "@src/components/common/textArea";
 import { useForm } from "react-hook-form";
 import { LabelElem } from "@src/components/common/inputs/styles";
-import { Alert, Button, Snackbar } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { MixedExtract } from "@serv/passport.config";
-import { InitServerSide } from "./init";
+import { InitServerSide } from "../utils/init";
 interface Props {}
 interface PropsForm {
     subject: string;
@@ -119,7 +113,7 @@ export default function Contact() {
 }
 export const getServerSideProps = wrapper.getServerSideProps<Props>(
     (store) => async (ctx) => {
-        await InitServerSide(store,ctx);
+        await InitServerSide(store, ctx);
 
         return {
             props: {},

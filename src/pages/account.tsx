@@ -1,5 +1,3 @@
-import { decode } from "@serv/util/jwt";
-import UserDB, { UserTokenInfo } from "@serv/models/user";
 import Header from "@src/components/header";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -9,11 +7,7 @@ import UploadAction, {
 import EmailNotification from "@src/components/account/emailnotifications";
 import DeleteAccount from "@src/components/account/deleteAccount";
 import { wrapper } from "@src/store";
-import { UserActions } from "@src/store/user";
-import { MakeItSerializable } from "@src/utils";
-import { setInitialData } from "@src/store/setInitalData";
-import { MixedExtract } from "@serv/passport.config";
-import { InitServerSide } from "./init";
+import { InitServerSide } from "../utils/init";
 
 interface Props {
     values: UserInfoProps;

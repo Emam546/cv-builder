@@ -1,5 +1,5 @@
 import { UserTokenInfo } from "@serv/models/user";
-import { MixedExtract } from "@serv/passport.config";
+import { MixedExtract } from "@serv/passport.config/utils";
 import { getUserEssentialData } from "@serv/util/user";
 import { AppStore } from "@src/store";
 import { setInitialData } from "@src/store/setInitalData";

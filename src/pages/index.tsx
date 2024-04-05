@@ -12,7 +12,7 @@ import UploadDataEle from "@src/components/upload";
 import LoginModel from "@src/components/loginModel";
 import ApiViewer from "@src/components/apiViewer";
 import InterFaceCode from "@src/components/showResult/interface";
-import { InitServerSide } from "./init";
+import { InitServerSide } from "../utils/init";
 export type SectionsEnabled = {
     [k in keyof UserData]?: boolean;
 };

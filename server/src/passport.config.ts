@@ -5,6 +5,7 @@ import EnvVars from "@serv/declarations/major/EnvVars";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import Users, { UserTokenInfo } from "@serv/models/user";
 import { createUser, getUserEssentialData } from "./util/user";
+import { MixedExtract } from "./passport.config/utils";
 const FacebookStrategy = passportFacebook.Strategy;
 const GoogleStrategy = passportGoogle.OAuth2Strategy;
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -83,16 +84,7 @@ passport.use(
         }
     )
 );
-export const MixedExtract = () =>
-    ExtractJwt.fromExtractors([
-        ExtractJwt.fromAuthHeaderAsBearerToken(),
-        (req) => {
-            if (req && req.cookies)
-                return (req.cookies as Record<string, string>).token;
 
-            return null;
-        },
-    ]);
 passport.use(
     new JwtStrategy(
         {
