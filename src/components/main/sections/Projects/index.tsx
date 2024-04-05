@@ -32,7 +32,10 @@ import DatePicker from "@src/components/common/inputs/datePicker";
 import { WrapElem } from "@src/components/common/inputs/styles";
 import RangeInput from "@src/components/common/inputs/rangeInput";
 import MultiSelectInput from "@src/components/common/inputs/multiSelect";
-
+import BudgetInput from "./budget";
+import { uuid } from "@src/utils";
+import { Technologies } from "../../utils";
+import { Duplicate } from "../InsertCommonData/utils";
 export type EleNameType = string;
 export type NameType = "projects";
 export const Name: NameType = "projects";
@@ -86,10 +89,7 @@ type LinkPathType = `${EleNameType}.${number}.links`;
 type TeamMemberPathType = `${EleNameType}.${number}.team`;
 type ImagesPathType = `${EleNameType}.${number}.images`;
 type LessonPathType = `${EleNameType}.${number}.lessons`;
-import BudgetInput from "./budget";
-import { uuid } from "@src/utils";
-import { Technologies } from "../../utils";
-import { Duplicate } from "../InsertCommonData/utils";
+
 
 function KindsInput({
     EleName,

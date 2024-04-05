@@ -5,7 +5,7 @@ export function exist(path: string) {
             .then(() => {
                 res(true);
             })
-            .catch((err) => {
+            .catch(() => {
                 res(false);
             });
     });

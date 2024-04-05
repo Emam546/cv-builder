@@ -8,12 +8,12 @@ import {
 } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Dayjs } from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { formateDate } from "@src/utils";
 import classNames from "classnames";
-import { BottomLine, LabelElem, StyledInput } from "./styles";
+import { useSyncRefs } from "@src/utils/hooks";
 export type Props = {
     value: Date;
     onChange?: (val: Date) => any;
@@ -29,32 +29,42 @@ interface ButtonFieldProps
     setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 function CustomField(props: ButtonFieldProps) {
+    const orgRef = useRef<HTMLDivElement>(null);
+    const ref = useSyncRefs<HTMLDivElement>(
+        props.InputProps?.ref || null,
+        orgRef
+    );
+    useEffect(() => {
+        if (props.focused) orgRef.current?.focus();
+    });
     return (
-        
-                <div
-                    ref={props.InputProps?.ref}
+        <div
+            ref={ref}
+            aria-disabled={props.disabled}
+            className={classNames(
+                "focus:outline-none bg-neutral-10 px-4 py-3 block w-full"
+            )}
+            tabIndex={1}
+        >
+            <div className="flex items-center">
+                <p
                     aria-disabled={props.disabled}
-                    className={classNames(
-                        "focus:outline-none bg-neutral-10 px-4 py-3 block w-full"
-                    )}
+                    className="flex-1"
                 >
-                    <div className="flex items-center">
-                        <p aria-disabled={props.disabled} className="flex-1">
-                            {formateDate(props.value!.toDate(), "/")}
-                        </p>
-                        <div className="flex items-center tw-mx-2 tw-flex h-0 ">
-                            <button
-                                disabled={props.disabled}
-                                onClick={() => props.setOpen?.(true)}
-                                type="button"
-                                className=" p-2 border-none text-gray-400 bg-inherit text-xl"
-                            >
-                                <FontAwesomeIcon icon={faCalendarDays} />
-                            </button>
-                        </div>
-                    </div>
+                    {formateDate(props.value!.toDate(), "/")}
+                </p>
+                <div className="flex items-center tw-mx-2 tw-flex h-0 ">
+                    <button
+                        disabled={props.disabled}
+                        onClick={() => props.setOpen?.(true)}
+                        type="button"
+                        className=" p-2 border-none text-gray-400 bg-inherit text-xl"
+                    >
+                        <FontAwesomeIcon icon={faCalendarDays} />
+                    </button>
                 </div>
-
+            </div>
+        </div>
     );
 }
 export default function DatePicker({ value, onChange, ...props }: Props) {

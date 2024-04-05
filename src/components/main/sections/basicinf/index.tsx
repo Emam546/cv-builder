@@ -1,15 +1,6 @@
-import { SyntheticEvent, useRef, useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import Header from "@src/components/common/inputs/header";
-import {
-    Control,
-    Controller,
-    ControllerFieldState,
-    ControllerRenderProps,
-    FieldValues,
-    UseFormReturn,
-    UseFormStateReturn,
-    useWatch,
-} from "react-hook-form";
+import { Control, Controller, UseFormReturn, useWatch } from "react-hook-form";
 import NormalInput, {
     OptionsInput,
 } from "@src/components/common/inputs/normal";
@@ -81,21 +72,19 @@ function DatePickerG({ control }: { control: Control<InputData> }) {
             render={({ field }) => {
                 return (
                     <LabelElem label="Date Of Birth">
-                        <div className="relative">
-                            <BottomLine>
-                                <DatePicker
-                                    value={
-                                        field.value
-                                            ? new Date(field.value)
-                                            : new Date()
-                                    }
-                                    onChange={(val) => {
-                                        if (!val) return;
-                                        field.onChange(val.toString());
-                                    }}
-                                />
-                            </BottomLine>
-                        </div>
+                        <BottomLine>
+                            <DatePicker
+                                value={
+                                    field.value
+                                        ? new Date(field.value)
+                                        : new Date()
+                                }
+                                onChange={(val) => {
+                                    if (!val) return;
+                                    field.onChange(val.toString());
+                                }}
+                            />
+                        </BottomLine>
                     </LabelElem>
                 );
             }}

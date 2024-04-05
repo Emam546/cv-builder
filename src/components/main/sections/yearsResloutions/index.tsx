@@ -1,17 +1,17 @@
 import React from "react";
 import { ElemType } from "@src/components/main/sections/InsertCommonData";
 import { Elem } from "@src/components/main/sections/InsertCommonData/Elem";
-import { useWatch } from "react-hook-form";
+import { useController, useWatch } from "react-hook-form";
 import Grid2Container from "@src/components/common/2GridInputHolder";
 import NormalInput from "@src/components/common/inputs/normal";
 import FinalEditor from "@src/components/common/inputs/Editor";
 import InfoGetter, {
     ListElemType,
 } from "@src/components/main/sections/InsertCommonData/input";
-import DatePicker from "@src/components/common/inputs/datePicker";
 import { WrapElem } from "@src/components/common/inputs/styles";
 import RangeInput from "@src/components/common/inputs/rangeInput";
-
+import { uuid } from "@src/utils";
+import { ExtendedDatePicker } from "./datePicker";
 export type EleNameType = string;
 export type NameType = "year_resolution";
 export const Name: NameType = "year_resolution";
@@ -30,18 +30,23 @@ export const EleInitData: () => EleInputData = () => ({
     name: "",
     desc: "<p></p>\n",
     date: {
-        start: "",
-        end: "",
+        start: new Date().toString(),
+        end: new Date(Date.now() + 30 * 24 * 60 * 60).toString(),
     },
     progress: 20,
-
 });
-
-import { uuid } from "@src/utils";
 
 const MiniResolutionElem = React.forwardRef(
     ({ index: i, props: { form, name: EleName }, ...props }, ref) => {
         const { register, control } = form;
+        const { field: fieldStart } = useController({
+            control,
+            name: `${EleName}.${i}.date.start`,
+        });
+        const { field: fieldEnd } = useController({
+            control,
+            name: `${EleName}.${i}.date.end`,
+        });
         return (
             <Elem
                 headLabel={function Title() {
@@ -66,19 +71,23 @@ const MiniResolutionElem = React.forwardRef(
                         label="Target Name"
                         {...register(`${EleName}.${i}.name`)}
                     />
-                    <DatePicker
-                        applyPresent
+                    <ExtendedDatePicker
                         label="Start &End Time"
                         startData={{
-                            ...register(`${EleName}.${i}.date.start`),
-                            placeholder: "MM / YYYY",
+                            value: new Date(fieldStart.value),
+                            onChange(val) {
+                                if (!val) return;
+                                fieldStart.onChange(val.toString());
+                            },
                         }}
                         endData={{
-                            ...register(`${EleName}.${i}.date.end`),
-                            placeholder: "MM / YYYY",
+                            value: new Date(fieldEnd.value),
+                            onChange(val) {
+                                if (!val) return;
+                                fieldEnd.onChange(val.toString());
+                            },
                         }}
                         control={control}
-                        labelEnd="Currently Work here."
                     />
                     <WrapElem label="Progress">
                         <div>

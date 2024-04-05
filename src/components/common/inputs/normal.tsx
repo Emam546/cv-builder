@@ -119,16 +119,14 @@ const NormalInput = React.forwardRef<HTMLInputElement, PropsWithOutOptions>(
                 ref={containerRef}
                 label={label}
             >
-                <div className="relative">
-                    <BottomLine>
-                        <StyledInput
-                            {...props}
-                            autoComplete="off"
-                            ref={ref}
-                            value={field.value}
-                        />
-                    </BottomLine>
-                </div>
+                <BottomLine>
+                    <StyledInput
+                        {...props}
+                        autoComplete="off"
+                        ref={ref}
+                        value={field.value}
+                    />
+                </BottomLine>
             </LabelElem>
         );
     }
