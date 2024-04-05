@@ -28,7 +28,7 @@ import { FormAction } from "@src/store/form";
 function Item({
     icon,
     label,
-    hiddenState,
+    hiddenState: OrgHiddenState,
     setData,
 }: {
     label: string;
@@ -36,6 +36,8 @@ function Item({
     setData: Dispatch<void>;
     icon: IconProp;
 }) {
+    const hiddenState =
+        OrgHiddenState == true || typeof OrgHiddenState != "boolean";
     return (
         <div
             className={classNames("flex items-center group gap-3 select-none", {
