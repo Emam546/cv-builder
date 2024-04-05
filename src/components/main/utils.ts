@@ -9,12 +9,12 @@ export function convertSection2Data(
     sectionState: SectionStateType
 ) {
     const Sections: Record<string, any> = { ...data };
-    Object.values(data[CustomName]).map((val) => {
+    Object.values(data[CustomName] || {}).forEach((val) => {
         Sections[val.head] = val;
     });
 
     delete Sections[CustomName];
-    [...Object.entries(sectionState.sections)].map(([key, val]) => {
+    Object.entries(sectionState.sections).forEach(([key, val]) => {
         if (val.hiddenState) delete Sections[key];
     });
     return Sections;

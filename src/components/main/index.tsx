@@ -116,7 +116,7 @@ function Uploader({
 
     const res = useWatch({ control: form.control });
     useEffect(() => {
-        dispatch(FormAction.setData(copyObject(res as Data)));
+        dispatch(FormAction.setAllData(copyObject(res as Data)));
     });
     return <></>;
 }

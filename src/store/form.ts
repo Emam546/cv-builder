@@ -6,10 +6,6 @@ export const FormSlice = createSlice({
     name: "form",
     initialState,
     reducers: {
-        setData(state, action: { payload: Data }) {
-            return action.payload;
-            // return { ...state, sections: action.payload };
-        },
         setAllData(state, action: { payload: Data }) {
             return { ...action.payload };
         },

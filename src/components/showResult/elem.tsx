@@ -1,8 +1,6 @@
 import { faCheck, faClipboard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import { convertSection2Data } from "../main/utils";
-import { useAppSelector } from "@src/store";
 interface Props {
     string: string;
     children: React.ReactNode;
