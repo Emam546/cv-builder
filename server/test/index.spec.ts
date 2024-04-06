@@ -12,6 +12,8 @@ import fs from "fs";
 import mongoose from "mongoose";
 import { convertSection2Data } from "@src/components/main/utils";
 import axios from "axios";
+import { uuid } from "@src/utils";
+import { EleInitData as InitDataProjects } from "@src/components/main/sections/Projects";
 const request = supertest(server);
 function readFile(p: string) {
     return path.join(__dirname, p);
@@ -129,7 +131,7 @@ describe("Main tests", () => {
         });
     });
     describe("GET", () => {
-        describe(" /data", () => {
+        describe("/data", () => {
             const PostedData = {
                 sections: defaultData,
                 sectionState: defaultSectionState,
@@ -163,6 +165,27 @@ describe("Main tests", () => {
                     .expect(200);
                 expect(res.body.status).true;
                 expect(res.body.data).deep.eq(curData.projects.data);
+            });
+            it("routed data with index", async () => {
+                PostedData.sections.projects.data[0] = {
+                    id: uuid(),
+                    label: "Test",
+                    data: [InitDataProjects()],
+                };
+                await request
+                    .post("/api/v1/user/data")
+                    .send(PostedData)
+                    .set("Authorization", `Bearer ${token}`);
+                const res = await request
+                    .get(`/api/v1/data/projects/data/0/data/0`)
+                    .query({
+                        apikey: user.apiKey,
+                    })
+                    .expect(200);
+                expect(res.body.status).true;
+                expect(res.body.data).deep.eq(
+                    PostedData.sections.projects.data[0].data[0]
+                );
             });
         });
     });

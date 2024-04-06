@@ -53,10 +53,8 @@ router.get("/*", async (req, res) => {
     const data = result.data;
     if (!data)
         return res.status(404).json({ status: false, msg: "Unprovided Data" });
-    const path = req.path
-        .substring(req.path.indexOf("data/") + 2)
-        .split("/")
-        .join(".");
+    const path = req.path.split("/").filter((val) => val != "");
+
     const convertedData = convertSection2Data(data.sections, data.sectionState);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const sendedData = lodash.get(convertedData, path);
