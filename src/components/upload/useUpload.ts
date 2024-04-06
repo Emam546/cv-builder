@@ -10,6 +10,7 @@ export function useUploadData() {
         sectionState: state.state.data,
     }));
     const isSingIn = useAppSelector((state) => state.user.isSingIn);
+    const isConnected = useAppSelector((state) => state.page.connectionState);
     const [state, setState] = useState<boolean>(false);
     const lastData = useRef(JSON.stringify(data));
     const [err, setErr] = useState<string>();
@@ -17,6 +18,7 @@ export function useUploadData() {
     const uploadData = async () => {
         if (!isSingIn) return false;
         if (lastData.current == str) return false;
+        if (!isConnected) return false;
         lastData.current = str;
         const source = axios.CancelToken.source();
         await axios.post("/api/v1/user/data", data, {

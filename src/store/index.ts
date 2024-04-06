@@ -5,11 +5,13 @@ import { FormSlice } from "./form";
 import { UserState } from "./user";
 import { State } from "./state";
 import { LoginModelSlice } from "@src/components/loginModel";
+import { PageStateSlice } from "./pageState";
 const allReducer = combineReducers({
     [FormSlice.name]: FormSlice.reducer,
     [UserState.name]: UserState.reducer,
     [State.name]: State.reducer,
     [LoginModelSlice.name]: LoginModelSlice.reducer,
+    [PageStateSlice.name]: PageStateSlice.reducer,
 });
 type StateAction = Parameters<typeof allReducer>[0];
 type Actions = Parameters<typeof allReducer>[1];

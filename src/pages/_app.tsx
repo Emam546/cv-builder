@@ -10,12 +10,14 @@ import { Provider } from "react-redux";
 import LoadingState from "@src/components/loading";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import SetConnectionState from "@src/components/internetConnection/setState";
 function App({ Component, ...rest }: AppProps) {
     const { store, props } = wrapper.useWrappedStore(rest);
     return (
         <Provider store={store}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <LoadingState />
+                <SetConnectionState />
                 <Component {...props.pageProps} />
             </LocalizationProvider>
         </Provider>

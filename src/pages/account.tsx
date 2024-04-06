@@ -8,6 +8,7 @@ import EmailNotification from "@src/components/account/emailnotifications";
 import DeleteAccount from "@src/components/account/deleteAccount";
 import { wrapper } from "@src/store";
 import { InitServerSide } from "../utils/init";
+import ConnectedBar from "@src/components/internetConnection";
 
 interface Props {
     values: UserInfoProps;
@@ -23,6 +24,7 @@ const Page: NextPage<Props> = ({ values }) => {
                 />
             </Head>
             <Header />
+            <ConnectedBar />
             <div className="bg-neutral-10 min-h-screen">
                 <div className="container relative px-3 mx-auto py-20 ">
                     <h1 className="text-3xl font-bold mx-12 mb-6">
