@@ -1,6 +1,7 @@
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark as style } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import ShowResultElem from "./elem";
+import { Name } from "@src/components/main/sections/yearsResloutions";
 const interfaceCode = `interface Data {
     info: {
         head: string;
@@ -261,6 +262,23 @@ const interfaceCode = `interface Data {
             id: string;
             language: string;
             level: string;
+        }>;
+    };
+    ${Name}?: {
+        head: string;
+        data: Array<{
+            id: string;
+            label: string;
+            data: Array<{
+                id: string;
+                name: string;
+                progress: number;
+                date: {
+                    start: string;
+                    end: string;
+                };
+                desc: string;
+            }>;
         }>;
     };
 }`;
