@@ -62,6 +62,7 @@ const CityInput = React.forwardRef<HTMLInputElement, CityInputProps>(
                 control={control}
                 options={CITIES.get(country) || []}
                 {...props}
+                ref={ref}
             />
         );
     }

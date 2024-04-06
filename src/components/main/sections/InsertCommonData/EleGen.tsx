@@ -37,7 +37,7 @@ export default function ElemGenerator<P extends PSchema>({
     data: P[];
     onDelete?: (id: string) => any;
     onDuplicate?: (id: string) => any;
-    onResort?: (indexes: number[]) => void;
+    onResort?: (indexes: string[]) => void;
     noDragging?: boolean;
 }) {
     const allEle = useRef<HTMLDivElement[]>([]);
@@ -70,7 +70,8 @@ export default function ElemGenerator<P extends PSchema>({
                                 })
                                 .sort((a, b) => a[0] - b[0])
                                 .map(([, i]) => i);
-                            if (onResort) onResort(indexes);
+                            if (onResort)
+                                onResort(indexes.map((i) => data[i].id));
                         }}
                         ref={(ele) => {
                             if (!ele) return;

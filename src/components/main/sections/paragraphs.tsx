@@ -48,6 +48,7 @@ const Professional = React.forwardRef(
                         </>
                     );
                 }}
+                ref={ref}
             >
                 <Grid2Container>
                     <NormalInput

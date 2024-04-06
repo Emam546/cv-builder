@@ -150,9 +150,6 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
         const inpRef = useRef<HTMLInputElement>(null);
         const AllRef = useSyncRefs(ref, inpRef);
         let State: StateType = [undefined, new Date().getFullYear()];
-        if (defaultS) {
-            const res = regEx.exec(defaultS);
-        }
         const { field } = useController({ control, name: props.name });
         const [val, setVal] = useState<StateType | "Present">(State);
         const [focus, setFocus] = useState(false);

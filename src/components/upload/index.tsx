@@ -43,7 +43,7 @@ export default function UploadDataEle() {
             <Alert
                 severity={err ? "error" : "success"}
                 sx={{ width: "100%" }}
-                onClose={() => setState(false)}
+                onClose={() => setOpen(false)}
             >
                 {err ? `Error happened:${err}` : `Data uploaded successfully`}
             </Alert>

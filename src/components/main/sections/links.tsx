@@ -78,6 +78,7 @@ const MainElem = React.forwardRef(
                 index={i}
                 props={{ form: form as any, id, name: `${name}.data`, index }}
                 {...props}
+                ref={ref}
             />
         );
     }
