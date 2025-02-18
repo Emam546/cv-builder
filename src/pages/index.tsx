@@ -14,6 +14,7 @@ import ApiViewer from "@src/components/apiViewer";
 import InterFaceCode from "@src/components/showResult/interface";
 import { InitServerSide } from "../utils/init";
 import ConnectedBar from "@src/components/internetConnection";
+import React from "react";
 export type SectionsEnabled = {
     [k in keyof UserData]?: boolean;
 };
@@ -24,7 +25,6 @@ interface Props {
 }
 const Home: NextPage<Props> = function ({ values, isSigned }) {
     const state = useAppSelector((state) => state.user.isSingIn);
-    
     return (
         <>
             <Head>
