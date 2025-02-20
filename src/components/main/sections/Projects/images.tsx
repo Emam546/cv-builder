@@ -257,7 +257,8 @@ export const ListItem = React.forwardRef(
         headLabel={() => (
           <>
             <p className="font-bold group-hover:text-blue-60">
-              {widthRation} / {heightRation}
+              {isNaN(widthRation) ? "" : widthRation} /{" "}
+              {isNaN(heightRation) ? "" : heightRation}
             </p>
           </>
         )}
@@ -269,6 +270,7 @@ export const ListItem = React.forwardRef(
             <NormalInput
               control={control}
               label="Width ratio"
+              type="number"
               {...register(`${Name}.${i}.widthRation`, {
                 valueAsNumber: true,
               })}
@@ -276,6 +278,7 @@ export const ListItem = React.forwardRef(
             <NormalInput
               control={control}
               label="Height ratio"
+              type="number"
               {...register(`${Name}.${i}.heightRation`, {
                 valueAsNumber: true,
               })}
